@@ -1,0 +1,100 @@
+# 拼音王子 — 多音字词表
+# 编辑后跑测试: .venv-pinyin/bin/python3.14 -m pytest tests/test_polyphone.py -v
+#
+# 三个段：
+#   defaults  — 单字兜底读音，pypinyin 默认猜错时强制覆盖
+#   overrides — 词组/上下文级覆盖，按文本子串匹配，长度必须与 pattern 一致
+#   skips     — 跳过 pypinyin 的字符（标点、数字、品牌名等），输出拼音置 None
+#
+# 拼音书写：使用带声调标记（ā á ǎ à），与 pypinyin style=Style.TONE 一致。
+# 以 "_" 开头的 key 会被 load_table 忽略，可用于注释。
+
+defaults:
+  # 单字多音字兜底（小学语文常见）
+  "行": "xíng"         # 行走、银行、行业
+  "还": "hái"          # 还是、还有
+  "长": "cháng"        # 长短、长大
+  "佛": "fó"           # 佛教、佛祖
+  "强": "qiáng"        # 强大、强迫
+  "了": "le"           # 助词"了"、动词完结
+  "着": "zhe"          # 助词"着"、进行态
+  "过": "guò"          # 过去、过度
+  "没": "méi"          # 没有、没来
+  "把": "bǎ"           # 介词"把"
+  "被": "bèi"          # 介词"被"
+  "得": "de"           # 结构助词（动词/形容词 → 补语）
+  "地": "de"           # 结构助词（副词 → 状语）
+  "舍": "shě"          # 舍弃、舍不得
+  "假": "jiǎ"          # 真假、假装
+  "相": "xiāng"        # 互相
+  "教": "jiāo"         # 教书
+  "都": "dōu"          # 都来了
+  "空": "kōng"         # 空中
+  "种": "zhǒng"        # 种子
+  "重": "zhòng"        # 重要
+  "为": "wéi"          # 做为
+  "便": "biàn"         # 方便、顺便
+  "难": "nán"          # 困难
+  "觉": "jué"          # 感觉
+  "调": "tiáo"         # 调整
+  "处": "chǔ"          # 处理
+  "散": "sàn"          # 散开
+  "血": "xuè"          # 血液
+
+overrides:
+  # 词组级（按子串匹配，先匹配先应用；冲突抛错）
+  - pattern: "勉强"
+    pinyin: ["miǎn", "qiǎng"]
+  - pattern: "仿佛"
+    pinyin: ["fǎng", "fú"]
+  - pattern: "还念起"
+    pinyin: ["hái", "niàn", "qǐ"]   # 唐僧还念起紧箍咒
+  - pattern: "依依不舍地"
+    pinyin: ["yī", "yī", "bù", "shě", "de"]
+  - pattern: "舍不得地"
+    pinyin: ["shě", "bù", "de", "de"]
+  - pattern: "舍不得"
+    pinyin: ["shě", "bù", "de"]
+  - pattern: "疼得"
+    pinyin: ["téng", "de"]
+  - pattern: "气得"
+    pinyin: ["qì", "de"]
+  - pattern: "笑得"
+    pinyin: ["xiào", "de"]
+  - pattern: "累得"
+    pinyin: ["lèi", "de"]
+  - pattern: "饿得"
+    pinyin: ["è", "de"]
+  - pattern: "红得"
+    pinyin: ["hóng", "de"]
+  - pattern: "热得"
+    pinyin: ["rè", "de"]
+  - pattern: "慢慢地"
+    pinyin: ["màn", "màn", "de"]
+  - pattern: "悄悄地"
+    pinyin: ["qiāo", "qiāo", "de"]
+  - pattern: "静静地"
+    pinyin: ["jìng", "jìng", "de"]
+  - pattern: "高兴地"
+    pinyin: ["gāo", "xìng", "de"]
+  - pattern: "认真地"
+    pinyin: ["rèn", "zhēn", "de"]
+  - pattern: "大声地"
+    pinyin: ["dà", "shēng", "de"]
+  - pattern: "狠狠"
+    pinyin: ["hěn", "hěn"]
+
+skips:
+  # 标点符号不标拼音
+  - "·"
+  - "——"
+  - "「"
+  - "」"
+  - "『"
+  - "』"
+  - "《"
+  - "》"
+  - "（"
+  - "）"
+  # 全角空格也跳过
+  - "　"

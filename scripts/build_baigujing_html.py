@@ -2,23 +2,90 @@
 
 from __future__ import annotations
 
+import re
+import sys
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from pypinyin import lazy_pinyin, Style
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "baigujing-story.html"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
-PARAS = [
-    "唐僧师徒四人西天取经，一路跋山涉水。这天，走到一座深山之中，山路崎岖，荒无人烟。",
-    "唐僧走得又累又饿，便让孙悟空前去化斋找吃食。孙悟空纵身跳到云端，四下观望，看见远处南山脚下有一片桃树，便叮嘱八戒、沙僧好好保护师父，自己驾云前去摘桃。",
-    "这座山里住着一个白骨精，她早就想吃唐僧肉长生不老。见孙悟空离开，白骨精便摇身一变，化作一个年轻美貌的农家女子，提着一篮馒头饭菜，假装上山送饭，慢慢走向唐僧师徒。",
-    "唐僧见女子温柔和善，十分客气。猪八戒更是满心欢喜，连连道谢。只有沙僧默默站在一旁。就在这时，孙悟空摘桃赶回，火眼金睛一眼看穿女子是妖怪所变，二话不说，举起金箍棒就要打去。",
-    "唐僧连忙拦住，责怪悟空无故伤人。悟空解释这女子是妖精幻化，唐僧不肯相信，还念起紧箍咒惩罚悟空。悟空强忍头痛，执意除妖，一棒打去，白骨精丢下假肉身，化作一缕青烟逃走了。",
-    "过了一会儿，白骨精不甘心，又变成一位白发苍苍的老婆婆，拄着拐杖，哭着来找女儿。唐僧见老人可怜，十分心疼。悟空再次认出是妖怪，又要举棒去打。唐僧更加生气，严厉斥责悟空滥杀无辜，又念紧箍咒，疼得悟空满地打滚。悟空不顾阻拦，再次挥棒，白骨精又丢下假尸首，脱身逃走。",
-    "白骨精仍不死心，第三次变成一位白发老翁，假装来找老伴和女儿。唐僧见老者慈眉善目，十分敬重。孙悟空早已看透妖精诡计，怕师父再被迷惑，强忍委屈，果断挥棒打死老翁。这一次，白骨精无处遁形，彻底现出白骨原形。",
-    "唐僧见悟空连伤三条人命，怒火中烧，不听悟空任何辩解，执意要把孙悟空赶走。悟空满心委屈，含泪拜别师父，嘱咐沙僧好好照看师父，无奈之下，依依不舍地返回了花果山。",
-]
+from pinyin_prince import polyphone as _polyphone  # noqa: E402  (import after sys.path tweak)
+OUT = ROOT / "baigujing-story.html"
+STORY_PATH = ROOT / "stories" / "baigujing.txt"
+POLYPHONE_PATH = ROOT / "data" / "polyphone.yaml"
+
+TITLE_FALLBACK = "拼音对照"
+
+
+@dataclass
+class Story:
+    title: str = ""
+    author: str | None = None
+    source: str | None = None
+    audited: str | None = None
+    level: str | None = None
+    paragraphs: list[str] = field(default_factory=list)
+
+
+_META_RE = re.compile(r"^#\s*(.+?)\s*[:：]\s*(.*)$")
+_META_KEY_MAP: dict[str, str] = {
+    "标题": "title",
+    "作者": "author",
+    "出处": "source",
+    "拼音校对": "audited",
+    "难度": "level",
+}
+
+
+def load_story(path: str | Path) -> Story:
+    """解析 stories/*.txt：前若干行元信息 + 剩余正文（按空行分段）。"""
+    text = Path(path).read_text(encoding="utf-8")
+    lines = text.splitlines()
+
+    story = Story()
+    body_start = len(lines)
+
+    for i, line in enumerate(lines):
+        m = _META_RE.match(line)
+        if not m:
+            body_start = i
+            break
+        key = m.group(1).strip()
+        value = m.group(2).strip()
+        attr = _META_KEY_MAP.get(key)
+        if attr is None:
+            body_start = i
+            break
+        if attr == "title":
+            story.title = value
+        elif value:
+            setattr(story, attr, value)
+        # 值为空 → 保持默认（None），不动
+
+    body_text = "\n".join(lines[body_start:])
+    raw_paras = re.split(r"\n\n+", body_text)
+    story.paragraphs = [p.strip() for p in raw_paras if p.strip()]
+    return story
+
+
+def load_polyphone(path: str | Path = POLYPHONE_PATH) -> _polyphone.PolyphoneTable | None:
+    """加载多音字词表；文件不存在或加载失败时返回 None（容错优先）。"""
+    p = Path(path)
+    if not p.exists():
+        print(f"提示: 多音字词表 {p} 不存在，跳过 polyphone override（占位表走 fallback）")
+        return None
+    try:
+        return _polyphone.load_table(p)
+    except NotImplementedError:
+        print(f"提示: polyphone.load_table 尚未实装（Subagent A 还在干），跳过")
+        return None
+    except Exception as e:
+        print(f"警告: 加载多音字词表失败: {e}，跳过 polyphone override")
+        return None
 
 
 def is_cjk(ch: str) -> bool:
@@ -53,7 +120,6 @@ def apply_particle_fixes(pairs: list[tuple[str, str | None]]) -> None:
 
         if ch == "得" and prev in "疼气笑走":
             set_py(i, "de")
-        # 依依不舍地
         if ch == "地" and i >= 4:
             window = "".join(pairs[j][0] for j in range(i - 4, i + 1))
             if window == "依依不舍地":
@@ -81,21 +147,43 @@ def pairs_to_html(pairs: list[tuple[str, str | None]]) -> str:
     return "".join(parts)
 
 
-def main() -> None:
-    paragraphs_html: list[str] = []
-    for raw in PARAS:
-        pairs = char_pairs(raw)
+def render_paragraphs_html(
+    paragraphs: list[str],
+    polyphone_table: _polyphone.PolyphoneTable | None = None,
+) -> str:
+    """逐段生成 <p class="line">…</p>，polyphone override 失败时降级不中断。"""
+    out: list[str] = []
+    for para in paragraphs:
+        pairs = char_pairs(para)
         apply_particle_fixes(pairs)
-        paragraphs_html.append(f'  <p class="line">{pairs_to_html(pairs)}</p>')
+        if polyphone_table is not None:
+            try:
+                _polyphone.apply_table(pairs, para, polyphone_table)
+            except ValueError as e:
+                print(f"警告: polyphone.apply_table 失败（{para[:12]}…）: {e}")
+            except NotImplementedError:
+                pass
+        out.append(f'  <p class="line">{pairs_to_html(pairs)}</p>')
+    return "\n".join(out)
 
-    body_paras = "\n".join(paragraphs_html)
+
+def main(
+    story_path: str | Path = STORY_PATH,
+    out_path: str | Path = OUT,
+    polyphone_path: str | Path = POLYPHONE_PATH,
+) -> Path:
+    story = load_story(story_path)
+    table = load_polyphone(polyphone_path)
+    body_paras = render_paragraphs_html(story.paragraphs, table)
+
+    title = story.title.strip() or TITLE_FALLBACK
 
     html = f"""<!DOCTYPE html>
 <html lang="zh-Hans">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>三打白骨精（节选）· 拼音对照</title>
+  <title>{escape_html(title)}· 拼音对照</title>
   <style>
     @page {{
       size: A4;
@@ -159,7 +247,7 @@ def main() -> None:
   </style>
 </head>
 <body>
-  <h1>三打白骨精（节选）· 拼音对照</h1>
+  <h1>{escape_html(title)}· 拼音对照</h1>
 
 {body_paras}
 
@@ -167,8 +255,10 @@ def main() -> None:
 </body>
 </html>
 """
-    OUT.write_text(html, encoding="utf-8")
-    print(f"Wrote {OUT}")
+    out_p = Path(out_path)
+    out_p.write_text(html, encoding="utf-8")
+    print(f"Wrote {out_p}")
+    return out_p
 
 
 if __name__ == "__main__":
