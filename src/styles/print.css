@@ -1,0 +1,69 @@
+/* 关键：放在 @layer base 之外，不进 Tailwind preflight。
+   由 src/routes/Print.tsx 顶部 import，确保切到 /print 路由时才加载。
+   不在 global.css 里 @import，避免污染主站。 */
+
+@page {
+  size: A4;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  color: #111;
+}
+
+/* ruby 核心：与 pinyin-prince.html:67-172 等价 */
+#previewInner {
+  font-family: "Songti SC", "SimSun", "STSong", "Noto Serif SC", serif;
+  font-size: 19px;
+  line-height: 2.15;
+  max-width: 170mm;
+  margin: 0 auto;
+  padding: 16mm 14mm;
+}
+
+#previewInner .line {
+  display: block;
+  margin: 0 0 14px;
+  text-indent: 2em;
+  text-align: justify;
+  text-justify: inter-character;
+}
+
+#previewInner .unit {
+  margin-right: 3px;
+}
+
+#previewInner ruby {
+  ruby-position: over;
+  ruby-align: center;
+  vertical-align: baseline;
+}
+
+#previewInner ruby > rt {
+  font-family: "Helvetica Neue", "Arial", "PingFang SC", "Noto Sans SC", sans-serif;
+  font-size: 0.64em;
+  font-weight: 500;
+  color: #333;
+  line-height: 1.15;
+}
+
+#previewInner .unit.punct rt {
+  font-size: 0;
+  opacity: 0;
+  height: 0;
+  line-height: 0;
+}
+
+/* 打印时移除屏幕上的 chrome */
+@media print {
+  body { background: #fff; }
+  .no-print { display: none !important; }
+}

@@ -1,44 +1,51 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code when working on this repo.
 
 ## 项目概述
 
-拼音王子 — 生成带 ruby 注音（字上标拼音）的 HTML，用于打印 A4 PDF 供儿童语文学习。核心功能：
-- 逐字生成拼音（pypinyin）+ 结构助词（的/地/得）轻量校正
-- 生成可打印的 HTML（ruby 标签）+ 浏览器无头打印生成 PDF
+拼音王子 — 给儿童语文学习生成带 ruby 注音的 HTML，可打印 A4 PDF。
+
+**v0.2 起**：完全重写为 Vite + React 18 + TS + Tailwind v4 的 SPA。
+**v0.1 旧版**（Python CLI + 单文件 HTML 工具）已废弃删除。
 
 ## 常用命令
 
 ```bash
-# 安装 Python 依赖
-pip install -r requirements.txt
-
-# 生成静态拼音 HTML（默认 baigujing-story.html）
-python scripts/build_baigujing_html.py
-
-# HTML 转 PDF（需要本机安装 Chrome/Edge/Chromium）
-python scripts/html_to_pdf.py                             # 默认转换根目录 baigujing-story.html
-python scripts/html_to_pdf.py path/to/input.html         # 指定输入，PDF 同名输出
-python scripts/html_to_pdf.py in.html out.pdf            # 指定输入输出
+npm install
+npm run dev          # http://localhost:5173
+npm run build        # tsc -b && vite build
+npm test             # vitest run (41 cases)
 ```
 
-## 技术栈
+## 核心架构
 
-- **Python**: pypinyin（汉字→拼音），Python 3 标准库（Path, subprocess）
-- **HTML/CSS**: ruby 标签实现字-音对照，@page 规则控制 A4 打印排版
-- **PDF**: Chrome headless 打印（`--print-to-pdf`），不依赖额外 Python 依赖
+- **拼音生成**：`pinyin-pro` npm 包，`src/lib/pinyin.ts` 包装为 `pinyinOf(ch)`
+- **多音字词表**：`src/data/polyphone.yaml` 用 Vite `?raw` + `js-yaml` 在编译时进 bundle
+- **打印页**：`/print?id=xxx` 路由挂独立 `print.css`，**不引入** Tailwind，避开 preflight 对 ruby 标签的破坏
+- **历史**：`localStorage` 键 `pinyinPrince.v2.history`（带 `schemaVersion: 2` 包装）；自动从 v1 数组迁移，v1 键保留只读
 
-## 核心文件
+## 关键文件
 
-- `scripts/build_baigujing_html.py` — 静态 HTML 生成器（故事文本硬编码，生成 baigujing-story.html）
-- `scripts/html_to_pdf.py` — 浏览器无头打印工具（支持 Chrome/Edge/Chromium，自动查找）
-- `pinyin-prince.html` — 用户交互工具（粘贴纯文本或「拼音行+汉字行」分段，实时预览）
-- `jiazhang-pinyin-wangzi.html` — 家长/老师使用说明（独立维护）
-- `baigujing-story.html` 等 — 已生成的静态示例
+- `src/lib/polyphone.ts` — 多音字算法（`applyTable`），直接对应旧 `pinyin_prince/polyphone.py:166-228`
+- `src/lib/render.tsx` — `<Ruby>` 组件，节点结构与旧 `pinyin-prince.html:543-553` 等价
+- `src/lib/particles.ts` — 结构助词校正，对应旧 `scripts/build_baigujing_html.py:108-127`
+- `src/lib/split.ts` — `splitPlainBlocks` + `buildDualParagraphs`（双行模式）
+- `src/styles/print.css` — ruby 关键样式，**不放** Tailwind `@layer base` 之外
 
-## 架构要点
+## 关键决策
 
-- **生成流程**: 文本 → `lazy_pinyin` 逐字转拼音 → `apply_particle_fixes` 校正助词 → ruby HTML
-- **PDF 打印**: `html_to_pdf.py` 调用本机浏览器 `--headless=new --print-to-pdf`，file:// URL 方式
-- **pinyin-prince.html** 为独立单文件，无需服务器，直接浏览器打开使用
+- **YAML 编译时 import** 而非运行时 fetch：bundle 体积 +3KB，省去 CORS 配置
+- **打印走独立路由** 而非 `window.print()` 直接调：URL 可分享，且 100% 隔离 Tailwind
+- **PDF 抽取保留**：`pdfjs-dist` 加 ~500KB bundle，换来"上传 PDF→注音"完整闭环
+- **不装 shadcn/ui**：v1 纯 Tailwind 够用，后续看需求
+
+## 部署
+
+`vercel.json` 已配 `framework: "vite"`，push 到 `main` 即自动部署。
+
+## 不要
+
+- **不要**在 `print.css` 顶部加 `@import "tailwindcss"`（preflight 会破坏 ruby）
+- **不要**把 `pinyin-pro` 改回 CDN（v0.1 旧版用过，已弃）
+- **不要**改 `src/lib/types.ts` 的契约（所有 agent 都依赖）

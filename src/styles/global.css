@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+/* 主站基础样式（打印页用 src/styles/print.css 单独走，避免 Tailwind preflight 干扰 ruby） */
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "PingFang SC", "Microsoft YaHei", -apple-system, sans-serif;
+  color: #222;
+  background: #f5f5f7;
+}

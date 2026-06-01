@@ -1,12 +1,25 @@
-# Vercel 部署排除：本地开发用的 Python 环境与脚本，不会上线
-.venv-pinyin/
-__pycache__/
-scripts/
+# Vite 构建产物
+node_modules/
+dist/
+.vite/
+
+# TS 编译产物
+*.tsbuildinfo
+vite.config.d.ts
+vite.config.js
+
+# 本地开发/CI 工具
 .opencode/
 .mavis/
 .claude/
+.worktrees/
 tmp/
 scratch/
-*.pyc
+
+# 运行时无需的
 *.pdf
 .DS_Store
+.env*.local
+
+# 测试
+tests/__snapshots__/

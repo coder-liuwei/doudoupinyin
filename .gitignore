@@ -1,37 +1,44 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-.venv*/
-venv/
-env/
-
-# Build / dist
+node_modules/
 dist/
-build/
-*.egg-info/
-*.pdf
-!docs/**/*.pdf
+dist-ssr/
+*.local
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*.swo
 
 # Test / coverage
 .pytest_cache/
-.coverage
+.coverage/
 htmlcov/
 .tox/
 
-# IDE / editor
-.idea/
-.vscode/
-*.swp
-*.swo
-.DS_Store
-
-# Mavis / OpenCode
+# Local artifacts
 .opencode/
 .mavis/
-
-# Local artifacts
+.claude/
+.worktrees/
 tmp/
 scratch/
+
+# Python（理论上不会生成）
+__pycache__/
+*.py[cod]
+.venv*/
+venv/
+env/
+*.pdf
+!docs/**/*.pdf
+
+# Vite
+.vite/
+*.tsbuildinfo
+vite.config.d.ts
+vite.config.js
+
+# Vercel
+.vercel
+.env*.local

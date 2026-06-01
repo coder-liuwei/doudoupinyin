@@ -1,0 +1,41 @@
+{
+  "name": "pinyin-prince",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "description": "拼音王子 — 给儿童语文学习生成 ruby 注音稿，React/Vite 重写版",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "pdfjs-dist": "^3.11.174",
+    "pinyin-pro": "^3.23.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0",
+    "sonner": "^1.7.1",
+    "zustand": "^5.0.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0-beta.7",
+    "@testing-library/react": "^16.1.0",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^25.9.1",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@types/react-test-renderer": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "jsdom": "^25.0.1",
+    "react-test-renderer": "^18.3.1",
+    "tailwindcss": "^4.0.0-beta.7",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.11",
+    "vitest": "^2.1.8"
+  }
+}
