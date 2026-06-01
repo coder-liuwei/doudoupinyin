@@ -1,0 +1,12 @@
+# Vercel 部署排除：本地开发用的 Python 环境与脚本，不会上线
+.venv-pinyin/
+__pycache__/
+scripts/
+.opencode/
+.mavis/
+.claude/
+tmp/
+scratch/
+*.pyc
+*.pdf
+.DS_Store
