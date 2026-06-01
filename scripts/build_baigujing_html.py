@@ -1,0 +1,175 @@
+"""Generate pinyin-ruby HTML for 三打白骨精 excerpt (拼音王子)."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+from pypinyin import lazy_pinyin, Style
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "baigujing-story.html"
+
+PARAS = [
+    "唐僧师徒四人西天取经，一路跋山涉水。这天，走到一座深山之中，山路崎岖，荒无人烟。",
+    "唐僧走得又累又饿，便让孙悟空前去化斋找吃食。孙悟空纵身跳到云端，四下观望，看见远处南山脚下有一片桃树，便叮嘱八戒、沙僧好好保护师父，自己驾云前去摘桃。",
+    "这座山里住着一个白骨精，她早就想吃唐僧肉长生不老。见孙悟空离开，白骨精便摇身一变，化作一个年轻美貌的农家女子，提着一篮馒头饭菜，假装上山送饭，慢慢走向唐僧师徒。",
+    "唐僧见女子温柔和善，十分客气。猪八戒更是满心欢喜，连连道谢。只有沙僧默默站在一旁。就在这时，孙悟空摘桃赶回，火眼金睛一眼看穿女子是妖怪所变，二话不说，举起金箍棒就要打去。",
+    "唐僧连忙拦住，责怪悟空无故伤人。悟空解释这女子是妖精幻化，唐僧不肯相信，还念起紧箍咒惩罚悟空。悟空强忍头痛，执意除妖，一棒打去，白骨精丢下假肉身，化作一缕青烟逃走了。",
+    "过了一会儿，白骨精不甘心，又变成一位白发苍苍的老婆婆，拄着拐杖，哭着来找女儿。唐僧见老人可怜，十分心疼。悟空再次认出是妖怪，又要举棒去打。唐僧更加生气，严厉斥责悟空滥杀无辜，又念紧箍咒，疼得悟空满地打滚。悟空不顾阻拦，再次挥棒，白骨精又丢下假尸首，脱身逃走。",
+    "白骨精仍不死心，第三次变成一位白发老翁，假装来找老伴和女儿。唐僧见老者慈眉善目，十分敬重。孙悟空早已看透妖精诡计，怕师父再被迷惑，强忍委屈，果断挥棒打死老翁。这一次，白骨精无处遁形，彻底现出白骨原形。",
+    "唐僧见悟空连伤三条人命，怒火中烧，不听悟空任何辩解，执意要把孙悟空赶走。悟空满心委屈，含泪拜别师父，嘱咐沙僧好好照看师父，无奈之下，依依不舍地返回了花果山。",
+]
+
+
+def is_cjk(ch: str) -> bool:
+    return "\u4e00" <= ch <= "\u9fff"
+
+
+def char_pairs(text: str) -> list[tuple[str, str | None]]:
+    out: list[tuple[str, str | None]] = []
+    for ch in text:
+        if ch.isspace():
+            continue
+        if is_cjk(ch):
+            py = lazy_pinyin(ch, style=Style.TONE)[0]
+            out.append((ch, py))
+        else:
+            out.append((ch, None))
+    return out
+
+
+def apply_particle_fixes(pairs: list[tuple[str, str | None]]) -> None:
+    """Light-touch fixes for structural 的/地/得 in this story."""
+
+    def set_py(i: int, py: str) -> None:
+        ch, _ = pairs[i]
+        pairs[i] = (ch, py)
+
+    for i in range(1, len(pairs)):
+        ch, py = pairs[i]
+        if py is None:
+            continue
+        prev = pairs[i - 1][0]
+
+        if ch == "得" and prev in "疼气笑走":
+            set_py(i, "de")
+        # 依依不舍地
+        if ch == "地" and i >= 4:
+            window = "".join(pairs[j][0] for j in range(i - 4, i + 1))
+            if window == "依依不舍地":
+                set_py(i, "de")
+
+
+def escape_html(s: str) -> str:
+    return (
+        s.replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+    )
+
+
+def pairs_to_html(pairs: list[tuple[str, str | None]]) -> str:
+    parts: list[str] = []
+    for ch, py in pairs:
+        if py is None:
+            parts.append(
+                f'<span class="punct"><ruby>{escape_html(ch)}<rt></rt></ruby></span>'
+            )
+        else:
+            parts.append(f"<ruby>{escape_html(ch)}<rt>{escape_html(py)}</rt></ruby>")
+    return "".join(parts)
+
+
+def main() -> None:
+    paragraphs_html: list[str] = []
+    for raw in PARAS:
+        pairs = char_pairs(raw)
+        apply_particle_fixes(pairs)
+        paragraphs_html.append(f'  <p class="line">{pairs_to_html(pairs)}</p>')
+
+    body_paras = "\n".join(paragraphs_html)
+
+    html = f"""<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>三打白骨精（节选）· 拼音对照</title>
+  <style>
+    @page {{
+      size: A4;
+      margin: 18mm 16mm;
+    }}
+    * {{ box-sizing: border-box; }}
+    body {{
+      font-family: "Songti SC", "SimSun", "STSong", "Noto Serif SC", serif;
+      font-size: 19px;
+      line-height: 2.15;
+      color: #111;
+      max-width: 170mm;
+      margin: 0 auto;
+      padding: 10mm 0 16mm;
+    }}
+    h1 {{
+      font-size: 22px;
+      font-weight: 600;
+      text-align: center;
+      margin: 0 0 14mm;
+      letter-spacing: 0.08em;
+    }}
+    .line {{
+      display: block;
+      margin: 0 0 14px;
+      text-indent: 2em;
+      text-align: justify;
+      text-justify: inter-character;
+    }}
+    .line ruby,
+    .line .punct {{
+      margin-right: 3px;
+    }}
+    ruby {{
+      ruby-position: over;
+      ruby-align: center;
+      vertical-align: baseline;
+    }}
+    ruby > rt {{
+      font-family: "Helvetica Neue", "Arial", "PingFang SC", "Noto Sans SC", sans-serif;
+      font-size: 0.55em;
+      font-weight: 500;
+      color: #333;
+      line-height: 1.15;
+      user-select: none;
+    }}
+    .punct rt {{
+      font-size: 0;
+      opacity: 0;
+    }}
+    .note {{
+      font-size: 14px;
+      color: #555;
+      margin-top: 18px;
+      padding-top: 12px;
+      border-top: 1px solid #ddd;
+    }}
+    @media print {{
+      body {{ padding: 0; }}
+    }}
+  </style>
+</head>
+<body>
+  <h1>三打白骨精（节选）· 拼音对照</h1>
+
+{body_paras}
+
+  <p class="note">注：正文拼音由 <code>pypinyin</code> 逐字生成，已对「疼得、气得、笑得」中的「得」及「依依不舍地」中的「地」等结构助词作轻量校正；若遇多音字教学需要，请再对照词典微调。</p>
+</body>
+</html>
+"""
+    OUT.write_text(html, encoding="utf-8")
+    print(f"Wrote {OUT}")
+
+
+if __name__ == "__main__":
+    main()
