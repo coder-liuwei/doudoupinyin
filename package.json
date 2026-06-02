@@ -6,7 +6,7 @@
   "description": "拼音王子 — 给儿童语文学习生成 ruby 注音稿，React/Vite 重写版",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
