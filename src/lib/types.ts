@@ -12,6 +12,7 @@ export interface Pair {
   ch: string;
   py: string | null;
   isPunct: boolean;
+  pySource?: "auto" | "dual" | "manual";
 }
 
 export type Paragraph = Pair[];

@@ -31,6 +31,11 @@ export interface EditorState {
   setCurrentId: (id: string | null) => void;
   setErr: (e: string | null) => void;
   updatePairPinyin: (paragraphIndex: number, pairIndex: number, py: string | null) => void;
+  updatePairPinyinRange: (
+    paragraphIndex: number,
+    startIndex: number,
+    values: Array<{ pairIndex: number; py: string | null }>,
+  ) => void;
   reset: () => void;
 }
 
@@ -65,11 +70,29 @@ export const useEditorStore = create<EditorState>((set) => ({
       paragraphs: state.paragraphs.map((paragraph, pIndex) =>
         pIndex === paragraphIndex
           ? paragraph.map((pair, i) =>
-              i === pairIndex ? { ...pair, py } : pair,
+              i === pairIndex ? { ...pair, py, pySource: "manual" } : pair,
             )
           : paragraph,
       ),
       currentId: null,
     })),
+  updatePairPinyinRange: (paragraphIndex, startIndex, values) =>
+    set((state) => {
+      const byIndex = new Map(
+        values.map(({ pairIndex, py }) => [startIndex + pairIndex, py]),
+      );
+      return {
+        paragraphs: state.paragraphs.map((paragraph, pIndex) =>
+          pIndex === paragraphIndex
+            ? paragraph.map((pair, i) =>
+                byIndex.has(i)
+                  ? { ...pair, py: byIndex.get(i) ?? null, pySource: "manual" }
+                  : pair,
+              )
+            : paragraph,
+        ),
+        currentId: null,
+      };
+    }),
   reset: () => set({ ...INITIAL }),
 }));

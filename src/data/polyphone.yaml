@@ -1,4 +1,4 @@
-# 拼音王子 — 多音字词表
+# 兜兜拼音 — 多音字词表
 # 编辑后跑测试: .venv-pinyin/bin/python3.14 -m pytest tests/test_polyphone.py -v
 #
 # 三个段：

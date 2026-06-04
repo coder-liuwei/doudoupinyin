@@ -1,15 +1,5 @@
-/**
- * 历史下拉 + 快捷删除按钮。
- *
- * 行为：
- * - 记录按保存时间倒序（useHistory 内部已 unshift）
- * - 选一条 → 还原 input / mode / paragraphs / title / currentId
- * - 「删除」按钮只显示最近 5 条（避免横排爆行）
- *
- * 不做「清空全部」按钮：误删一条比误删全部代价小，保守起见让用户逐条删。
- */
 import { useState } from "react";
-import { Clock, Edit3, FileText, RotateCw, Trash2 } from "lucide-react";
+import { Clock, Edit3, FileText, FolderOpen, RotateCw, Trash2 } from "lucide-react";
 import { useHistory } from "@/hooks/useHistory";
 import { useEditorStore } from "@/store/useEditorStore";
 import { countAnnotatedChars } from "@/lib/document";
@@ -40,7 +30,7 @@ export default function HistoryPanel() {
       <div className="history-head">
         <div>
           <span className="eyebrow">历史</span>
-          <h2>最近文档</h2>
+          <h2>历史记录</h2>
         </div>
         <button type="button" className="icon-button" onClick={refresh} aria-label="刷新历史">
           <RotateCw size={16} />
@@ -50,7 +40,7 @@ export default function HistoryPanel() {
       {records.length === 0 ? (
         <div className="empty-history">
           <FileText size={18} />
-          <span>暂无历史，生成后可保存到这里。</span>
+          <span>保存过的注音稿会出现在这里；新稿请在右侧输入。</span>
         </div>
       ) : (
         <div className="history-list">
@@ -74,13 +64,7 @@ export default function HistoryPanel() {
                   </form>
                 ) : (
                   <>
-                    <button
-                      type="button"
-                      className="history-title"
-                      onClick={() => loadRecord(r.id)}
-                    >
-                      {r.title}
-                    </button>
+                    <h3 className="history-title">{r.title}</h3>
                     <p>
                       <Clock size={13} />
                       {new Date(r.ts).toLocaleString("zh-CN", {
@@ -96,6 +80,15 @@ export default function HistoryPanel() {
                 )}
               </div>
               <div className="history-actions">
+                <button
+                  type="button"
+                  className="history-open"
+                  aria-label={`打开 ${r.title}`}
+                  onClick={() => loadRecord(r.id)}
+                >
+                  <FolderOpen size={15} />
+                  打开
+                </button>
                 <button
                   type="button"
                   aria-label={`重命名 ${r.title}`}

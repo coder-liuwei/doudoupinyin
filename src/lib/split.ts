@@ -27,7 +27,7 @@ function isCjk(ch: string): boolean {
  */
 function toPair(ch: string): import("./types").Pair {
   if (isCjk(ch)) {
-    return { ch, py: pinyinOf(ch), isPunct: false };
+    return { ch, py: pinyinOf(ch), isPunct: false, pySource: "auto" };
   }
   return { ch, py: null, isPunct: true };
 }
@@ -144,7 +144,7 @@ export function buildDualParagraphs(text: string): Paragraph[] {
         );
       }
       if (isCjk(hz)) {
-        pairs.push({ ch: hz, py, isPunct: false });
+        pairs.push({ ch: hz, py, isPunct: false, pySource: "dual" });
       } else {
         pairs.push({ ch: hz, py: null, isPunct: true });
       }

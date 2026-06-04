@@ -8,26 +8,86 @@
  * 三个档位：小学 16 / 大班 20 / 小班 24。
  */
 import { useState } from "react";
-import { Check, MousePointer2, PencilLine, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, MousePointer2, PencilLine, X } from "lucide-react";
 import { useEditorStore } from "@/store/useEditorStore";
 import { Ruby } from "@/lib/render";
 import { countAnnotatedChars } from "@/lib/document";
+import { countBySource, countReviewRisks, isReviewRisk } from "@/lib/review";
 
-const SUSPECT_CHARS = new Set("行长得地了着还重种为都教觉调处散血");
+interface EditingRange {
+  paragraphIndex: number;
+  startIndex: number;
+  endIndex: number;
+  values: string[];
+}
+
+function sourceClass(pair: { pySource?: string }): string {
+  if (pair.pySource === "manual") return "manual";
+  if (pair.pySource === "dual") return "dual";
+  return "auto";
+}
 
 export default function Preview() {
-  const [editing, setEditing] = useState<{
-    paragraphIndex: number;
-    pairIndex: number;
-    value: string;
-  } | null>(null);
+  const [editing, setEditing] = useState<EditingRange | null>(null);
   const paragraphs = useEditorStore((s) => s.paragraphs);
   const fontSize = useEditorStore((s) => s.fontSize);
   const lineHeight = useEditorStore((s) => s.lineHeight);
   const showTitle = useEditorStore((s) => s.showTitle);
   const pageGuide = useEditorStore((s) => s.pageGuide);
   const title = useEditorStore((s) => s.title);
-  const updatePairPinyin = useEditorStore((s) => s.updatePairPinyin);
+  const updatePairPinyinRange = useEditorStore((s) => s.updatePairPinyinRange);
+
+  function beginEdit(paragraphIndex: number, pairIndex: number): void {
+    const pair = paragraphs[paragraphIndex]?.[pairIndex];
+    if (!pair?.py) return;
+    setEditing({
+      paragraphIndex,
+      startIndex: pairIndex,
+      endIndex: pairIndex,
+      values: [pair.py],
+    });
+  }
+
+  function canUsePair(paragraphIndex: number, pairIndex: number): boolean {
+    const pair = paragraphs[paragraphIndex]?.[pairIndex];
+    return Boolean(pair && !pair.isPunct && pair.py);
+  }
+
+  function expandEditing(direction: "left" | "right"): void {
+    if (!editing) return;
+    if (direction === "left") {
+      const nextIndex = editing.startIndex - 1;
+      if (!canUsePair(editing.paragraphIndex, nextIndex)) return;
+      const pair = paragraphs[editing.paragraphIndex][nextIndex];
+      setEditing({
+        ...editing,
+        startIndex: nextIndex,
+        values: [pair.py ?? "", ...editing.values],
+      });
+      return;
+    }
+    const nextIndex = editing.endIndex + 1;
+    if (!canUsePair(editing.paragraphIndex, nextIndex)) return;
+    const pair = paragraphs[editing.paragraphIndex][nextIndex];
+    setEditing({
+      ...editing,
+      endIndex: nextIndex,
+      values: [...editing.values, pair.py ?? ""],
+    });
+  }
+
+  function saveEditing(): void {
+    if (!editing) return;
+    updatePairPinyinRange(
+      editing.paragraphIndex,
+      editing.startIndex,
+      editing.values.map((py, pairIndex) => ({
+        pairIndex,
+        py: py.trim() || null,
+      })),
+    );
+    setEditing(null);
+  }
 
   if (paragraphs.length === 0) {
     return (
@@ -65,41 +125,58 @@ export default function Preview() {
               {paragraph.map((pair, pairIndex) => {
                 const isEditing =
                   editing?.paragraphIndex === paragraphIndex &&
-                  editing.pairIndex === pairIndex;
-                const isSuspect = !pair.isPunct && SUSPECT_CHARS.has(pair.ch);
+                  pairIndex >= editing.startIndex &&
+                  pairIndex <= editing.endIndex;
+                const isEditStart = isEditing && pairIndex === editing?.startIndex;
+                const isSuspect = isReviewRisk(pair);
                 if (isEditing) {
+                  if (!isEditStart || !editing) return null;
+                  const selectedPairs = paragraph.slice(editing.startIndex, editing.endIndex + 1);
                   return (
-                    <span className="unit edit-unit" key={pairIndex}>
-                      <span className="edit-char">{pair.ch}</span>
-                      <input
-                        value={editing.value}
-                        autoFocus
-                        onChange={(e) =>
-                          setEditing({ ...editing, value: e.target.value })
-                        }
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            updatePairPinyin(
-                              paragraphIndex,
-                              pairIndex,
-                              editing.value.trim() || null,
-                            );
-                            setEditing(null);
-                          }
-                          if (e.key === "Escape") setEditing(null);
-                        }}
-                      />
+                    <span className="unit edit-unit range-edit-unit" key={pairIndex}>
+                      <span className="range-word">
+                        {selectedPairs.map((selectedPair) => selectedPair.ch).join("")}
+                      </span>
+                      <span className="range-inputs">
+                        {selectedPairs.map((selectedPair, i) => (
+                          <label key={`${selectedPair.ch}-${i}`}>
+                            <span>{selectedPair.ch}</span>
+                            <input
+                              value={editing.values[i] ?? ""}
+                              autoFocus={i === 0}
+                              onChange={(e) => {
+                                const next = [...editing.values];
+                                next[i] = e.target.value;
+                                setEditing({ ...editing, values: next });
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") saveEditing();
+                                if (e.key === "Escape") setEditing(null);
+                              }}
+                            />
+                          </label>
+                        ))}
+                      </span>
+                      <button
+                        type="button"
+                        aria-label="向左扩一字"
+                        disabled={!canUsePair(paragraphIndex, editing.startIndex - 1)}
+                        onClick={() => expandEditing("left")}
+                      >
+                        <ArrowLeft size={12} />
+                      </button>
+                      <button
+                        type="button"
+                        aria-label="向右扩一字"
+                        disabled={!canUsePair(paragraphIndex, editing.endIndex + 1)}
+                        onClick={() => expandEditing("right")}
+                      >
+                        <ArrowRight size={12} />
+                      </button>
                       <button
                         type="button"
                         aria-label="保存拼音"
-                        onClick={() => {
-                          updatePairPinyin(
-                            paragraphIndex,
-                            pairIndex,
-                            editing.value.trim() || null,
-                          );
-                          setEditing(null);
-                        }}
+                        onClick={saveEditing}
                       >
                         <Check size={12} />
                       </button>
@@ -116,17 +193,19 @@ export default function Preview() {
                 return (
                   <span
                     key={pairIndex}
-                    className={isSuspect ? "proof-unit suspect" : "proof-unit"}
+                    className={[
+                      "proof-unit",
+                      sourceClass(pair),
+                      isSuspect ? "suspect" : "",
+                    ].filter(Boolean).join(" ")}
                     role={pair.py ? "button" : undefined}
                     tabIndex={pair.py ? 0 : undefined}
                     onClick={() => {
-                      if (pair.py) {
-                        setEditing({ paragraphIndex, pairIndex, value: pair.py });
-                      }
+                      beginEdit(paragraphIndex, pairIndex);
                     }}
                     onKeyDown={(e) => {
                       if (pair.py && (e.key === "Enter" || e.key === " ")) {
-                        setEditing({ paragraphIndex, pairIndex, value: pair.py });
+                        beginEdit(paragraphIndex, pairIndex);
                       }
                     }}
                   >
@@ -142,6 +221,9 @@ export default function Preview() {
       <div className="preview-stats">
         <span>{paragraphs.length} 段</span>
         <span>{countAnnotatedChars(paragraphs)} 个注音字</span>
+        <span>{countReviewRisks(paragraphs)} 个待核对</span>
+        <span>{countBySource(paragraphs, "dual")} 个用户录入</span>
+        <span>{countBySource(paragraphs, "manual")} 个人工修改</span>
       </div>
     </section>
   );

@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.2.0",
   "type": "module",
-  "description": "拼音王子 — 给儿童语文学习生成 ruby 注音稿，React/Vite 重写版",
+  "description": "兜兜拼音 — 给儿童语文学习生成 ruby 注音稿，React/Vite 重写版",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

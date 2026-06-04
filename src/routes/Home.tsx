@@ -40,8 +40,8 @@ export default function Home() {
     <main className="app-shell">
       <header className="hero-band">
         <div>
-          <p className="hero-kicker">儿童语文注音工作台</p>
-          <h1>拼音王子</h1>
+          <p className="hero-kicker">儿童语文拼音工作台</p>
+          <h1>兜兜拼音</h1>
           <p>
             给课文、故事和练习稿加上清晰 ruby 拼音，家里打印、课堂备课都能用。
           </p>

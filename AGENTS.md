@@ -4,7 +4,7 @@ This file provides guidance to Codex when working on this repo.
 
 ## 项目概述
 
-拼音王子 — 给儿童语文学习生成带 ruby 注音的 HTML，可打印 A4 PDF。
+兜兜拼音 — 给儿童语文学习生成带 ruby 注音的 HTML，可打印 A4 PDF。
 
 **v0.2 起**：完全重写为 Vite + React 18 + TS + Tailwind v4 的 SPA。
 **v0.1 旧版**（Python CLI + 单文件 HTML 工具）已废弃删除。

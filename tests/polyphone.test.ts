@@ -160,8 +160,8 @@ describe("polyphone.applyTable — override", () => {
       overrides: [{ pattern: "勉强", pinyin: ["miǎn", "qiǎng"] }],
     });
     applyTable(pairs, text, table);
-    expect(pairs[0]).toEqual({ ch: "勉", py: "miǎn", isPunct: false });
-    expect(pairs[1]).toEqual({ ch: "强", py: "qiǎng", isPunct: false });
+    expect(pairs[0]).toEqual({ ch: "勉", py: "miǎn", isPunct: false, pySource: "auto" });
+    expect(pairs[1]).toEqual({ ch: "强", py: "qiǎng", isPunct: false, pySource: "auto" });
     // 后续字保留 pypinyin 兜底
     expect(pairs[2]).toEqual({ ch: "笑", py: "xiào", isPunct: false });
   });
@@ -246,7 +246,7 @@ describe("polyphone.applyTable — defaults & fall-back", () => {
     expect(pairs[0].py).toBe("xíng");
     const table = makeTable({ defaults: { 行: "xíng" } });
     applyTable(pairs, text, table);
-    expect(pairs[0]).toEqual({ ch: "行", py: "xíng", isPunct: false });
+    expect(pairs[0]).toEqual({ ch: "行", py: "xíng", isPunct: false, pySource: "auto" });
   });
 
   it("default used as a safety net for ambiguous readings", () => {
@@ -254,7 +254,7 @@ describe("polyphone.applyTable — defaults & fall-back", () => {
     const pairs = cjkPairs(text);
     const table = makeTable({ defaults: { 强: "qiáng" } });
     applyTable(pairs, text, table);
-    expect(pairs[0]).toEqual({ ch: "强", py: "qiáng", isPunct: false });
+    expect(pairs[0]).toEqual({ ch: "强", py: "qiáng", isPunct: false, pySource: "auto" });
   });
 
   it("keeps pinyin-pro output when no default and no override match", () => {
@@ -426,8 +426,8 @@ describe("polyphone.applyTable — in-place mutation", () => {
     expect(ret).toBeUndefined();
     // 内容已被原地修改
     expect(pairs).not.toEqual(before);
-    expect(pairs[0]).toEqual({ ch: "勉", py: "miǎn", isPunct: false });
-    expect(pairs[1]).toEqual({ ch: "强", py: "qiǎng", isPunct: false });
+    expect(pairs[0]).toEqual({ ch: "勉", py: "miǎn", isPunct: false, pySource: "auto" });
+    expect(pairs[1]).toEqual({ ch: "强", py: "qiǎng", isPunct: false, pySource: "auto" });
   });
 
   it("handles empty pairs / empty text gracefully", () => {

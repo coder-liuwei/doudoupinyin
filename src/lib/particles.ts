@@ -32,6 +32,7 @@ export function fixParticles(pairs: Pair[]): void {
 
     if (ch === "得" && DE_BEFORE.includes(prev)) {
       pairs[i].py = "de";
+      pairs[i].pySource = "auto";
     }
     if (ch === "地" && i >= 4) {
       const window = pairs
@@ -40,6 +41,7 @@ export function fixParticles(pairs: Pair[]): void {
         .join("");
       if (window === "依依不舍地") {
         pairs[i].py = "de";
+        pairs[i].pySource = "auto";
       }
     }
   }
