@@ -108,6 +108,19 @@ export function deleteRecord(id: string): HistorySchema {
   return next;
 }
 
+export function renameRecord(id: string, title: string): HistorySchema {
+  const cur = loadHistory();
+  const cleanTitle = title.trim() || "未命名";
+  const next: HistorySchema = {
+    schemaVersion: 2,
+    records: cur.records.map((r) =>
+      r.id === id ? { ...r, title: cleanTitle } : r,
+    ),
+  };
+  writeV2Schema(next);
+  return next;
+}
+
 export function clearHistory(): HistorySchema {
   const next: HistorySchema = { schemaVersion: 2, records: [] };
   writeV2Schema(next);

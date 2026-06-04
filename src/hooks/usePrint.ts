@@ -18,22 +18,36 @@ interface TempPayload {
   id: string;
   paragraphs: Paragraph[];
   title: string;
+  fontSize: number;
+  lineHeight: number;
+  showTitle: boolean;
+  pageGuide: "plain" | "grid";
 }
 
 export function usePrint(): () => void {
   const currentId = useEditorStore((s) => s.currentId);
   const paragraphs = useEditorStore((s) => s.paragraphs);
   const title = useEditorStore((s) => s.title);
+  const fontSize = useEditorStore((s) => s.fontSize);
+  const lineHeight = useEditorStore((s) => s.lineHeight);
+  const showTitle = useEditorStore((s) => s.showTitle);
+  const pageGuide = useEditorStore((s) => s.pageGuide);
 
   return function go() {
     const id = currentId ?? `temp-${Date.now()}`;
-    if (!currentId) {
-      const payload: TempPayload = { id, paragraphs, title };
-      try {
-        sessionStorage.setItem(TEMP_KEY, JSON.stringify(payload));
-      } catch {
-        // 写入失败不阻塞跳转；Print 路由会按缺省态降级
-      }
+    const payload: TempPayload = {
+      id,
+      paragraphs,
+      title,
+      fontSize,
+      lineHeight,
+      showTitle,
+      pageGuide,
+    };
+    try {
+      sessionStorage.setItem(TEMP_KEY, JSON.stringify(payload));
+    } catch {
+      // 写入失败不阻塞跳转；Print 路由会按缺省态降级
     }
     window.location.assign(`/print?id=${encodeURIComponent(id)}`);
   };

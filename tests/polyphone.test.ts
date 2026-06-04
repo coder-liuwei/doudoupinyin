@@ -17,6 +17,7 @@ import {
   type PolyphoneTable,
 } from "@/lib/polyphone";
 import { pinyinOf } from "@/lib/pinyin";
+import { splitPlainBlocks } from "@/lib/split";
 import type { Pair } from "@/lib/types";
 
 // ---------------------------------------------------------------------------
@@ -129,6 +130,29 @@ describe("polyphone.loadTable", () => {
 // ---------------------------------------------------------------------------
 
 describe("polyphone.applyTable — override", () => {
+  it("uses embedded table for common textbook readings: 长大 and 银行", () => {
+    const text = "我在银行门口看见小树长大了";
+    const pairs = cjkPairs(text);
+
+    applyTable(pairs, text, loadTable());
+
+    const bank = pairs.slice(2, 4).map((p) => p.py);
+    const grow = pairs.slice(10, 12).map((p) => p.py);
+    expect(bank).toEqual(["yín", "háng"]);
+    expect(grow).toEqual(["zhǎng", "dà"]);
+  });
+
+  it("writes overrides back through flattened paragraph references", () => {
+    const text = "我在银行门口看见小树长大了";
+    const paragraphs = splitPlainBlocks(text);
+    const flat = paragraphs.flat();
+
+    applyTable(flat, text, loadTable());
+
+    expect(paragraphs[0][3].py).toBe("háng");
+    expect(paragraphs[0][10].py).toBe("zhǎng");
+  });
+
   it("applies a single override: 勉强 → miǎn qiǎng", () => {
     const text = "勉强笑了笑";
     const pairs = cjkPairs(text);

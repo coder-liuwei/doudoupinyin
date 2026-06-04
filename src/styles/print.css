@@ -41,6 +41,13 @@ body {
   margin-right: 3px;
 }
 
+#previewInner.practice-grid .unit {
+  display: inline-flex;
+  min-width: 1.7em;
+  justify-content: center;
+  border-bottom: 1px solid rgba(180, 42, 32, 0.28);
+}
+
 #previewInner ruby {
   ruby-position: over;
   ruby-align: center;

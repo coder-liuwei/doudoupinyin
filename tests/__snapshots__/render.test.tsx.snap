@@ -263,6 +263,108 @@ exports[`render — ruby structure > renders the full SAMPLE_BAIGUJING (8 paragr
       c
     </span>
     <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          得
+        </span>
+        <rt>
+          de
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      ]
+    </span>
+    <span
+      className="unit punct"
+    >
+      [
+    </span>
+    <span
+      className="unit punct"
+    >
+      o
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          便
+        </span>
+        <rt>
+          biàn
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+       
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          空
+        </span>
+        <rt>
+          kōng
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
       className="unit punct"
     >
       t
@@ -271,6 +373,687 @@ exports[`render — ruby structure > renders the full SAMPLE_BAIGUJING (8 paragr
       className="unit punct"
     >
       ]
+    </span>
+    <span
+      className="unit punct"
+    >
+      [
+    </span>
+    <span
+      className="unit punct"
+    >
+      o
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          空
+        </span>
+        <rt>
+          kōng
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+       
+    </span>
+    <span
+      className="unit punct"
+    >
+      O
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+      ]
+    </span>
+    <span
+      className="unit punct"
+    >
+      [
+    </span>
+    <span
+      className="unit punct"
+    >
+      o
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          处
+        </span>
+        <rt>
+          chǔ
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+       
+    </span>
+    <span
+      className="unit punct"
+    >
+      O
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+      ]
+    </span>
+    <span
+      className="unit punct"
+    >
+      [
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          便
+        </span>
+        <rt>
+          biàn
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+       
+    </span>
+    <span
+      className="unit punct"
+    >
+      O
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+      ]
+    </span>
+    <span
+      className="unit punct"
+    >
+      [
+    </span>
+    <span
+      className="unit punct"
+    >
+      o
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+       
+    </span>
+    <span
+      className="unit punct"
+    >
+      O
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+      ]
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          着
+        </span>
+        <rt>
+          zhe
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      o
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+       
+    </span>
+    <span
+      className="unit punct"
+    >
+      O
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+      ]
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          长
+        </span>
+        <rt>
+          cháng
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      o
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+       
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          空
+        </span>
+        <rt>
+          kōng
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+      ]
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          便
+        </span>
+        <rt>
+          biàn
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      o
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+       
+    </span>
+    <span
+      className="unit punct"
+    >
+      O
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+      ]
+    </span>
+    <span
+      className="unit punct"
+    >
+      [
+    </span>
+    <span
+      className="unit punct"
+    >
+      o
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          着
+        </span>
+        <rt>
+          zhe
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+       
+    </span>
+    <span
+      className="unit punct"
+    >
+      O
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          假
+        </span>
+        <rt>
+          jiǎ
+        </rt>
+      </ruby>
     </span>
     <span
       className="unit punct"
@@ -588,9 +1371,18 @@ exports[`render — ruby structure > renders the full SAMPLE_BAIGUJING (8 paragr
       b
     </span>
     <span
-      className="unit punct"
+      className="unit"
     >
-      j
+      <ruby>
+        <span
+          className="rb"
+        >
+          空
+        </span>
+        <rt>
+          kōng
+        </rt>
+      </ruby>
     </span>
     <span
       className="unit punct"
@@ -823,6 +1615,99 @@ exports[`render — ruby structure > renders the full SAMPLE_BAIGUJING (8 paragr
       e
     </span>
     <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          空
+        </span>
+        <rt>
+          kōng
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+       
+    </span>
+    <span
+      className="unit punct"
+    >
+      O
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          空
+        </span>
+        <rt>
+          kōng
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+      ]
+    </span>
+    <span
+      className="unit punct"
+    >
+      [
+    </span>
+    <span
+      className="unit punct"
+    >
+      o
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
       className="unit punct"
     >
       c
@@ -856,6 +1741,657 @@ exports[`render — ruby structure > renders the full SAMPLE_BAIGUJING (8 paragr
       className="unit punct"
     >
       e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          相
+        </span>
+        <rt>
+          xiāng
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      ]
+    </span>
+    <span
+      className="unit punct"
+    >
+      [
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          还
+        </span>
+        <rt>
+          hái
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          念
+        </span>
+        <rt>
+          niàn
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          起
+        </span>
+        <rt>
+          qǐ
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+       
+    </span>
+    <span
+      className="unit punct"
+    >
+      O
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          空
+        </span>
+        <rt>
+          kōng
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          空
+        </span>
+        <rt>
+          kōng
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          强
+        </span>
+        <rt>
+          qiáng
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      [
+    </span>
+    <span
+      className="unit punct"
+    >
+      o
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+       
+    </span>
+    <span
+      className="unit punct"
+    >
+      O
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+      ]
+    </span>
+    <span
+      className="unit punct"
+    >
+      [
+    </span>
+    <span
+      className="unit punct"
+    >
+      o
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          假
+        </span>
+        <rt>
+          jiǎ
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+       
+    </span>
+    <span
+      className="unit punct"
+    >
+      O
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+      ]
+    </span>
+    <span
+      className="unit punct"
+    >
+      [
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          了
+        </span>
+        <rt>
+          le
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          过
+        </span>
+        <rt>
+          guò
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          了
+        </span>
+        <rt>
+          le
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+       
+    </span>
+    <span
+      className="unit punct"
+    >
+      O
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+      ]
+    </span>
+    <span
+      className="unit punct"
+    >
+      [
+    </span>
+    <span
+      className="unit punct"
+    >
+      o
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+       
+    </span>
+    <span
+      className="unit punct"
+    >
+      O
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+      ]
+    </span>
+    <span
+      className="unit punct"
+    >
+      [
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          着
+        </span>
+        <rt>
+          zhe
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          着
+        </span>
+        <rt>
+          zhe
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+       
+    </span>
+    <span
+      className="unit punct"
+    >
+      O
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+      ]
+    </span>
+    <span
+      className="unit punct"
+    >
+      [
+    </span>
+    <span
+      className="unit punct"
+    >
+      o
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+       
+    </span>
+    <span
+      className="unit punct"
+    >
+      O
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          空
+        </span>
+        <rt>
+          kōng
+        </rt>
+      </ruby>
     </span>
     <span
       className="unit punct"
@@ -993,9 +2529,18 @@ exports[`render — ruby structure > renders the full SAMPLE_BAIGUJING (8 paragr
       O
     </span>
     <span
-      className="unit punct"
+      className="unit"
     >
-      b
+      <ruby>
+        <span
+          className="rb"
+        >
+          空
+        </span>
+        <rt>
+          kōng
+        </rt>
+      </ruby>
     </span>
     <span
       className="unit punct"
@@ -1031,6 +2576,126 @@ exports[`render — ruby structure > renders the full SAMPLE_BAIGUJING (8 paragr
       className="unit punct"
     >
       o
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          疼
+        </span>
+        <rt>
+          téng
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          得
+        </span>
+        <rt>
+          de
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      O
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          空
+        </span>
+        <rt>
+          kōng
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          地
+        </span>
+        <rt>
+          de
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit punct"
+    >
+      ]
+    </span>
+    <span
+      className="unit punct"
+    >
+      [
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          空
+        </span>
+        <rt>
+          kōng
+        </rt>
+      </ruby>
     </span>
     <span
       className="unit punct"
@@ -1113,984 +2778,18 @@ exports[`render — ruby structure > renders the full SAMPLE_BAIGUJING (8 paragr
       b
     </span>
     <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-       
-    </span>
-    <span
-      className="unit punct"
-    >
-      O
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-      ]
-    </span>
-    <span
-      className="unit punct"
-    >
-      [
-    </span>
-    <span
-      className="unit punct"
-    >
-      o
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-       
-    </span>
-    <span
-      className="unit punct"
-    >
-      O
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-      ]
-    </span>
-    <span
-      className="unit punct"
-    >
-      [
-    </span>
-    <span
-      className="unit punct"
-    >
-      o
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-       
-    </span>
-    <span
-      className="unit punct"
-    >
-      O
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-      ]
-    </span>
-    <span
-      className="unit punct"
-    >
-      [
-    </span>
-    <span
-      className="unit punct"
-    >
-      o
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-       
-    </span>
-    <span
-      className="unit punct"
-    >
-      O
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-      ]
-    </span>
-    <span
-      className="unit punct"
-    >
-      [
-    </span>
-    <span
-      className="unit punct"
-    >
-      o
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-       
-    </span>
-    <span
-      className="unit punct"
-    >
-      O
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-      ]
-    </span>
-    <span
-      className="unit punct"
-    >
-      [
-    </span>
-    <span
-      className="unit punct"
-    >
-      o
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-       
-    </span>
-    <span
-      className="unit punct"
-    >
-      O
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-      ]
-    </span>
-    <span
-      className="unit punct"
-    >
-      [
-    </span>
-    <span
-      className="unit punct"
-    >
-      o
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-       
-    </span>
-    <span
-      className="unit punct"
-    >
-      O
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-      ]
-    </span>
-    <span
-      className="unit punct"
-    >
-      [
-    </span>
-    <span
-      className="unit punct"
-    >
-      o
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-       
-    </span>
-    <span
-      className="unit punct"
-    >
-      O
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-      ]
-    </span>
-    <span
-      className="unit punct"
-    >
-      [
-    </span>
-    <span
-      className="unit punct"
-    >
-      o
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-       
-    </span>
-    <span
-      className="unit punct"
-    >
-      O
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-      ]
-    </span>
-    <span
-      className="unit punct"
-    >
-      [
-    </span>
-    <span
-      className="unit punct"
-    >
-      o
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-       
-    </span>
-    <span
-      className="unit punct"
-    >
-      O
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-      ]
-    </span>
-    <span
-      className="unit punct"
-    >
-      [
-    </span>
-    <span
-      className="unit punct"
-    >
-      o
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-       
-    </span>
-    <span
-      className="unit punct"
-    >
-      O
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-      ]
-    </span>
-    <span
-      className="unit punct"
-    >
-      [
-    </span>
-    <span
-      className="unit punct"
-    >
-      o
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-       
-    </span>
-    <span
-      className="unit punct"
-    >
-      O
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-      ]
-    </span>
-    <span
-      className="unit punct"
-    >
-      [
-    </span>
-    <span
-      className="unit punct"
-    >
-      o
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-       
-    </span>
-    <span
-      className="unit punct"
-    >
-      O
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-      ]
-    </span>
-    <span
-      className="unit punct"
-    >
-      [
-    </span>
-    <span
-      className="unit punct"
-    >
-      o
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          假
+        </span>
+        <rt>
+          jiǎ
+        </rt>
+      </ruby>
     </span>
     <span
       className="unit punct"
@@ -2233,9 +2932,18 @@ exports[`render — ruby structure > renders the full SAMPLE_BAIGUJING (8 paragr
       o
     </span>
     <span
-      className="unit punct"
+      className="unit"
     >
-      b
+      <ruby>
+        <span
+          className="rb"
+        >
+          假
+        </span>
+        <rt>
+          jiǎ
+        </rt>
+      </ruby>
     </span>
     <span
       className="unit punct"
@@ -2348,6 +3056,64 @@ exports[`render — ruby structure > renders the full SAMPLE_BAIGUJING (8 paragr
       b
     </span>
     <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          重
+        </span>
+        <rt>
+          zhòng
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          空
+        </span>
+        <rt>
+          kōng
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      [
+    </span>
+    <span
+      className="unit punct"
+    >
+      o
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
       className="unit punct"
     >
       j
@@ -2370,6 +3136,50 @@ exports[`render — ruby structure > renders the full SAMPLE_BAIGUJING (8 paragr
     <span
       className="unit punct"
     >
+       
+    </span>
+    <span
+      className="unit punct"
+    >
+      O
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          被
+        </span>
+        <rt>
+          bèi
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
       ]
     </span>
     <span
@@ -2383,9 +3193,18 @@ exports[`render — ruby structure > renders the full SAMPLE_BAIGUJING (8 paragr
       o
     </span>
     <span
-      className="unit punct"
+      className="unit"
     >
-      b
+      <ruby>
+        <span
+          className="rb"
+        >
+          强
+        </span>
+        <rt>
+          qiáng
+        </rt>
+      </ruby>
     </span>
     <span
       className="unit punct"
@@ -2493,9 +3312,18 @@ exports[`render — ruby structure > renders the full SAMPLE_BAIGUJING (8 paragr
       O
     </span>
     <span
-      className="unit punct"
+      className="unit"
     >
-      b
+      <ruby>
+        <span
+          className="rb"
+        >
+          处
+        </span>
+        <rt>
+          chǔ
+        </rt>
+      </ruby>
     </span>
     <span
       className="unit punct"
@@ -2578,459 +3406,18 @@ exports[`render — ruby structure > renders the full SAMPLE_BAIGUJING (8 paragr
       j
     </span>
     <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-      ]
-    </span>
-    <span
-      className="unit punct"
-    >
-      [
-    </span>
-    <span
-      className="unit punct"
-    >
-      o
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-       
-    </span>
-    <span
-      className="unit punct"
-    >
-      O
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-      ]
-    </span>
-    <span
-      className="unit punct"
-    >
-      [
-    </span>
-    <span
-      className="unit punct"
-    >
-      o
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-       
-    </span>
-    <span
-      className="unit punct"
-    >
-      O
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-      ]
-    </span>
-    <span
-      className="unit punct"
-    >
-      [
-    </span>
-    <span
-      className="unit punct"
-    >
-      o
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-       
-    </span>
-    <span
-      className="unit punct"
-    >
-      O
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-      ]
-    </span>
-    <span
-      className="unit punct"
-    >
-      [
-    </span>
-    <span
-      className="unit punct"
-    >
-      o
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-       
-    </span>
-    <span
-      className="unit punct"
-    >
-      O
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-      ]
-    </span>
-    <span
-      className="unit punct"
-    >
-      [
-    </span>
-    <span
-      className="unit punct"
-    >
-      o
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-       
-    </span>
-    <span
-      className="unit punct"
-    >
-      O
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-      ]
-    </span>
-    <span
-      className="unit punct"
-    >
-      [
-    </span>
-    <span
-      className="unit punct"
-    >
-      o
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-       
-    </span>
-    <span
-      className="unit punct"
-    >
-      O
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          空
+        </span>
+        <rt>
+          kōng
+        </rt>
+      </ruby>
     </span>
     <span
       className="unit punct"
@@ -3112,9 +3499,18 @@ exports[`render — ruby structure > renders the full SAMPLE_BAIGUJING (8 paragr
       e
     </span>
     <span
-      className="unit punct"
+      className="unit"
     >
-      c
+      <ruby>
+        <span
+          className="rb"
+        >
+          空
+        </span>
+        <rt>
+          kōng
+        </rt>
+      </ruby>
     </span>
     <span
       className="unit punct"
@@ -3125,6 +3521,108 @@ exports[`render — ruby structure > renders the full SAMPLE_BAIGUJING (8 paragr
       className="unit punct"
     >
       ]
+    </span>
+    <span
+      className="unit punct"
+    >
+      [
+    </span>
+    <span
+      className="unit punct"
+    >
+      o
+    </span>
+    <span
+      className="unit punct"
+    >
+      b
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          把
+        </span>
+        <rt>
+          bǎ
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+       
+    </span>
+    <span
+      className="unit punct"
+    >
+      O
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          空
+        </span>
+        <rt>
+          kōng
+        </rt>
+      </ruby>
+    </span>
+    <span
+      className="unit punct"
+    >
+      j
+    </span>
+    <span
+      className="unit punct"
+    >
+      e
+    </span>
+    <span
+      className="unit punct"
+    >
+      c
+    </span>
+    <span
+      className="unit punct"
+    >
+      t
+    </span>
+    <span
+      className="unit"
+    >
+      <ruby>
+        <span
+          className="rb"
+        >
+          空
+        </span>
+        <rt>
+          kōng
+        </rt>
+      </ruby>
     </span>
     <span
       className="unit punct"
@@ -3267,104 +3765,74 @@ exports[`render — ruby structure > renders the full SAMPLE_BAIGUJING (8 paragr
       c
     </span>
     <span
-      className="unit punct"
+      className="unit"
     >
-      t
+      <ruby>
+        <span
+          className="rb"
+        >
+          依
+        </span>
+        <rt>
+          yī
+        </rt>
+      </ruby>
     </span>
     <span
-      className="unit punct"
+      className="unit"
     >
-      ]
+      <ruby>
+        <span
+          className="rb"
+        >
+          依
+        </span>
+        <rt>
+          yī
+        </rt>
+      </ruby>
     </span>
     <span
-      className="unit punct"
+      className="unit"
     >
-      [
+      <ruby>
+        <span
+          className="rb"
+        >
+          不
+        </span>
+        <rt>
+          bù
+        </rt>
+      </ruby>
     </span>
     <span
-      className="unit punct"
+      className="unit"
     >
-      o
+      <ruby>
+        <span
+          className="rb"
+        >
+          舍
+        </span>
+        <rt>
+          shě
+        </rt>
+      </ruby>
     </span>
     <span
-      className="unit punct"
+      className="unit"
     >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-       
-    </span>
-    <span
-      className="unit punct"
-    >
-      O
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
-    </span>
-    <span
-      className="unit punct"
-    >
-      j
-    </span>
-    <span
-      className="unit punct"
-    >
-      e
-    </span>
-    <span
-      className="unit punct"
-    >
-      c
-    </span>
-    <span
-      className="unit punct"
-    >
-      t
-    </span>
-    <span
-      className="unit punct"
-    >
-      ]
-    </span>
-    <span
-      className="unit punct"
-    >
-      [
-    </span>
-    <span
-      className="unit punct"
-    >
-      o
-    </span>
-    <span
-      className="unit punct"
-    >
-      b
+      <ruby>
+        <span
+          className="rb"
+        >
+          地
+        </span>
+        <rt>
+          de
+        </rt>
+      </ruby>
     </span>
     <span
       className="unit punct"
@@ -3377,9 +3845,18 @@ exports[`render — ruby structure > renders the full SAMPLE_BAIGUJING (8 paragr
       e
     </span>
     <span
-      className="unit punct"
+      className="unit"
     >
-      c
+      <ruby>
+        <span
+          className="rb"
+        >
+          了
+        </span>
+        <rt>
+          le
+        </rt>
+      </ruby>
     </span>
     <span
       className="unit punct"

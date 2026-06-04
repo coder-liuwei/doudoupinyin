@@ -12,13 +12,17 @@ import {
   loadHistory,
   saveRecord,
   deleteRecord,
+  renameRecord,
   clearHistory,
 } from "@/lib/history";
+
+const HISTORY_EVENT = "pinyin-prince-history-change";
 
 export interface UseHistoryResult {
   records: HistoryRecord[];
   save: (rec: HistoryRecord) => void;
   remove: (id: string) => void;
+  rename: (id: string, title: string) => void;
   clear: () => void;
   /** 兜底：组件需要时主动重读 localStorage（其它标签页写入了等场景）。 */
   refresh: () => void;
@@ -29,26 +33,38 @@ export function useHistory(): UseHistoryResult {
 
   useEffect(() => {
     setRecords(loadHistory().records);
+    const sync = () => setRecords(loadHistory().records);
+    window.addEventListener(HISTORY_EVENT, sync);
+    return () => window.removeEventListener(HISTORY_EVENT, sync);
   }, []);
 
   const save = useCallback((rec: HistoryRecord) => {
     const next = saveRecord(rec);
     setRecords(next.records);
+    window.dispatchEvent(new Event(HISTORY_EVENT));
   }, []);
 
   const remove = useCallback((id: string) => {
     const next = deleteRecord(id);
     setRecords(next.records);
+    window.dispatchEvent(new Event(HISTORY_EVENT));
+  }, []);
+
+  const rename = useCallback((id: string, title: string) => {
+    const next = renameRecord(id, title);
+    setRecords(next.records);
+    window.dispatchEvent(new Event(HISTORY_EVENT));
   }, []);
 
   const clear = useCallback(() => {
     const next = clearHistory();
     setRecords(next.records);
+    window.dispatchEvent(new Event(HISTORY_EVENT));
   }, []);
 
   const refresh = useCallback(() => {
     setRecords(loadHistory().records);
   }, []);
 
-  return { records, save, remove, clear, refresh };
+  return { records, save, remove, rename, clear, refresh };
 }

@@ -9,6 +9,8 @@
  * 让用户至少能看到注音稿 + 控制台告警。其它（双行格式错 / 输入空）会冒泡
  * 到 setErr，Editor 在输入源附近显示红字。
  */
+import { useState } from "react";
+import { Eraser, FileText, Printer, Save, Sparkles } from "lucide-react";
 import { useEditorStore } from "@/store/useEditorStore";
 import { useHistory } from "@/hooks/useHistory";
 import { usePrint } from "@/hooks/usePrint";
@@ -16,19 +18,28 @@ import { normalizeInput } from "@/lib/normalize";
 import { splitPlainBlocks, buildDualParagraphs } from "@/lib/split";
 import { applyTable, loadTable } from "@/lib/polyphone";
 import { fixParticles } from "@/lib/particles";
+import { deriveTitleFromInput } from "@/lib/document";
 import type { Paragraph } from "@/lib/types";
 
 export default function Toolbar() {
+  const [confirmClear, setConfirmClear] = useState(false);
   const input = useEditorStore((s) => s.input);
   const mode = useEditorStore((s) => s.mode);
   const paragraphs = useEditorStore((s) => s.paragraphs);
   const title = useEditorStore((s) => s.title);
   const currentId = useEditorStore((s) => s.currentId);
   const fontSize = useEditorStore((s) => s.fontSize);
+  const lineHeight = useEditorStore((s) => s.lineHeight);
+  const showTitle = useEditorStore((s) => s.showTitle);
+  const pageGuide = useEditorStore((s) => s.pageGuide);
   const setParagraphs = useEditorStore((s) => s.setParagraphs);
   const setErr = useEditorStore((s) => s.setErr);
   const setCurrentId = useEditorStore((s) => s.setCurrentId);
   const setFontSize = useEditorStore((s) => s.setFontSize);
+  const setLineHeight = useEditorStore((s) => s.setLineHeight);
+  const setShowTitle = useEditorStore((s) => s.setShowTitle);
+  const setPageGuide = useEditorStore((s) => s.setPageGuide);
+  const setTitle = useEditorStore((s) => s.setTitle);
   const reset = useEditorStore((s) => s.reset);
 
   const { save } = useHistory();
@@ -65,6 +76,10 @@ export default function Toolbar() {
       }
       fixParticles(flat);
       setParagraphs(next);
+      if (!title.trim() || title === "未命名") {
+        setTitle(deriveTitleFromInput(normalized));
+      }
+      setCurrentId(null);
     } catch (e) {
       setErr(e instanceof Error ? e.message : String(e));
     }
@@ -76,70 +91,109 @@ export default function Toolbar() {
       return;
     }
     const id = currentId ?? `rec-${Date.now()}`;
+    const nextTitle = title.trim() || deriveTitleFromInput(input);
     save({
       id,
       ts: Date.now(),
-      title,
+      title: nextTitle,
       mode,
       sourceRaw: input,
       paragraphs,
     });
+    setTitle(nextTitle);
     setCurrentId(id);
     setErr(null);
   }
 
   function handleReset(): void {
-    if (
-      window.confirm("清空当前编辑器和已生成注音稿，确定吗？历史记录不受影响。")
-    ) {
-      reset();
-    }
+    reset();
+    setConfirmClear(false);
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-2 my-3">
-      <button
-        type="button"
-        onClick={handleGenerate}
-        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-      >
-        生成
-      </button>
-      <button
-        type="button"
-        onClick={handleSave}
-        disabled={paragraphs.length === 0}
-        className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 disabled:opacity-50"
-      >
-        保存到历史
-      </button>
-      <button
-        type="button"
-        onClick={goPrint}
-        disabled={paragraphs.length === 0}
-        className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50"
-      >
-        打印 / 存 PDF
-      </button>
-      <button
-        type="button"
-        onClick={handleReset}
-        className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
-      >
-        清空
-      </button>
-      <label className="text-sm ml-2 inline-flex items-center gap-1">
-        字号：
-        <select
-          value={fontSize}
-          onChange={(e) => setFontSize(Number(e.target.value))}
-          className="ml-1 border rounded px-2 py-1"
+    <section className="workbench-card action-panel" aria-label="生成与打印设置">
+      <div className="panel-heading">
+        <span className="eyebrow">第 2 步</span>
+        <h2>生成与打印</h2>
+      </div>
+
+      <div className="action-grid">
+        <button type="button" onClick={handleGenerate} className="btn btn-primary">
+          <Sparkles size={18} />
+          生成注音
+        </button>
+        <button
+          type="button"
+          onClick={handleSave}
+          disabled={paragraphs.length === 0}
+          className="btn btn-secondary"
         >
-          <option value={16}>小学 16px</option>
-          <option value={20}>大班 20px</option>
-          <option value={24}>小班 24px</option>
-        </select>
-      </label>
-    </div>
+          <Save size={17} />
+          保存到历史
+        </button>
+        <button
+          type="button"
+          onClick={goPrint}
+          disabled={paragraphs.length === 0}
+          className="btn btn-ink"
+        >
+          <Printer size={17} />
+          打印 / 存 PDF
+        </button>
+        <button
+          type="button"
+          onClick={() => setConfirmClear(true)}
+          className="btn btn-quiet"
+        >
+          <Eraser size={17} />
+          清空
+        </button>
+      </div>
+
+      {confirmClear && (
+        <div className="confirm-strip" role="alert">
+          <span>清空当前编辑器和预览？历史记录不受影响。</span>
+          <button type="button" onClick={handleReset}>确认清空</button>
+          <button type="button" onClick={() => setConfirmClear(false)}>取消</button>
+        </div>
+      )}
+
+      <div className="print-settings">
+        <label>
+          <span>字号</span>
+          <select value={fontSize} onChange={(e) => setFontSize(Number(e.target.value))}>
+            <option value={16}>小学 16px</option>
+            <option value={20}>大班 20px</option>
+            <option value={24}>小班 24px</option>
+          </select>
+        </label>
+        <label>
+          <span>行距</span>
+          <select value={lineHeight} onChange={(e) => setLineHeight(Number(e.target.value))}>
+            <option value={1.9}>紧凑</option>
+            <option value={2.15}>标准</option>
+            <option value={2.45}>宽松</option>
+          </select>
+        </label>
+        <label>
+          <span>纸面</span>
+          <select
+            value={pageGuide}
+            onChange={(e) => setPageGuide(e.target.value === "grid" ? "grid" : "plain")}
+          >
+            <option value="plain">无格</option>
+            <option value="grid">练字线</option>
+          </select>
+        </label>
+        <label className="toggle-setting">
+          <input
+            type="checkbox"
+            checked={showTitle}
+            onChange={(e) => setShowTitle(e.target.checked)}
+          />
+          <span><FileText size={15} /> 显示标题</span>
+        </label>
+      </div>
+    </section>
   );
 }

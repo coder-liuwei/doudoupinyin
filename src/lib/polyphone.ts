@@ -157,11 +157,11 @@ export function applyTable(
     if (pi === null) continue;
     const ch = text[j];
     if (t.skips.has(ch)) {
-      pairs[pi] = { ch, py: null, isPunct: true };
+      Object.assign(pairs[pi], { ch, py: null, isPunct: true });
     } else if (j in overrideAt) {
-      pairs[pi] = { ch, py: overrideAt[j], isPunct: false };
+      Object.assign(pairs[pi], { ch, py: overrideAt[j], isPunct: false });
     } else if (isCjk(ch) && ch in t.defaults) {
-      pairs[pi] = { ch, py: t.defaults[ch], isPunct: false };
+      Object.assign(pairs[pi], { ch, py: t.defaults[ch], isPunct: false });
     }
   }
 }

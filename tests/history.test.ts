@@ -23,6 +23,7 @@ import {
   saveRecord,
   deleteRecord,
   clearHistory,
+  renameRecord,
   MAX_HISTORY,
   type HistorySchema,
 } from "@/lib/history";
@@ -170,6 +171,17 @@ describe("history delete / clear", () => {
     const schema = loadHistory();
     expect(schema.records).toHaveLength(2);
     expect(schema.records.map((r) => r.id)).toEqual(["c", "a"]);
+  });
+
+  it("renames a record without changing its order or content", () => {
+    saveRecord(makeRecord("a", 1, "A"));
+    saveRecord(makeRecord("b", 2, "B"));
+
+    const schema = renameRecord("a", "  课堂练习  ");
+
+    expect(schema.records.map((r) => r.id)).toEqual(["b", "a"]);
+    expect(schema.records[1].title).toBe("课堂练习");
+    expect(schema.records[1].sourceRaw).toBe("你好");
   });
 
   it("clearHistory empties v2 but leaves v1 untouched", () => {

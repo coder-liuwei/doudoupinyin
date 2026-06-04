@@ -13,6 +13,9 @@ export interface EditorState {
   mode: Mode;
   paragraphs: Paragraph[];
   fontSize: number;
+  lineHeight: number;
+  showTitle: boolean;
+  pageGuide: "plain" | "grid";
   title: string;
   currentId: string | null;
   err: string | null;
@@ -21,9 +24,13 @@ export interface EditorState {
   setMode: (m: Mode) => void;
   setParagraphs: (p: Paragraph[]) => void;
   setFontSize: (n: number) => void;
+  setLineHeight: (n: number) => void;
+  setShowTitle: (v: boolean) => void;
+  setPageGuide: (v: "plain" | "grid") => void;
   setTitle: (s: string) => void;
   setCurrentId: (id: string | null) => void;
   setErr: (e: string | null) => void;
+  updatePairPinyin: (paragraphIndex: number, pairIndex: number, py: string | null) => void;
   reset: () => void;
 }
 
@@ -33,6 +40,9 @@ const INITIAL = {
   mode: "plain" as Mode,
   paragraphs: [] as Paragraph[],
   fontSize: 19,
+  lineHeight: 2.15,
+  showTitle: true,
+  pageGuide: "plain" as const,
   title: "未命名",
   currentId: null as string | null,
   err: null as string | null,
@@ -44,8 +54,22 @@ export const useEditorStore = create<EditorState>((set) => ({
   setMode: (m) => set({ mode: m }),
   setParagraphs: (p) => set({ paragraphs: p }),
   setFontSize: (n) => set({ fontSize: n }),
+  setLineHeight: (n) => set({ lineHeight: n }),
+  setShowTitle: (v) => set({ showTitle: v }),
+  setPageGuide: (v) => set({ pageGuide: v }),
   setTitle: (s) => set({ title: s }),
   setCurrentId: (id) => set({ currentId: id }),
   setErr: (e) => set({ err: e }),
+  updatePairPinyin: (paragraphIndex, pairIndex, py) =>
+    set((state) => ({
+      paragraphs: state.paragraphs.map((paragraph, pIndex) =>
+        pIndex === paragraphIndex
+          ? paragraph.map((pair, i) =>
+              i === pairIndex ? { ...pair, py } : pair,
+            )
+          : paragraph,
+      ),
+      currentId: null,
+    })),
   reset: () => set({ ...INITIAL }),
 }));

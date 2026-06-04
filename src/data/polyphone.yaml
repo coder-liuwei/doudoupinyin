@@ -45,6 +45,10 @@ overrides:
   # 词组级（按子串匹配，先匹配先应用；冲突抛错）
   - pattern: "勉强"
     pinyin: ["miǎn", "qiǎng"]
+  - pattern: "银行"
+    pinyin: ["yín", "háng"]
+  - pattern: "长大"
+    pinyin: ["zhǎng", "dà"]
   - pattern: "仿佛"
     pinyin: ["fǎng", "fú"]
   - pattern: "还念起"

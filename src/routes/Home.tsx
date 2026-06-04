@@ -18,22 +18,53 @@ import Preview from "@/components/Preview";
 import HistoryPanel from "@/components/HistoryPanel";
 import PdfImport from "@/components/PdfImport";
 import DualHelp from "@/components/DualHelp";
+import { useEditorStore } from "@/store/useEditorStore";
+import { useEffect } from "react";
 
 export default function Home() {
+  const input = useEditorStore((s) => s.input);
+  const currentId = useEditorStore((s) => s.currentId);
+
+  useEffect(() => {
+    const hasDraft = input.trim().length > 0 && !currentId;
+    if (!hasDraft) return;
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [currentId, input]);
+
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <header className="mb-4">
-        <h1 className="text-xl font-semibold m-0">拼音王子</h1>
-        <p className="text-sm text-gray-500 m-0">
-          粘贴正文，生成注音稿，保存为 PDF 打印。
-        </p>
+    <main className="app-shell">
+      <header className="hero-band">
+        <div>
+          <p className="hero-kicker">儿童语文注音工作台</p>
+          <h1>拼音王子</h1>
+          <p>
+            给课文、故事和练习稿加上清晰 ruby 拼音，家里打印、课堂备课都能用。
+          </p>
+        </div>
+        <div className="hero-note" aria-label="当前流程">
+          <span>粘贴正文</span>
+          <span>生成校对</span>
+          <span>打印 PDF</span>
+        </div>
       </header>
-      <HistoryPanel />
-      <Toolbar />
-      <Editor />
-      <DualHelp />
-      <PdfImport />
-      <Preview />
-    </div>
+
+      <div className="workbench-layout">
+        <aside className="left-rail">
+          <HistoryPanel />
+        </aside>
+        <section className="input-column">
+          <Editor />
+          <Toolbar />
+          <DualHelp />
+          <PdfImport />
+        </section>
+        <Preview />
+      </div>
+    </main>
   );
 }
