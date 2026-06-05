@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Eraser, Save, Sparkles } from "lucide-react";
+import { toast } from "sonner";
 import { useEditorStore } from "@/store/useEditorStore";
 import { useHistory } from "@/hooks/useHistory";
 import { normalizeInput } from "@/lib/normalize";
@@ -56,6 +57,7 @@ export default function ActionPanel() {
         setTitle(deriveTitleFromInput(normalized));
       }
       setCurrentId(null);
+      toast.success("已生成注音稿");
     } catch (e) {
       setErr(e instanceof Error ? e.message : String(e));
     }
@@ -79,11 +81,13 @@ export default function ActionPanel() {
     setTitle(nextTitle);
     setCurrentId(id);
     setErr(null);
+    toast.success("已保存到历史");
   }
 
   function handleReset(): void {
     reset();
     setConfirmClear(false);
+    setErr(null);
   }
 
   return (
@@ -108,7 +112,7 @@ export default function ActionPanel() {
           className="btn btn-quiet"
         >
           <Eraser size={17} />
-          清空
+          清空当前稿
         </button>
       </div>
 

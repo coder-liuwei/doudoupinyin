@@ -12,43 +12,94 @@
  *       </ruby>
  *     </span>
  *
- *   标点（py === null）：
- *     <span class="unit punct">{ch}</span>
+ *   非注音单元（标点 / 英文 / 数字）：
+ *     <span class="unit punct|latin">
+ *       <ruby>
+ *         <span class="rb">{ch}</span>
+ *         <rt aria-hidden="true">&nbsp;</rt>
+ *       </ruby>
+ *     </span>
  *
- * 注意：标点不打 ruby，因为标点本就不需要注音位置；CSS 可选地保留 .punct 类以便
- * 隐藏空白注音空间（参考 print.css）。
+ * 注意：非注音单元也保留 ruby 空位，避免与汉字 ruby 混排时基线漂移。
  */
 
-import { Fragment, type JSX } from "react";
-import type { Paragraph, Pair } from "./types";
+import { Fragment, type JSX, type MouseEvent } from "react";
+import type { Paragraph } from "./types";
+
+export function isAsciiTokenChar(ch: string): boolean {
+  return /[A-Za-z0-9]/.test(ch);
+}
 
 export function Ruby({
   ch,
   py,
+  className = "unit",
+  onActivate,
 }: {
   ch: string;
   py: string | null;
+  className?: string;
+  onActivate?: () => void;
 }): JSX.Element {
-  if (py === null) {
-    return <span className="unit punct">{ch}</span>;
-  }
+  const activationProps = onActivate
+    ? {
+        onClick: (event: MouseEvent) => {
+          event.stopPropagation();
+          onActivate();
+        },
+      }
+    : {};
+
   return (
-    <span className="unit">
+    <span className={className}>
       <ruby>
-        <span className="rb">{ch}</span>
-        <rt>{py}</rt>
+        <span className="rb" {...activationProps}>{ch}</span>
+        {py === null ? (
+          <rt aria-hidden="true">{"\u00a0"}</rt>
+        ) : (
+          <rt {...activationProps}>{py}</rt>
+        )}
       </ruby>
     </span>
   );
 }
 
+function renderUnitNodes(paragraph: Paragraph): JSX.Element[] {
+  const nodes: JSX.Element[] = [];
+  for (let i = 0; i < paragraph.length; ) {
+    const pair = paragraph[i];
+    if (pair.py && !pair.isPunct) {
+      nodes.push(<Ruby key={i} ch={pair.ch} py={pair.py} />);
+      i++;
+      continue;
+    }
+    if (isAsciiTokenChar(pair.ch)) {
+      let token = pair.ch;
+      let end = i + 1;
+      while (end < paragraph.length && isAsciiTokenChar(paragraph[end].ch)) {
+        token += paragraph[end].ch;
+        end++;
+      }
+      nodes.push(
+        <Ruby key={`latin-${i}`} ch={token} py={null} className="unit latin" />,
+      );
+      i = end;
+      continue;
+    }
+    nodes.push(
+      <Ruby key={i} ch={pair.ch} py={null} className="unit punct" />,
+    );
+    i++;
+  }
+  return nodes;
+}
+
 /** 渲染单段：`<p class="line">...</p>`。 */
 export function renderParagraph(paragraph: Paragraph): JSX.Element {
+  const nodes = renderUnitNodes(paragraph);
   return (
     <p className="line">
-      {paragraph.map((pair, i) => (
-        <Ruby key={i} ch={pair.ch} py={pair.py} />
-      ))}
+      {nodes}
     </p>
   );
 }
@@ -68,9 +119,7 @@ export function renderParagraphs(paragraphs: Paragraph[]): JSX.Element {
 export function renderUnits(paragraph: Paragraph): JSX.Element {
   return (
     <>
-      {paragraph.map((pair: Pair, i: number) => (
-        <Ruby key={i} ch={pair.ch} py={pair.py} />
-      ))}
+      {renderUnitNodes(paragraph)}
     </>
   );
 }

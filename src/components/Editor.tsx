@@ -10,7 +10,7 @@
  * 错误条 err 也在本组件底部展示，靠近输入源（避免页面顶部飘红）。
  */
 import { useState } from "react";
-import { BookOpen, FilePlus2, Wand2 } from "lucide-react";
+import { FilePlus2 } from "lucide-react";
 import { useEditorStore } from "@/store/useEditorStore";
 import { SAMPLE_BAIGUJING } from "@/lib/samples";
 import { deriveTitleFromInput } from "@/lib/document";
@@ -24,7 +24,6 @@ export default function Editor() {
   const currentId = useEditorStore((s) => s.currentId);
   const paragraphs = useEditorStore((s) => s.paragraphs);
   const setInput = useEditorStore((s) => s.setInput);
-  const setMode = useEditorStore((s) => s.setMode);
   const setErr = useEditorStore((s) => s.setErr);
   const setTitle = useEditorStore((s) => s.setTitle);
   const setCurrentId = useEditorStore((s) => s.setCurrentId);
@@ -78,29 +77,6 @@ export default function Editor() {
         }}
         placeholder="例如：小马过河注音稿"
       />
-
-      <div className="mode-tabs" role="radiogroup" aria-label="注音模式">
-        <button
-          type="button"
-          role="radio"
-          aria-checked={mode === "plain"}
-          className={mode === "plain" ? "active" : ""}
-          onClick={() => setMode("plain")}
-        >
-          <Wand2 size={16} />
-          自动注音
-        </button>
-        <button
-          type="button"
-          role="radio"
-          aria-checked={mode === "dual"}
-          className={mode === "dual" ? "active" : ""}
-          onClick={() => setMode("dual")}
-        >
-          <BookOpen size={16} />
-          双行手稿
-        </button>
-      </div>
 
       <label className="field-label" htmlFor="editor-input">
         正文（粘贴或编辑）

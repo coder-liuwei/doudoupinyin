@@ -2,6 +2,7 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import ActionPanel from "@/components/ActionPanel";
 import Editor from "@/components/Editor";
+import ModePanel from "@/components/ModePanel";
 import PrintSettingsPanel from "@/components/PrintSettingsPanel";
 import Preview from "@/components/Preview";
 import { useEditorStore } from "@/store/useEditorStore";
@@ -28,6 +29,7 @@ describe("layout settings", () => {
   it("preserves source line breaks without changing first-line indent", () => {
     render(
       <>
+        <ModePanel />
         <Editor />
         <ActionPanel />
         <PrintSettingsPanel />
@@ -51,6 +53,7 @@ describe("layout settings", () => {
   it("keeps mode selection near the editor and moves printing to the preview", () => {
     const { rerender } = render(
       <>
+        <ModePanel />
         <Editor />
         <ActionPanel />
         <Preview />
@@ -67,6 +70,7 @@ describe("layout settings", () => {
     });
     rerender(
       <>
+        <ModePanel />
         <Editor />
         <ActionPanel />
         <Preview />

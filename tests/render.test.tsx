@@ -75,7 +75,7 @@ describe("render — ruby structure", () => {
     expect(root.children).toHaveLength(8);
   });
 
-  it("renders punctuation as <span class='unit punct'> without ruby", () => {
+  it("renders punctuation as ruby with a hidden blank rt", () => {
     const paragraph: Paragraph = [
       { ch: "你", py: "nǐ", isPunct: false },
       { ch: "，", py: null, isPunct: true },
@@ -87,7 +87,7 @@ describe("render — ruby structure", () => {
     ).toJSON();
     expect(tree).toMatchSnapshot();
 
-    // 标点 span 的 className 应包含 "punct"，且不应包裹 ruby
+    // 标点 span 的 className 应包含 "punct"，且用空 rt 补齐 ruby 高度
     const root = tree as {
       children: Array<{
         type: string;
@@ -105,14 +105,66 @@ describe("render — ruby structure", () => {
     expect(units[0].type).toBe("span");
     expect(units[0].props.className).toBe("unit");
     expect(units[0].children?.[0].type).toBe("ruby");
-    // 第二个：， → punct span（无 ruby，children 是单文本节点 "，"）
+    // 第二个：， → punct span（ruby + 空白 rt）
     expect(units[1].type).toBe("span");
     expect(units[1].props.className).toBe("unit punct");
-    expect(units[1].children).toEqual(["，"]);
+    expect(units[1].children?.[0].type).toBe("ruby");
+    const punctRuby = units[1].children?.[0] as {
+      children: Array<{
+        type: string;
+        props?: { "aria-hidden"?: string };
+        children?: string[];
+      }>;
+    };
+    expect(punctRuby.children[0].children).toEqual(["，"]);
+    expect(punctRuby.children[1].type).toBe("rt");
+    expect(punctRuby.children[1].props?.["aria-hidden"]).toBe("true");
     // 第三个：好 → ruby
     expect(units[2].type).toBe("span");
     expect(units[2].props.className).toBe("unit");
     expect(units[2].children?.[0].type).toBe("ruby");
+  });
+
+  it("groups latin letters and digits into plain text units", () => {
+    const paragraph: Paragraph = [
+      { ch: "A", py: null, isPunct: true },
+      { ch: "I", py: null, isPunct: true },
+      { ch: " ", py: null, isPunct: true },
+      { ch: "2", py: null, isPunct: true },
+      { ch: "0", py: null, isPunct: true },
+      { ch: "2", py: null, isPunct: true },
+      { ch: "1", py: null, isPunct: true },
+    ];
+
+    const tree = TestRenderer.create(
+      <div>{renderParagraphs([paragraph])}</div>,
+    ).toJSON();
+
+    const root = tree as {
+      children: Array<{
+        type: string;
+        props?: { className?: string };
+        children?: Array<unknown>;
+      }>;
+    };
+
+    const p = root.children[0];
+    expect(p.children?.[0]).toMatchObject({ type: "span" });
+    const firstLatin = p.children?.[0] as {
+      props?: { className?: string };
+      children?: Array<{ type: string; children?: Array<{ children?: string[] }> }>;
+    };
+    expect(firstLatin.props?.className).toBe("unit latin");
+    expect(firstLatin.children?.[0].type).toBe("ruby");
+    expect(firstLatin.children?.[0].children?.[0].children).toEqual(["AI"]);
+
+    const secondLatin = p.children?.[2] as {
+      props?: { className?: string };
+      children?: Array<{ type: string; children?: Array<{ children?: string[] }> }>;
+    };
+    expect(secondLatin.props?.className).toBe("unit latin");
+    expect(secondLatin.children?.[0].type).toBe("ruby");
+    expect(secondLatin.children?.[0].children?.[0].children).toEqual(["2021"]);
   });
 
   it("renders 8 <p class='line'> nodes in the right order for the sample", () => {

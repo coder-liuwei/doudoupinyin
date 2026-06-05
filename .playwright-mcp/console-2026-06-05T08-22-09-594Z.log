@@ -1,0 +1,116 @@
+[    1220ms] [LOG] luma.gl: WebGL debug support imported @ https://map.qq.com/api/gljs?v=2.exp&key=BYABZ-D5I6U-2K5VY-BPGTO-JYYGV-3YB2Z&libraries=geometry,tools,visualization:154
+[    1220ms] [LOG] seiya getPixelRatio: 2 @ https://map.qq.com/api/gljs?v=2.exp&key=BYABZ-D5I6U-2K5VY-BPGTO-JYYGV-3YB2Z&libraries=geometry,tools,visualization:148
+[    1240ms] [LOG] %c[code-inspector-plugin]%cPress and hold %cshift %c+ %c⌥option%c to enable the feature. (click on page elements to locate the source code in the editor) color: #006aff; font-weight: bolder; font-size: 12px; color: #00B42A; font-family: PingFang SC; font-size: 12px; color: #006aff; font-weight: bold; font-family: PingFang SC; font-size: 12px; color: #00B42A; font-family: PingFang SC; font-size: 12px; color: #006aff; font-weight: bold; font-family: PingFang SC; font-size: 12px; color: #00B42A; font-family: PingFang SC; font-size: 12px; @ http://local.hdops-test.jd.com:8887/:4
+[    1372ms] [LOG] version:startAutoVersionCheck @ http://local.hdops-test.jd.com:8887/src/utils/version.js:197
+[    1379ms] [LOG] version: current:  @ http://local.hdops-test.jd.com:8887/src/utils/version.js:138
+[    1379ms] [LOG] version:fetchRemoteVersion @ http://local.hdops-test.jd.com:8887/src/utils/version.js:119
+[    1379ms] [LOG] version: urlStr: http://local.hdops-test.jd.com:8887/version.json?v=1780647730973 @ http://local.hdops-test.jd.com:8887/src/utils/version.js:124
+[    1401ms] [LOG] version:checkAndReload error: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON @ http://local.hdops-test.jd.com:8887/src/utils/version.js:184
+[    1431ms] [LOG] version:replaceState @ http://local.hdops-test.jd.com:8887/src/utils/version.js:247
+[    1447ms] [LOG] version: current:  @ http://local.hdops-test.jd.com:8887/src/utils/version.js:138
+[    1447ms] [LOG] version: 距离上次检查不足1分钟，跳过本次检查 @ http://local.hdops-test.jd.com:8887/src/utils/version.js:142
+[   16612ms] [LOG] version:replaceState @ http://local.hdops-test.jd.com:8887/src/utils/version.js:247
+[   16613ms] [LOG] version: current:  @ http://local.hdops-test.jd.com:8887/src/utils/version.js:138
+[   16613ms] [LOG] version: 距离上次检查不足1分钟，跳过本次检查 @ http://local.hdops-test.jd.com:8887/src/utils/version.js:142
+[   18739ms] [VERBOSE] [DOM] Input elements should have autocomplete attributes (suggested: "current-password"): (More info: https://goo.gl/9p2vKq) %o @ https://ssa.jd.com/sso/login?ReturnUrl=http://local.hdops-test.jd.com:8887/index:0
+[   18764ms] [ERROR] Failed to load resource: net::ERR_SOCKET_NOT_CONNECTED @ http://127.0.0.1:8988/hioffice?from=hio_plugin_sso_Mac:0
+[   19556ms] [LOG] luma.gl: WebGL debug support imported @ https://map.qq.com/api/gljs?v=2.exp&key=BYABZ-D5I6U-2K5VY-BPGTO-JYYGV-3YB2Z&libraries=geometry,tools,visualization:154
+[   19556ms] [LOG] seiya getPixelRatio: 1 @ https://map.qq.com/api/gljs?v=2.exp&key=BYABZ-D5I6U-2K5VY-BPGTO-JYYGV-3YB2Z&libraries=geometry,tools,visualization:148
+[   19621ms] [LOG] %c[code-inspector-plugin]%cPress and hold %cshift %c+ %c⌥option%c to enable the feature. (click on page elements to locate the source code in the editor) color: #006aff; font-weight: bolder; font-size: 12px; color: #00B42A; font-family: PingFang SC; font-size: 12px; color: #006aff; font-weight: bold; font-family: PingFang SC; font-size: 12px; color: #00B42A; font-family: PingFang SC; font-size: 12px; color: #006aff; font-weight: bold; font-family: PingFang SC; font-size: 12px; color: #00B42A; font-family: PingFang SC; font-size: 12px; @ http://local.hdops-test.jd.com:8887/index:4
+[   19714ms] [LOG] version:startAutoVersionCheck @ http://local.hdops-test.jd.com:8887/src/utils/version.js:197
+[   19721ms] [LOG] version: current:  @ http://local.hdops-test.jd.com:8887/src/utils/version.js:138
+[   19721ms] [LOG] version:fetchRemoteVersion @ http://local.hdops-test.jd.com:8887/src/utils/version.js:119
+[   19721ms] [LOG] version: urlStr: http://local.hdops-test.jd.com:8887/version.json?v=1780647749315 @ http://local.hdops-test.jd.com:8887/src/utils/version.js:124
+[   19738ms] [LOG] version:checkAndReload error: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON @ http://local.hdops-test.jd.com:8887/src/utils/version.js:184
+[   20351ms] [LOG] verifyUserLoginState-------- {msg: 操作成功, code: 200, data: Object} @ http://local.hdops-test.jd.com:8887/src/permission.js:80
+[   20352ms] [LOG] setTitle 首页 @ http://local.hdops-test.jd.com:8887/src/store/modules/settings.js:52
+[   20352ms] [LOG] useDynamicTitle @ http://local.hdops-test.jd.com:8887/src/utils/dynamicTitle.js:7
+[   21082ms] [LOG] setTitle 首页 @ http://local.hdops-test.jd.com:8887/src/store/modules/settings.js:52
+[   21082ms] [LOG] useDynamicTitle @ http://local.hdops-test.jd.com:8887/src/utils/dynamicTitle.js:7
+[   21239ms] [LOG] version:replaceState @ http://local.hdops-test.jd.com:8887/src/utils/version.js:247
+[   21241ms] [LOG] 生命周期-------setup-》onBeforeMount->onMounted->onBeforeUpdate->onUpdated->onBeforeUnmount->onUnmounted @ http://local.hdops-test.jd.com:8887/src/layout/index.vue:60
+[   21267ms] [LOG] customPageTitle 实时数据 @ http://local.hdops-test.jd.com:8887/src/components/CustomPage/index.vue:44
+[   21289ms] [LOG] addCachedView------- Proxy(Array) @ http://local.hdops-test.jd.com:8887/src/store/modules/tagsView.js:32
+[   21327ms] [LOG] version: current:  @ http://local.hdops-test.jd.com:8887/src/utils/version.js:138
+[   21327ms] [LOG] version: 距离上次检查不足1分钟，跳过本次检查 @ http://local.hdops-test.jd.com:8887/src/utils/version.js:142
+[   22330ms] [LOG] [Object, Object, Object, Object, Object, Object, Object, Object, Object, Object] @ http://local.hdops-test.jd.com:8887/src/views/home/index.vue:196
+[   23601ms] [LOG] setTitle 供应商列表 @ http://local.hdops-test.jd.com:8887/src/store/modules/settings.js:52
+[   23601ms] [LOG] useDynamicTitle @ http://local.hdops-test.jd.com:8887/src/utils/dynamicTitle.js:7
+[   23784ms] [LOG] version:replaceState @ http://local.hdops-test.jd.com:8887/src/utils/version.js:247
+[   23784ms] [LOG] version:pushState @ http://local.hdops-test.jd.com:8887/src/utils/version.js:239
+[   23786ms] [LOG] addCachedView------- Proxy(Array) @ http://local.hdops-test.jd.com:8887/src/store/modules/tagsView.js:32
+[   23788ms] [LOG] customPageTitle null @ http://local.hdops-test.jd.com:8887/src/components/CustomPage/index.vue:44
+[   23824ms] [LOG] search params {pageNum: 1, pageSize: 20} @ http://local.hdops-test.jd.com:8887/src/hooks/useTableData.js:38
+[   23850ms] [LOG] version: current:  @ http://local.hdops-test.jd.com:8887/src/utils/version.js:138
+[   23850ms] [LOG] version: 距离上次检查不足1分钟，跳过本次检查 @ http://local.hdops-test.jd.com:8887/src/utils/version.js:142
+[   27787ms] [WARNING] {packageIds: Array(1)} @ http://local.hdops-test.jd.com:8887/index:4
+[   30219ms] [WARNING] {packageIds: Array(1)} @ http://local.hdops-test.jd.com:8887/index:4
+[   32088ms] [LOG] setTitle 订单管理 @ http://local.hdops-test.jd.com:8887/src/store/modules/settings.js:52
+[   32088ms] [LOG] useDynamicTitle @ http://local.hdops-test.jd.com:8887/src/utils/dynamicTitle.js:7
+[   32118ms] [LOG] version:replaceState @ http://local.hdops-test.jd.com:8887/src/utils/version.js:247
+[   32118ms] [LOG] version:pushState @ http://local.hdops-test.jd.com:8887/src/utils/version.js:239
+[   32120ms] [LOG] addCachedView------- Proxy(Array) @ http://local.hdops-test.jd.com:8887/src/store/modules/tagsView.js:32
+[   32122ms] [LOG] customPageTitle null @ http://local.hdops-test.jd.com:8887/src/components/CustomPage/index.vue:44
+[   32154ms] [LOG] search params {pageNum: 1, pageSize: 20} @ http://local.hdops-test.jd.com:8887/src/hooks/useTableData.js:38
+[   32179ms] [LOG] version: current:  @ http://local.hdops-test.jd.com:8887/src/utils/version.js:138
+[   32179ms] [LOG] version: 距离上次检查不足1分钟，跳过本次检查 @ http://local.hdops-test.jd.com:8887/src/utils/version.js:142
+[   33461ms] [LOG] setTitle 订单详情 @ http://local.hdops-test.jd.com:8887/src/store/modules/settings.js:52
+[   33461ms] [LOG] useDynamicTitle @ http://local.hdops-test.jd.com:8887/src/utils/dynamicTitle.js:7
+[   33493ms] [LOG] version:replaceState @ http://local.hdops-test.jd.com:8887/src/utils/version.js:247
+[   33493ms] [LOG] version:pushState @ http://local.hdops-test.jd.com:8887/src/utils/version.js:239
+[   33495ms] [LOG] addCachedView------- Proxy(Array) @ http://local.hdops-test.jd.com:8887/src/store/modules/tagsView.js:32
+[   33500ms] [LOG] customPageTitle null @ http://local.hdops-test.jd.com:8887/src/components/CustomPage/index.vue:44
+[   33506ms] [LOG] version: current:  @ http://local.hdops-test.jd.com:8887/src/utils/version.js:138
+[   33506ms] [LOG] version: 距离上次检查不足1分钟，跳过本次检查 @ http://local.hdops-test.jd.com:8887/src/utils/version.js:142
+[   35493ms] [LOG] setTitle 对账管理 @ http://local.hdops-test.jd.com:8887/src/store/modules/settings.js:52
+[   35494ms] [LOG] useDynamicTitle @ http://local.hdops-test.jd.com:8887/src/utils/dynamicTitle.js:7
+[   35515ms] [LOG] version:replaceState @ http://local.hdops-test.jd.com:8887/src/utils/version.js:247
+[   35515ms] [LOG] version:pushState @ http://local.hdops-test.jd.com:8887/src/utils/version.js:239
+[   35516ms] [LOG] addCachedView------- Proxy(Array) @ http://local.hdops-test.jd.com:8887/src/store/modules/tagsView.js:32
+[   35518ms] [LOG] customPageTitle null @ http://local.hdops-test.jd.com:8887/src/components/CustomPage/index.vue:44
+[   35538ms] [LOG] search params {pageNum: 1, pageSize: 20} @ http://local.hdops-test.jd.com:8887/src/hooks/useTableData.js:38
+[   35559ms] [LOG] version: current:  @ http://local.hdops-test.jd.com:8887/src/utils/version.js:138
+[   35559ms] [LOG] version: 距离上次检查不足1分钟，跳过本次检查 @ http://local.hdops-test.jd.com:8887/src/utils/version.js:142
+[   36491ms] [LOG] setTitle 对账单详情 @ http://local.hdops-test.jd.com:8887/src/store/modules/settings.js:52
+[   36491ms] [LOG] useDynamicTitle @ http://local.hdops-test.jd.com:8887/src/utils/dynamicTitle.js:7
+[   36514ms] [LOG] version:replaceState @ http://local.hdops-test.jd.com:8887/src/utils/version.js:247
+[   36514ms] [LOG] version:pushState @ http://local.hdops-test.jd.com:8887/src/utils/version.js:239
+[   36515ms] [LOG] addCachedView------- Proxy(Array) @ http://local.hdops-test.jd.com:8887/src/store/modules/tagsView.js:32
+[   36520ms] [LOG] customPageTitle null @ http://local.hdops-test.jd.com:8887/src/components/CustomPage/index.vue:44
+[   36527ms] [LOG] version: current:  @ http://local.hdops-test.jd.com:8887/src/utils/version.js:138
+[   36527ms] [LOG] version: 距离上次检查不足1分钟，跳过本次检查 @ http://local.hdops-test.jd.com:8887/src/utils/version.js:142
+[   39205ms] [LOG] setTitle 对账管理 @ http://local.hdops-test.jd.com:8887/src/store/modules/settings.js:52
+[   39205ms] [LOG] useDynamicTitle @ http://local.hdops-test.jd.com:8887/src/utils/dynamicTitle.js:7
+[   39205ms] [LOG] version:replaceState @ http://local.hdops-test.jd.com:8887/src/utils/version.js:247
+[   39205ms] [LOG] version:pushState @ http://local.hdops-test.jd.com:8887/src/utils/version.js:239
+[   39209ms] [LOG] customPageTitle null @ http://local.hdops-test.jd.com:8887/src/components/CustomPage/index.vue:44
+[   39234ms] [LOG] search params {pageNum: 1, pageSize: 20} @ http://local.hdops-test.jd.com:8887/src/hooks/useTableData.js:38
+[   39260ms] [LOG] version: current:  @ http://local.hdops-test.jd.com:8887/src/utils/version.js:138
+[   39260ms] [LOG] version: 距离上次检查不足1分钟，跳过本次检查 @ http://local.hdops-test.jd.com:8887/src/utils/version.js:142
+[   44152ms] [LOG] setTitle 菜单管理 @ http://local.hdops-test.jd.com:8887/src/store/modules/settings.js:52
+[   44152ms] [LOG] useDynamicTitle @ http://local.hdops-test.jd.com:8887/src/utils/dynamicTitle.js:7
+[   44214ms] [LOG] version:replaceState @ http://local.hdops-test.jd.com:8887/src/utils/version.js:247
+[   44214ms] [LOG] version:pushState @ http://local.hdops-test.jd.com:8887/src/utils/version.js:239
+[   44216ms] [LOG] addCachedView------- Proxy(Array) @ http://local.hdops-test.jd.com:8887/src/store/modules/tagsView.js:32
+[   44221ms] [LOG] customPageTitle null @ http://local.hdops-test.jd.com:8887/src/components/CustomPage/index.vue:44
+[   44229ms] [LOG] version: current:  @ http://local.hdops-test.jd.com:8887/src/utils/version.js:138
+[   44229ms] [LOG] version: 距离上次检查不足1分钟，跳过本次检查 @ http://local.hdops-test.jd.com:8887/src/utils/version.js:142
+[   57500ms] [LOG] version:replaceState @ http://local.hdops-test.jd.com:8887/src/utils/version.js:247
+[   57500ms] [LOG] version: current:  @ http://local.hdops-test.jd.com:8887/src/utils/version.js:138
+[   57500ms] [LOG] version: 距离上次检查不足1分钟，跳过本次检查 @ http://local.hdops-test.jd.com:8887/src/utils/version.js:142
+[   58168ms] [LOG] luma.gl: WebGL debug support imported @ https://map.qq.com/api/gljs?v=2.exp&key=BYABZ-D5I6U-2K5VY-BPGTO-JYYGV-3YB2Z&libraries=geometry,tools,visualization:154
+[   58169ms] [LOG] seiya getPixelRatio: 1 @ https://map.qq.com/api/gljs?v=2.exp&key=BYABZ-D5I6U-2K5VY-BPGTO-JYYGV-3YB2Z&libraries=geometry,tools,visualization:148
+[   58181ms] [LOG] %c[code-inspector-plugin]%cPress and hold %cshift %c+ %c⌥option%c to enable the feature. (click on page elements to locate the source code in the editor) color: #006aff; font-weight: bolder; font-size: 12px; color: #00B42A; font-family: PingFang SC; font-size: 12px; color: #006aff; font-weight: bold; font-family: PingFang SC; font-size: 12px; color: #00B42A; font-family: PingFang SC; font-size: 12px; color: #006aff; font-weight: bold; font-family: PingFang SC; font-size: 12px; color: #00B42A; font-family: PingFang SC; font-size: 12px; @ http://local.hdops-test.jd.com:8887/account/menu:4
+[   58241ms] [LOG] version:startAutoVersionCheck @ http://local.hdops-test.jd.com:8887/src/utils/version.js:197
+[   58245ms] [LOG] version: current:  @ http://local.hdops-test.jd.com:8887/src/utils/version.js:138
+[   58245ms] [LOG] version:fetchRemoteVersion @ http://local.hdops-test.jd.com:8887/src/utils/version.js:119
+[   58245ms] [LOG] version: urlStr: http://local.hdops-test.jd.com:8887/version.json?v=1780647787839 @ http://local.hdops-test.jd.com:8887/src/utils/version.js:124
+[   58249ms] [LOG] version:checkAndReload error: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON @ http://local.hdops-test.jd.com:8887/src/utils/version.js:184
+[   58899ms] [LOG] setTitle 菜单管理 @ http://local.hdops-test.jd.com:8887/src/store/modules/settings.js:52
+[   58899ms] [LOG] useDynamicTitle @ http://local.hdops-test.jd.com:8887/src/utils/dynamicTitle.js:7
+[   58910ms] [LOG] version:replaceState @ http://local.hdops-test.jd.com:8887/src/utils/version.js:247
+[   58912ms] [LOG] 生命周期-------setup-》onBeforeMount->onMounted->onBeforeUpdate->onUpdated->onBeforeUnmount->onUnmounted @ http://local.hdops-test.jd.com:8887/src/layout/index.vue:60
+[   58930ms] [LOG] customPageTitle null @ http://local.hdops-test.jd.com:8887/src/components/CustomPage/index.vue:44
+[   58939ms] [LOG] addCachedView------- Proxy(Array) @ http://local.hdops-test.jd.com:8887/src/store/modules/tagsView.js:32
+[   58949ms] [LOG] version: current:  @ http://local.hdops-test.jd.com:8887/src/utils/version.js:138
+[   58949ms] [LOG] version: 距离上次检查不足1分钟，跳过本次检查 @ http://local.hdops-test.jd.com:8887/src/utils/version.js:142

@@ -22,6 +22,10 @@ interface EditingRange {
   values: string[];
 }
 
+function isAsciiTokenChar(ch: string): boolean {
+  return /[A-Za-z0-9]/.test(ch);
+}
+
 function sourceClass(pair: { pySource?: string }): string {
   if (pair.pySource === "manual") return "manual";
   if (pair.pySource === "dual") return "dual";
@@ -95,6 +99,120 @@ export default function Preview() {
     setEditing(null);
   }
 
+  function renderParagraph(paragraph: typeof paragraphs[number], paragraphIndex: number) {
+    const nodes: JSX.Element[] = [];
+    let pairIndex = 0;
+    while (pairIndex < paragraph.length) {
+      const pair = paragraph[pairIndex];
+      const currentPairIndex = pairIndex;
+      const isEditing =
+        editing?.paragraphIndex === paragraphIndex &&
+        currentPairIndex >= (editing?.startIndex ?? -1) &&
+        currentPairIndex <= (editing?.endIndex ?? -1);
+
+      if (isEditing && currentPairIndex === editing?.startIndex && editing) {
+        const selectedPairs = paragraph.slice(editing.startIndex, editing.endIndex + 1);
+        nodes.push(
+          <span className="unit edit-unit range-edit-unit" key={`edit-${currentPairIndex}`}>
+            <span className="range-word">{selectedPairs.map((selectedPair) => selectedPair.ch).join("")}</span>
+            <span className="range-inputs">
+              {selectedPairs.map((selectedPair, i) => (
+                <label key={`${selectedPair.ch}-${i}`}>
+                  <span>{selectedPair.ch}</span>
+                  <input
+                    value={editing.values[i] ?? ""}
+                    autoFocus={i === 0}
+                    onChange={(e) => {
+                      const next = [...editing.values];
+                      next[i] = e.target.value;
+                      setEditing({ ...editing, values: next });
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") saveEditing();
+                      if (e.key === "Escape") setEditing(null);
+                    }}
+                  />
+                </label>
+              ))}
+            </span>
+            <button
+              type="button"
+              aria-label="向左扩一字"
+              disabled={!canUsePair(paragraphIndex, editing.startIndex - 1)}
+              onClick={() => expandEditing("left")}
+            >
+              <ArrowLeft size={12} />
+            </button>
+            <button
+              type="button"
+              aria-label="向右扩一字"
+              disabled={!canUsePair(paragraphIndex, editing.endIndex + 1)}
+              onClick={() => expandEditing("right")}
+            >
+              <ArrowRight size={12} />
+            </button>
+            <button type="button" aria-label="保存拼音" onClick={saveEditing}>
+              <Check size={12} />
+            </button>
+            <button type="button" aria-label="取消编辑" onClick={() => setEditing(null)}>
+              <X size={12} />
+            </button>
+          </span>,
+        );
+        pairIndex = editing.endIndex + 1;
+        continue;
+      }
+
+      if (pair.py && !pair.isPunct) {
+        const isSuspect = isReviewRisk(pair);
+        nodes.push(
+          <span
+            key={currentPairIndex}
+            className={[
+              "proof-unit",
+              sourceClass(pair),
+              isSuspect ? "suspect" : "",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+            role="button"
+            tabIndex={0}
+            onClick={() => {
+              beginEdit(paragraphIndex, currentPairIndex);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                beginEdit(paragraphIndex, currentPairIndex);
+              }
+            }}
+          >
+            <Ruby ch={pair.ch} py={pair.py} onActivate={() => beginEdit(paragraphIndex, currentPairIndex)} />
+          </span>,
+        );
+        pairIndex++;
+        continue;
+      }
+
+      if (isAsciiTokenChar(pair.ch)) {
+        let token = pair.ch;
+        let end = pairIndex + 1;
+        while (end < paragraph.length && isAsciiTokenChar(paragraph[end].ch)) {
+          token += paragraph[end].ch;
+          end++;
+        }
+        nodes.push(
+          <Ruby key={`latin-${pairIndex}`} ch={token} py={null} className="unit latin" />,
+        );
+        pairIndex = end;
+        continue;
+      }
+
+      nodes.push(<Ruby key={pairIndex} ch={pair.ch} py={null} className="unit punct" />);
+      pairIndex++;
+    }
+    return nodes;
+  }
+
   if (paragraphs.length === 0) {
     return (
       <section className="preview-panel empty-preview" aria-label="预览">
@@ -146,97 +264,7 @@ export default function Preview() {
         >
           {paragraphs.map((paragraph, paragraphIndex) => (
             <p className="line" key={paragraphIndex}>
-              {paragraph.map((pair, pairIndex) => {
-                const isEditing =
-                  editing?.paragraphIndex === paragraphIndex &&
-                  pairIndex >= editing.startIndex &&
-                  pairIndex <= editing.endIndex;
-                const isEditStart = isEditing && pairIndex === editing?.startIndex;
-                const isSuspect = isReviewRisk(pair);
-                if (isEditing) {
-                  if (!isEditStart || !editing) return null;
-                  const selectedPairs = paragraph.slice(editing.startIndex, editing.endIndex + 1);
-                  return (
-                    <span className="unit edit-unit range-edit-unit" key={pairIndex}>
-                      <span className="range-word">
-                        {selectedPairs.map((selectedPair) => selectedPair.ch).join("")}
-                      </span>
-                      <span className="range-inputs">
-                        {selectedPairs.map((selectedPair, i) => (
-                          <label key={`${selectedPair.ch}-${i}`}>
-                            <span>{selectedPair.ch}</span>
-                            <input
-                              value={editing.values[i] ?? ""}
-                              autoFocus={i === 0}
-                              onChange={(e) => {
-                                const next = [...editing.values];
-                                next[i] = e.target.value;
-                                setEditing({ ...editing, values: next });
-                              }}
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") saveEditing();
-                                if (e.key === "Escape") setEditing(null);
-                              }}
-                            />
-                          </label>
-                        ))}
-                      </span>
-                      <button
-                        type="button"
-                        aria-label="向左扩一字"
-                        disabled={!canUsePair(paragraphIndex, editing.startIndex - 1)}
-                        onClick={() => expandEditing("left")}
-                      >
-                        <ArrowLeft size={12} />
-                      </button>
-                      <button
-                        type="button"
-                        aria-label="向右扩一字"
-                        disabled={!canUsePair(paragraphIndex, editing.endIndex + 1)}
-                        onClick={() => expandEditing("right")}
-                      >
-                        <ArrowRight size={12} />
-                      </button>
-                      <button
-                        type="button"
-                        aria-label="保存拼音"
-                        onClick={saveEditing}
-                      >
-                        <Check size={12} />
-                      </button>
-                      <button
-                        type="button"
-                        aria-label="取消编辑"
-                        onClick={() => setEditing(null)}
-                      >
-                        <X size={12} />
-                      </button>
-                    </span>
-                  );
-                }
-                return (
-                  <span
-                    key={pairIndex}
-                    className={[
-                      "proof-unit",
-                      sourceClass(pair),
-                      isSuspect ? "suspect" : "",
-                    ].filter(Boolean).join(" ")}
-                    role={pair.py ? "button" : undefined}
-                    tabIndex={pair.py ? 0 : undefined}
-                    onClick={() => {
-                      beginEdit(paragraphIndex, pairIndex);
-                    }}
-                    onKeyDown={(e) => {
-                      if (pair.py && (e.key === "Enter" || e.key === " ")) {
-                        beginEdit(paragraphIndex, pairIndex);
-                      }
-                    }}
-                  >
-                    <Ruby ch={pair.ch} py={pair.py} />
-                  </span>
-                );
-              })}
+              {renderParagraph(paragraph, paragraphIndex)}
             </p>
           ))}
         </div>

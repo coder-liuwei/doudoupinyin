@@ -21,6 +21,7 @@
 
 /* ruby 核心：与 pinyin-prince.html:67-172 等价 */
 .print-page #previewInner {
+  --preview-cell-size: 32px;
   font-family: "Songti SC", "SimSun", "STSong", "Noto Serif SC", serif;
   font-size: 19px;
   line-height: 2.15;
@@ -37,8 +38,19 @@
   text-align-last: left;
 }
 
+.print-page #previewInner.practice-grid .line {
+  text-indent: calc(var(--preview-cell-size) * 2);
+}
+
 .print-page #previewInner.no-first-indent .line {
   text-indent: 0;
+}
+
+.print-page #previewInner.practice-grid {
+  background-origin: content-box;
+  background-clip: content-box;
+  background-position: 0 0;
+  background-size: var(--preview-cell-size) 100%;
 }
 
 .print-page #previewInner .unit {
@@ -48,6 +60,18 @@
   justify-items: center;
   margin-right: var(--ruby-unit-gap, 2px);
   vertical-align: baseline;
+}
+
+.print-page #previewInner.practice-grid .unit {
+  width: var(--preview-cell-size);
+  min-width: var(--preview-cell-size);
+}
+
+.print-page #previewInner.practice-grid .unit.latin {
+  width: auto;
+  min-width: auto;
+  white-space: nowrap;
+  border-bottom-color: transparent;
 }
 
 .print-page #previewInner.practice-grid .unit {
@@ -80,15 +104,14 @@
 }
 
 .print-page #previewInner .unit.punct {
-  width: auto;
   margin-right: 3px;
 }
 
-.print-page #previewInner .unit.punct rt {
-  font-size: 0;
-  opacity: 0;
-  height: 0;
-  line-height: 0;
+.print-page #previewInner .unit.latin {
+  width: auto;
+  min-width: auto;
+  white-space: nowrap;
+  padding: 0 2px;
 }
 
 /* 打印时移除屏幕上的 chrome */

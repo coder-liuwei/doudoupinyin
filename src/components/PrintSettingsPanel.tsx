@@ -70,7 +70,7 @@ export default function PrintSettingsPanel() {
             onChange={(e) => setPageGuide(e.target.value === "grid" ? "grid" : "plain")}
           >
             <option value="plain">无格</option>
-            <option value="grid">练字线</option>
+            <option value="grid">字格线</option>
           </select>
         </label>
         <label className="toggle-setting">
