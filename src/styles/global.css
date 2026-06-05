@@ -37,25 +37,22 @@ button:disabled {
 .app-shell {
   width: min(1500px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 28px 0 40px;
+  padding: 16px 0 40px;
 }
 
 .hero-band {
-  min-height: 124px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 22px 28px;
+  gap: 16px;
+  padding: 14px 20px;
   border: 1px solid rgba(86, 54, 32, 0.18);
-  border-radius: 18px;
+  border-radius: 14px;
   background:
     linear-gradient(135deg, rgba(255, 252, 242, 0.96), rgba(240, 225, 193, 0.92)),
     repeating-linear-gradient(0deg, transparent 0 30px, rgba(167, 54, 42, 0.07) 31px 32px);
-  box-shadow: 0 18px 60px rgba(76, 47, 22, 0.12);
+  box-shadow: 0 10px 30px rgba(76, 47, 22, 0.1);
 }
 
-.hero-kicker,
 .eyebrow {
   margin: 0;
   color: #9d3428;
@@ -65,36 +62,21 @@ button:disabled {
 }
 
 .hero-band h1 {
-  margin: 4px 0 6px;
+  flex: 0 0 auto;
+  margin: 0;
   color: #211713;
   font-family: "Songti SC", "STSong", serif;
-  font-size: clamp(36px, 5.2vw, 64px);
-  line-height: 0.95;
+  font-size: 34px;
+  line-height: 1;
 }
 
 .hero-band p {
+  min-width: 0;
   max-width: 600px;
   margin: 0;
   color: #6b5140;
   font-size: 15px;
-  line-height: 1.75;
-}
-
-.hero-note {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: flex-end;
-  align-self: center;
-}
-
-.hero-note span {
-  padding: 8px 12px;
-  border: 1px solid rgba(157, 52, 40, 0.22);
-  border-radius: 999px;
-  color: #7a2b23;
-  background: rgba(255, 250, 235, 0.76);
-  font-size: 13px;
+  line-height: 1.55;
 }
 
 .workbench-layout {
@@ -305,8 +287,12 @@ button:disabled {
 
 .action-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 9px;
+}
+
+.action-panel {
+  padding: 12px;
 }
 
 .btn {
@@ -372,7 +358,11 @@ button:disabled {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
-  margin-top: 14px;
+  margin-top: 0;
+}
+
+.compact-heading {
+  margin-bottom: 10px;
 }
 
 .print-settings label {
@@ -507,13 +497,17 @@ button:disabled {
 
 .history-actions .history-open {
   width: auto;
-  min-width: max-content;
-  padding: 0 10px;
+  flex: 0 0 auto;
+  min-width: 6.5rem;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 999px;
   gap: 5px;
   color: #fffaf0;
   background: #7d3d2a;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 900;
   white-space: nowrap;
 }
@@ -598,6 +592,26 @@ button:disabled {
   font-size: 13px;
 }
 
+.preview-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  min-width: 0;
+}
+
+.preview-print-button {
+  color: #fffaf0;
+  border-color: rgba(177, 58, 46, 0.12);
+  background: #b13a2e;
+  box-shadow: 0 8px 18px rgba(177, 58, 46, 0.2);
+  white-space: nowrap;
+}
+
+.preview-print-button:hover {
+  background: #9f2f27;
+}
+
 .paper-sheet {
   min-height: 720px;
   padding: 34px 36px;
@@ -611,8 +625,8 @@ button:disabled {
 }
 
 .paper-sheet.practice-grid .unit {
-  display: inline-flex;
-  min-width: 1.7em;
+  display: inline-grid;
+  min-width: 1.35em;
   justify-content: center;
   border-bottom: 1px solid rgba(177, 58, 46, 0.24);
 }
@@ -653,7 +667,8 @@ button:disabled {
 .screen-preview .line {
   margin: 0 0 14px;
   text-indent: 2em;
-  text-align: justify;
+  text-align: left;
+  text-align-last: left;
 }
 
 .screen-preview.no-first-indent .line {
@@ -661,20 +676,41 @@ button:disabled {
 }
 
 .screen-preview .unit {
-  display: inline-block;
-  margin-right: 3px;
+  min-width: 1.35em;
+  width: max-content;
+  display: inline-grid;
+  justify-items: center;
+  margin-right: var(--ruby-unit-gap, 2px);
+  vertical-align: baseline;
 }
 
 .screen-preview ruby {
+  min-width: 1.35em;
+  width: max-content;
+  display: inline-grid;
+  justify-items: center;
   ruby-position: over;
   ruby-align: center;
+  overflow: visible;
+}
+
+.screen-preview ruby .rb {
+  grid-row: 2;
 }
 
 .screen-preview rt {
+  grid-row: 1;
   color: #43352d;
   font-family: "Helvetica Neue", "PingFang SC", sans-serif;
   font-size: 0.64em;
   font-weight: 600;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.screen-preview .unit.punct {
+  width: auto;
+  margin-right: 3px;
 }
 
 .proof-unit {
@@ -822,16 +858,20 @@ button:disabled {
     padding-top: 10px;
   }
 
-  .hero-band,
   .workbench-layout {
     display: block;
   }
 
   .hero-band {
-    padding: 22px;
+    display: block;
+    padding: 12px 16px;
   }
 
-  .hero-note,
+  .hero-band h1 {
+    font-size: 30px;
+    margin-bottom: 6px;
+  }
+
   .left-rail,
   .input-column,
   .preview-panel {
@@ -843,8 +883,8 @@ button:disabled {
     max-height: none;
   }
 
-  .action-grid,
   .print-settings,
+  .action-grid,
   .mode-tabs {
     grid-template-columns: 1fr;
   }

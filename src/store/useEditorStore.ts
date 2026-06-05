@@ -14,6 +14,7 @@ export interface EditorState {
   paragraphs: Paragraph[];
   fontSize: number;
   lineHeight: number;
+  letterSpacing: number;
   layoutMode: LayoutMode;
   indentFirstLine: boolean;
   showTitle: boolean;
@@ -27,6 +28,7 @@ export interface EditorState {
   setParagraphs: (p: Paragraph[]) => void;
   setFontSize: (n: number) => void;
   setLineHeight: (n: number) => void;
+  setLetterSpacing: (n: number) => void;
   setLayoutMode: (v: LayoutMode) => void;
   setIndentFirstLine: (v: boolean) => void;
   setShowTitle: (v: boolean) => void;
@@ -50,6 +52,7 @@ const INITIAL = {
   paragraphs: [] as Paragraph[],
   fontSize: 19,
   lineHeight: 2.15,
+  letterSpacing: 2,
   layoutMode: "auto" as LayoutMode,
   indentFirstLine: true,
   showTitle: true,
@@ -66,7 +69,8 @@ export const useEditorStore = create<EditorState>((set) => ({
   setParagraphs: (p) => set({ paragraphs: p }),
   setFontSize: (n) => set({ fontSize: n }),
   setLineHeight: (n) => set({ lineHeight: n }),
-  setLayoutMode: (v) => set({ layoutMode: v, indentFirstLine: v === "auto" }),
+  setLetterSpacing: (n) => set({ letterSpacing: n }),
+  setLayoutMode: (v) => set({ layoutMode: v }),
   setIndentFirstLine: (v) => set({ indentFirstLine: v }),
   setShowTitle: (v) => set({ showTitle: v }),
   setPageGuide: (v) => set({ pageGuide: v }),

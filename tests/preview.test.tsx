@@ -11,6 +11,7 @@ describe("Preview proofreading", () => {
       paragraphs: [],
       fontSize: 19,
       lineHeight: 2.15,
+      letterSpacing: 2,
       layoutMode: "auto",
       indentFirstLine: true,
       showTitle: true,

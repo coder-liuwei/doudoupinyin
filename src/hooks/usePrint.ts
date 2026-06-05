@@ -20,6 +20,7 @@ interface TempPayload {
   title: string;
   fontSize: number;
   lineHeight: number;
+  letterSpacing: number;
   layoutMode: LayoutMode;
   indentFirstLine: boolean;
   showTitle: boolean;
@@ -32,6 +33,7 @@ export function usePrint(): () => void {
   const title = useEditorStore((s) => s.title);
   const fontSize = useEditorStore((s) => s.fontSize);
   const lineHeight = useEditorStore((s) => s.lineHeight);
+  const letterSpacing = useEditorStore((s) => s.letterSpacing);
   const layoutMode = useEditorStore((s) => s.layoutMode);
   const indentFirstLine = useEditorStore((s) => s.indentFirstLine);
   const showTitle = useEditorStore((s) => s.showTitle);
@@ -45,6 +47,7 @@ export function usePrint(): () => void {
       title,
       fontSize,
       lineHeight,
+      letterSpacing,
       layoutMode,
       indentFirstLine,
       showTitle,

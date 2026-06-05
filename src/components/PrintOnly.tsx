@@ -18,6 +18,7 @@ export default function PrintOnly() {
     title: string;
     fontSize: number;
     lineHeight: number;
+    letterSpacing: number;
     layoutMode: LayoutMode;
     indentFirstLine: boolean;
     showTitle: boolean;
@@ -42,6 +43,9 @@ export default function PrintOnly() {
             title: parsed.title ?? "",
             fontSize: Number(parsed.fontSize) || 19,
             lineHeight: Number(parsed.lineHeight) || 2.15,
+            letterSpacing: Number.isFinite(Number(parsed.letterSpacing))
+              ? Number(parsed.letterSpacing)
+              : 2,
             layoutMode: parsed.layoutMode === "preserve" ? "preserve" : "auto",
             indentFirstLine: parsed.indentFirstLine !== false,
             showTitle: parsed.showTitle !== false,
@@ -64,6 +68,7 @@ export default function PrintOnly() {
           title: found.title,
           fontSize: 19,
           lineHeight: 2.15,
+          letterSpacing: 2,
           layoutMode: "auto",
           indentFirstLine: true,
           showTitle: true,
@@ -80,20 +85,20 @@ export default function PrintOnly() {
 
   if (error) {
     return (
-      <div style={{ padding: 24, fontFamily: "sans-serif" }}>
+      <main className="print-page" style={{ padding: 24, fontFamily: "sans-serif" }}>
         <h1>无法打开打印视图</h1>
         <p>{error}</p>
         <a href="/" className="no-print">返回首页</a>
-      </div>
+      </main>
     );
   }
 
   if (!data) {
-    return <div style={{ padding: 24 }}>加载中…</div>;
+    return <main className="print-page" style={{ padding: 24 }}>加载中…</main>;
   }
 
   return (
-    <>
+    <main className="print-page">
       {/* 屏幕上的返回/打印按钮，打印时隐藏 */}
       <div className="no-print" style={{ position: "fixed", top: 12, right: 12, zIndex: 10 }}>
         <a href="/" style={{ marginRight: 8 }}>← 返回</a>
@@ -107,7 +112,11 @@ export default function PrintOnly() {
           `layout-${data.layoutMode}`,
           data.indentFirstLine ? "first-indent" : "no-first-indent",
         ].filter(Boolean).join(" ")}
-        style={{ fontSize: data.fontSize, lineHeight: data.lineHeight }}
+        style={{
+          fontSize: data.fontSize,
+          lineHeight: data.lineHeight,
+          ["--ruby-unit-gap" as string]: `${data.letterSpacing}px`,
+        }}
       >
         {data.showTitle && (
           <h1 style={{ textAlign: "center", fontSize: "1.2em", marginBottom: 16 }}>{data.title}</h1>
@@ -115,6 +124,6 @@ export default function PrintOnly() {
         {/* Agent A 的 renderParagraphs 导出会渲染 .line 段落 */}
         {renderParagraphs(data.paragraphs)}
       </div>
-    </>
+    </main>
   );
 }

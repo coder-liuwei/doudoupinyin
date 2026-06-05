@@ -1,9 +1,12 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
-import Toolbar from "@/components/Toolbar";
+import ActionPanel from "@/components/ActionPanel";
+import Editor from "@/components/Editor";
+import PrintSettingsPanel from "@/components/PrintSettingsPanel";
+import Preview from "@/components/Preview";
 import { useEditorStore } from "@/store/useEditorStore";
 
-describe("Toolbar layout settings", () => {
+describe("layout settings", () => {
   beforeEach(() => {
     useEditorStore.setState({
       input: "床前明月光\n疑是地上霜",
@@ -11,6 +14,7 @@ describe("Toolbar layout settings", () => {
       paragraphs: [],
       fontSize: 19,
       lineHeight: 2.15,
+      letterSpacing: 2,
       layoutMode: "auto",
       indentFirstLine: true,
       showTitle: true,
@@ -21,8 +25,14 @@ describe("Toolbar layout settings", () => {
     });
   });
 
-  it("preserves source line breaks and disables first-line indent by default", () => {
-    render(<Toolbar />);
+  it("preserves source line breaks without changing first-line indent", () => {
+    render(
+      <>
+        <Editor />
+        <ActionPanel />
+        <PrintSettingsPanel />
+      </>,
+    );
 
     fireEvent.change(screen.getByLabelText("排版"), {
       target: { value: "preserve" },
@@ -31,10 +41,38 @@ describe("Toolbar layout settings", () => {
 
     const state = useEditorStore.getState();
     expect(state.layoutMode).toBe("preserve");
-    expect(state.indentFirstLine).toBe(false);
+    expect(state.indentFirstLine).toBe(true);
     expect(state.paragraphs.map((paragraph) => paragraph.map((pair) => pair.ch).join(""))).toEqual([
       "床前明月光",
       "疑是地上霜",
     ]);
+  });
+
+  it("keeps mode selection near the editor and moves printing to the preview", () => {
+    const { rerender } = render(
+      <>
+        <Editor />
+        <ActionPanel />
+        <Preview />
+      </>,
+    );
+
+    expect(screen.getByRole("radio", { name: "自动注音" })).not.toBeNull();
+    expect(screen.queryByRole("button", { name: "打印 / 存 PDF" })).toBeNull();
+
+    act(() => {
+      useEditorStore.setState({
+        paragraphs: [[{ ch: "床", py: "chuáng", isPunct: false, pySource: "auto" }]],
+      });
+    });
+    rerender(
+      <>
+        <Editor />
+        <ActionPanel />
+        <Preview />
+      </>,
+    );
+
+    expect(screen.getByRole("button", { name: "打印 / 存 PDF" })).not.toBeNull();
   });
 });

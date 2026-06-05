@@ -8,8 +8,9 @@
  * 三个档位：小学 16 / 大班 20 / 小班 24。
  */
 import { useState } from "react";
-import { ArrowLeft, ArrowRight, Check, MousePointer2, PencilLine, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, MousePointer2, PencilLine, Printer, X } from "lucide-react";
 import { useEditorStore } from "@/store/useEditorStore";
+import { usePrint } from "@/hooks/usePrint";
 import { Ruby } from "@/lib/render";
 import { countAnnotatedChars } from "@/lib/document";
 import { countBySource, countReviewRisks, isReviewRisk } from "@/lib/review";
@@ -32,12 +33,14 @@ export default function Preview() {
   const paragraphs = useEditorStore((s) => s.paragraphs);
   const fontSize = useEditorStore((s) => s.fontSize);
   const lineHeight = useEditorStore((s) => s.lineHeight);
+  const letterSpacing = useEditorStore((s) => s.letterSpacing);
   const layoutMode = useEditorStore((s) => s.layoutMode);
   const indentFirstLine = useEditorStore((s) => s.indentFirstLine);
   const showTitle = useEditorStore((s) => s.showTitle);
   const pageGuide = useEditorStore((s) => s.pageGuide);
   const title = useEditorStore((s) => s.title);
   const updatePairPinyinRange = useEditorStore((s) => s.updatePairPinyinRange);
+  const goPrint = usePrint();
   const gridOffset = (36 + fontSize * 2) % 32;
 
   function beginEdit(paragraphIndex: number, pairIndex: number): void {
@@ -111,10 +114,16 @@ export default function Preview() {
           <span className="eyebrow">第 3 步</span>
           <h2>校对与预览</h2>
         </div>
-        <p>
-          <MousePointer2 size={14} />
-          点击拼音可修改，红点字建议重点检查
-        </p>
+        <div className="preview-actions">
+          <p>
+            <MousePointer2 size={14} />
+            点击拼音可修改，红点字建议重点检查
+          </p>
+          <button type="button" className="new-doc-button preview-print-button" onClick={goPrint}>
+            <Printer size={15} />
+            打印 / 存 PDF
+          </button>
+        </div>
       </div>
 
       <div
@@ -122,6 +131,7 @@ export default function Preview() {
         style={{
           ["--preview-font-size" as string]: `${fontSize}px`,
           ["--preview-line-height" as string]: lineHeight,
+          ["--ruby-unit-gap" as string]: `${letterSpacing}px`,
           backgroundPositionX: `${gridOffset}px`,
         }}
       >

@@ -11,16 +11,16 @@
   box-sizing: border-box;
 }
 
-html,
-body {
+.print-page {
   margin: 0;
   padding: 0;
   background: #fff;
   color: #111;
+  min-height: 100vh;
 }
 
 /* ruby 核心：与 pinyin-prince.html:67-172 等价 */
-#previewInner {
+.print-page #previewInner {
   font-family: "Songti SC", "SimSun", "STSong", "Noto Serif SC", serif;
   font-size: 19px;
   line-height: 2.15;
@@ -29,45 +29,62 @@ body {
   padding: 16mm 14mm;
 }
 
-#previewInner .line {
+.print-page #previewInner .line {
   display: block;
   margin: 0 0 14px;
   text-indent: 2em;
-  text-align: justify;
-  text-justify: inter-character;
+  text-align: left;
+  text-align-last: left;
 }
 
-#previewInner.no-first-indent .line {
+.print-page #previewInner.no-first-indent .line {
   text-indent: 0;
 }
 
-#previewInner .unit {
-  display: inline-block;
-  margin-right: 3px;
-}
-
-#previewInner.practice-grid .unit {
-  display: inline-flex;
-  min-width: 1.7em;
-  justify-content: center;
-  border-bottom: 1px solid rgba(180, 42, 32, 0.28);
-}
-
-#previewInner ruby {
-  ruby-position: over;
-  ruby-align: center;
+.print-page #previewInner .unit {
+  min-width: 1.35em;
+  width: max-content;
+  display: inline-grid;
+  justify-items: center;
+  margin-right: var(--ruby-unit-gap, 2px);
   vertical-align: baseline;
 }
 
-#previewInner ruby > rt {
+.print-page #previewInner.practice-grid .unit {
+  min-width: 1.35em;
+  border-bottom: 1px solid rgba(180, 42, 32, 0.28);
+}
+
+.print-page #previewInner ruby {
+  min-width: 1.35em;
+  width: max-content;
+  display: inline-grid;
+  justify-items: center;
+  ruby-position: over;
+  ruby-align: center;
+  overflow: visible;
+}
+
+.print-page #previewInner ruby .rb {
+  grid-row: 2;
+}
+
+.print-page #previewInner ruby > rt {
+  grid-row: 1;
   font-family: "Helvetica Neue", "Arial", "PingFang SC", "Noto Sans SC", sans-serif;
   font-size: 0.64em;
   font-weight: 500;
   color: #333;
   line-height: 1.15;
+  white-space: nowrap;
 }
 
-#previewInner .unit.punct rt {
+.print-page #previewInner .unit.punct {
+  width: auto;
+  margin-right: 3px;
+}
+
+.print-page #previewInner .unit.punct rt {
   font-size: 0;
   opacity: 0;
   height: 0;
