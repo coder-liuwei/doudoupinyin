@@ -10,7 +10,7 @@
  * 打印页可以完全脱壳（Agent C 的 PrintOnly 容器会另挂样式）。
  */
 import { useEditorStore } from "@/store/useEditorStore";
-import type { Paragraph } from "@/lib/types";
+import type { LayoutMode, Paragraph } from "@/lib/types";
 
 const TEMP_KEY = "pinyinPrince.print-temp";
 
@@ -20,6 +20,8 @@ interface TempPayload {
   title: string;
   fontSize: number;
   lineHeight: number;
+  layoutMode: LayoutMode;
+  indentFirstLine: boolean;
   showTitle: boolean;
   pageGuide: "plain" | "grid";
 }
@@ -30,6 +32,8 @@ export function usePrint(): () => void {
   const title = useEditorStore((s) => s.title);
   const fontSize = useEditorStore((s) => s.fontSize);
   const lineHeight = useEditorStore((s) => s.lineHeight);
+  const layoutMode = useEditorStore((s) => s.layoutMode);
+  const indentFirstLine = useEditorStore((s) => s.indentFirstLine);
   const showTitle = useEditorStore((s) => s.showTitle);
   const pageGuide = useEditorStore((s) => s.pageGuide);
 
@@ -41,6 +45,8 @@ export function usePrint(): () => void {
       title,
       fontSize,
       lineHeight,
+      layoutMode,
+      indentFirstLine,
       showTitle,
       pageGuide,
     };

@@ -37,7 +37,12 @@ body {
   text-justify: inter-character;
 }
 
+#previewInner.no-first-indent .line {
+  text-indent: 0;
+}
+
 #previewInner .unit {
+  display: inline-block;
   margin-right: 3px;
 }
 

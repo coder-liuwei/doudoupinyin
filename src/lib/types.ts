@@ -19,6 +19,8 @@ export type Paragraph = Pair[];
 
 export type Mode = "plain" | "dual";
 
+export type LayoutMode = "auto" | "preserve";
+
 export interface HistoryRecord {
   id: string;
   ts: number;

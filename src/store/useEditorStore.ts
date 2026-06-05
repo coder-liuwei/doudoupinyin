@@ -6,7 +6,7 @@
  * 也不持有 PDF 抽取状态（临时态，组件内 useState 即可）。
  */
 import { create } from "zustand";
-import type { Mode, Paragraph } from "@/lib/types";
+import type { LayoutMode, Mode, Paragraph } from "@/lib/types";
 
 export interface EditorState {
   input: string;
@@ -14,6 +14,8 @@ export interface EditorState {
   paragraphs: Paragraph[];
   fontSize: number;
   lineHeight: number;
+  layoutMode: LayoutMode;
+  indentFirstLine: boolean;
   showTitle: boolean;
   pageGuide: "plain" | "grid";
   title: string;
@@ -25,6 +27,8 @@ export interface EditorState {
   setParagraphs: (p: Paragraph[]) => void;
   setFontSize: (n: number) => void;
   setLineHeight: (n: number) => void;
+  setLayoutMode: (v: LayoutMode) => void;
+  setIndentFirstLine: (v: boolean) => void;
   setShowTitle: (v: boolean) => void;
   setPageGuide: (v: "plain" | "grid") => void;
   setTitle: (s: string) => void;
@@ -46,6 +50,8 @@ const INITIAL = {
   paragraphs: [] as Paragraph[],
   fontSize: 19,
   lineHeight: 2.15,
+  layoutMode: "auto" as LayoutMode,
+  indentFirstLine: true,
   showTitle: true,
   pageGuide: "plain" as const,
   title: "未命名",
@@ -60,6 +66,8 @@ export const useEditorStore = create<EditorState>((set) => ({
   setParagraphs: (p) => set({ paragraphs: p }),
   setFontSize: (n) => set({ fontSize: n }),
   setLineHeight: (n) => set({ lineHeight: n }),
+  setLayoutMode: (v) => set({ layoutMode: v, indentFirstLine: v === "auto" }),
+  setIndentFirstLine: (v) => set({ indentFirstLine: v }),
   setShowTitle: (v) => set({ showTitle: v }),
   setPageGuide: (v) => set({ pageGuide: v }),
   setTitle: (s) => set({ title: s }),

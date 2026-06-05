@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import type { Paragraph, HistoryRecord } from "@/lib/types";
+import type { LayoutMode, Paragraph, HistoryRecord } from "@/lib/types";
 import { renderParagraphs } from "@/lib/render";
 import { loadHistory } from "@/lib/history";
 
@@ -18,6 +18,8 @@ export default function PrintOnly() {
     title: string;
     fontSize: number;
     lineHeight: number;
+    layoutMode: LayoutMode;
+    indentFirstLine: boolean;
     showTitle: boolean;
     pageGuide: "plain" | "grid";
   } | null>(null);
@@ -40,6 +42,8 @@ export default function PrintOnly() {
             title: parsed.title ?? "",
             fontSize: Number(parsed.fontSize) || 19,
             lineHeight: Number(parsed.lineHeight) || 2.15,
+            layoutMode: parsed.layoutMode === "preserve" ? "preserve" : "auto",
+            indentFirstLine: parsed.indentFirstLine !== false,
             showTitle: parsed.showTitle !== false,
             pageGuide: parsed.pageGuide === "grid" ? "grid" : "plain",
           });
@@ -60,6 +64,8 @@ export default function PrintOnly() {
           title: found.title,
           fontSize: 19,
           lineHeight: 2.15,
+          layoutMode: "auto",
+          indentFirstLine: true,
           showTitle: true,
           pageGuide: "plain",
         });
@@ -96,7 +102,11 @@ export default function PrintOnly() {
 
       <div
         id="previewInner"
-        className={data.pageGuide === "grid" ? "practice-grid" : undefined}
+        className={[
+          data.pageGuide === "grid" ? "practice-grid" : "",
+          `layout-${data.layoutMode}`,
+          data.indentFirstLine ? "first-indent" : "no-first-indent",
+        ].filter(Boolean).join(" ")}
         style={{ fontSize: data.fontSize, lineHeight: data.lineHeight }}
       >
         {data.showTitle && (

@@ -11,6 +11,8 @@ describe("Preview proofreading", () => {
       paragraphs: [],
       fontSize: 19,
       lineHeight: 2.15,
+      layoutMode: "auto",
+      indentFirstLine: true,
       showTitle: true,
       pageGuide: "plain",
       title: "未命名",
@@ -45,6 +47,20 @@ describe("Preview proofreading", () => {
 
     expect(container.querySelector(".proof-unit.suspect")).not.toBeNull();
     expect(screen.getByText("1 个待核对")).not.toBeNull();
+  });
+
+  it("applies layout and indent classes to the preview body", () => {
+    useEditorStore.setState({
+      layoutMode: "preserve",
+      indentFirstLine: false,
+      paragraphs: [[{ ch: "床", py: "chuáng", isPunct: false, pySource: "auto" }]],
+    });
+
+    const { container } = render(<Preview />);
+    const preview = container.querySelector("#previewInner");
+
+    expect(preview?.className).toContain("layout-preserve");
+    expect(preview?.className).toContain("no-first-indent");
   });
 
   it("updates a selected word range and marks all selected pinyin as manual", () => {

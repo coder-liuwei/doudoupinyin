@@ -41,12 +41,12 @@ button:disabled {
 }
 
 .hero-band {
-  min-height: 150px;
+  min-height: 124px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  padding: 28px 32px;
+  gap: 20px;
+  padding: 22px 28px;
   border: 1px solid rgba(86, 54, 32, 0.18);
   border-radius: 18px;
   background:
@@ -65,19 +65,19 @@ button:disabled {
 }
 
 .hero-band h1 {
-  margin: 6px 0 8px;
+  margin: 4px 0 6px;
   color: #211713;
   font-family: "Songti SC", "STSong", serif;
-  font-size: clamp(42px, 6vw, 78px);
+  font-size: clamp(36px, 5.2vw, 64px);
   line-height: 0.95;
 }
 
 .hero-band p {
-  max-width: 560px;
+  max-width: 600px;
   margin: 0;
   color: #6b5140;
-  font-size: 16px;
-  line-height: 1.8;
+  font-size: 15px;
+  line-height: 1.75;
 }
 
 .hero-note {
@@ -85,6 +85,7 @@ button:disabled {
   flex-wrap: wrap;
   gap: 8px;
   justify-content: flex-end;
+  align-self: center;
 }
 
 .hero-note span {
@@ -246,16 +247,19 @@ button:disabled {
   justify-content: center;
   gap: 7px;
   min-height: 40px;
-  border: 0;
+  padding: 0 14px;
+  border: 1px solid rgba(91, 63, 44, 0.14);
   border-radius: 10px;
   color: #6a4d3c;
-  background: transparent;
+  background: rgba(255, 250, 240, 0.74);
   font-weight: 800;
+  white-space: nowrap;
 }
 
 .mode-tabs button.active {
   color: #fffaf0;
   background: #7d3d2a;
+  border-color: rgba(61, 28, 17, 0.12);
   box-shadow: 0 6px 16px rgba(125, 61, 42, 0.22);
 }
 
@@ -503,6 +507,7 @@ button:disabled {
 
 .history-actions .history-open {
   width: auto;
+  min-width: max-content;
   padding: 0 10px;
   border-radius: 999px;
   gap: 5px;
@@ -510,6 +515,7 @@ button:disabled {
   background: #7d3d2a;
   font-size: 12px;
   font-weight: 900;
+  white-space: nowrap;
 }
 
 .history-item form {
@@ -650,7 +656,12 @@ button:disabled {
   text-align: justify;
 }
 
+.screen-preview.no-first-indent .line {
+  text-indent: 0;
+}
+
 .screen-preview .unit {
+  display: inline-block;
   margin-right: 3px;
 }
 

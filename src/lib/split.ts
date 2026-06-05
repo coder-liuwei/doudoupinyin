@@ -13,7 +13,7 @@
  *   - 汉字非单字 → "第 N 组：汉字「...」须一格一字、用空格分开。"
  */
 
-import type { Paragraph } from "./types";
+import type { LayoutMode, Paragraph } from "./types";
 import { pinyinOf } from "./pinyin";
 
 const CJK_RE = /[\u4e00-\u9fff]/;
@@ -37,12 +37,20 @@ function toPair(ch: string): import("./types").Pair {
  *   - 有空行（`\n[ \t]*\n`）→ 按空行分段，段内多余换行去掉
  *   - 无空行 → 按单换行分段（适合一行一段粘贴）
  */
-export function splitPlainBlocks(text: string): Paragraph[] {
+export function splitPlainBlocks(
+  text: string,
+  options: { layoutMode?: LayoutMode } = {},
+): Paragraph[] {
   const t = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n").trim();
   if (!t) return [];
 
   let blocks: string[];
-  if (/\n[ \t]*\n/.test(t)) {
+  if (options.layoutMode === "preserve") {
+    blocks = t
+      .split(/\n/)
+      .map((p) => p.trim())
+      .filter(Boolean);
+  } else if (/\n[ \t]*\n/.test(t)) {
     blocks = t
       .split(/\n[ \t]*\n+/)
       .map((p) => p.replace(/\n+/g, "").trim())

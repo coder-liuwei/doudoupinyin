@@ -30,6 +30,8 @@ export default function Toolbar() {
   const currentId = useEditorStore((s) => s.currentId);
   const fontSize = useEditorStore((s) => s.fontSize);
   const lineHeight = useEditorStore((s) => s.lineHeight);
+  const layoutMode = useEditorStore((s) => s.layoutMode);
+  const indentFirstLine = useEditorStore((s) => s.indentFirstLine);
   const showTitle = useEditorStore((s) => s.showTitle);
   const pageGuide = useEditorStore((s) => s.pageGuide);
   const setParagraphs = useEditorStore((s) => s.setParagraphs);
@@ -37,6 +39,8 @@ export default function Toolbar() {
   const setCurrentId = useEditorStore((s) => s.setCurrentId);
   const setFontSize = useEditorStore((s) => s.setFontSize);
   const setLineHeight = useEditorStore((s) => s.setLineHeight);
+  const setLayoutMode = useEditorStore((s) => s.setLayoutMode);
+  const setIndentFirstLine = useEditorStore((s) => s.setIndentFirstLine);
   const setShowTitle = useEditorStore((s) => s.setShowTitle);
   const setPageGuide = useEditorStore((s) => s.setPageGuide);
   const setTitle = useEditorStore((s) => s.setTitle);
@@ -52,7 +56,7 @@ export default function Toolbar() {
       let next: Paragraph[];
       if (mode === "plain") {
         // splitPlainBlocks 已逐字生成 Pair（含标点）
-        next = splitPlainBlocks(normalized);
+        next = splitPlainBlocks(normalized, { layoutMode });
       } else {
         // buildDualParagraphs 已对齐拼音/汉字格数并填好 py
         next = buildDualParagraphs(normalized);
@@ -176,6 +180,16 @@ export default function Toolbar() {
           </select>
         </label>
         <label>
+          <span>排版</span>
+          <select
+            value={layoutMode}
+            onChange={(e) => setLayoutMode(e.target.value === "preserve" ? "preserve" : "auto")}
+          >
+            <option value="auto">自动排版</option>
+            <option value="preserve">保留换行</option>
+          </select>
+        </label>
+        <label>
           <span>纸面</span>
           <select
             value={pageGuide}
@@ -184,6 +198,14 @@ export default function Toolbar() {
             <option value="plain">无格</option>
             <option value="grid">练字线</option>
           </select>
+        </label>
+        <label className="toggle-setting">
+          <input
+            type="checkbox"
+            checked={indentFirstLine}
+            onChange={(e) => setIndentFirstLine(e.target.checked)}
+          />
+          <span>首行缩进</span>
         </label>
         <label className="toggle-setting">
           <input

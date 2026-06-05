@@ -32,10 +32,13 @@ export default function Preview() {
   const paragraphs = useEditorStore((s) => s.paragraphs);
   const fontSize = useEditorStore((s) => s.fontSize);
   const lineHeight = useEditorStore((s) => s.lineHeight);
+  const layoutMode = useEditorStore((s) => s.layoutMode);
+  const indentFirstLine = useEditorStore((s) => s.indentFirstLine);
   const showTitle = useEditorStore((s) => s.showTitle);
   const pageGuide = useEditorStore((s) => s.pageGuide);
   const title = useEditorStore((s) => s.title);
   const updatePairPinyinRange = useEditorStore((s) => s.updatePairPinyinRange);
+  const gridOffset = (36 + fontSize * 2) % 32;
 
   function beginEdit(paragraphIndex: number, pairIndex: number): void {
     const pair = paragraphs[paragraphIndex]?.[pairIndex];
@@ -116,10 +119,21 @@ export default function Preview() {
 
       <div
         className={`paper-sheet ${pageGuide === "grid" ? "practice-grid" : ""}`}
-        style={{ ["--preview-font-size" as string]: `${fontSize}px`, ["--preview-line-height" as string]: lineHeight }}
+        style={{
+          ["--preview-font-size" as string]: `${fontSize}px`,
+          ["--preview-line-height" as string]: lineHeight,
+          backgroundPositionX: `${gridOffset}px`,
+        }}
       >
         {showTitle && <h1 className="paper-title">{title}</h1>}
-        <div id="previewInner" className="screen-preview">
+        <div
+          id="previewInner"
+          className={[
+            "screen-preview",
+            `layout-${layoutMode}`,
+            indentFirstLine ? "first-indent" : "no-first-indent",
+          ].join(" ")}
+        >
           {paragraphs.map((paragraph, paragraphIndex) => (
             <p className="line" key={paragraphIndex}>
               {paragraph.map((pair, pairIndex) => {
