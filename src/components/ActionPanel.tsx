@@ -8,6 +8,7 @@ import { splitPlainBlocks, buildDualParagraphs } from "@/lib/split";
 import { applyTable, loadTable } from "@/lib/polyphone";
 import { fixParticles } from "@/lib/particles";
 import { deriveTitleFromInput } from "@/lib/document";
+import { printSettingsFromStore } from "@/lib/print-settings";
 import type { Paragraph } from "@/lib/types";
 
 export default function ActionPanel() {
@@ -18,6 +19,12 @@ export default function ActionPanel() {
   const title = useEditorStore((s) => s.title);
   const currentId = useEditorStore((s) => s.currentId);
   const layoutMode = useEditorStore((s) => s.layoutMode);
+  const fontSize = useEditorStore((s) => s.fontSize);
+  const lineHeight = useEditorStore((s) => s.lineHeight);
+  const letterSpacing = useEditorStore((s) => s.letterSpacing);
+  const indentFirstLine = useEditorStore((s) => s.indentFirstLine);
+  const showTitle = useEditorStore((s) => s.showTitle);
+  const pageGuide = useEditorStore((s) => s.pageGuide);
   const setParagraphs = useEditorStore((s) => s.setParagraphs);
   const setErr = useEditorStore((s) => s.setErr);
   const setCurrentId = useEditorStore((s) => s.setCurrentId);
@@ -77,6 +84,15 @@ export default function ActionPanel() {
       mode,
       sourceRaw: input,
       paragraphs,
+      printSettings: printSettingsFromStore({
+        fontSize,
+        lineHeight,
+        letterSpacing,
+        layoutMode,
+        indentFirstLine,
+        showTitle,
+        pageGuide,
+      }),
     });
     setTitle(nextTitle);
     setCurrentId(id);

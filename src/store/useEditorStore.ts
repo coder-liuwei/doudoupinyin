@@ -6,6 +6,7 @@
  * 也不持有 PDF 抽取状态（临时态，组件内 useState 即可）。
  */
 import { create } from "zustand";
+import { DEFAULT_PRINT_SETTINGS } from "@/lib/print-settings";
 import type { LayoutMode, Mode, Paragraph } from "@/lib/types";
 
 export interface EditorState {
@@ -50,13 +51,7 @@ const INITIAL = {
   input: "",
   mode: "plain" as Mode,
   paragraphs: [] as Paragraph[],
-  fontSize: 19,
-  lineHeight: 2.15,
-  letterSpacing: 2,
-  layoutMode: "auto" as LayoutMode,
-  indentFirstLine: true,
-  showTitle: true,
-  pageGuide: "plain" as const,
+  ...DEFAULT_PRINT_SETTINGS,
   title: "未命名",
   currentId: null as string | null,
   err: null as string | null,

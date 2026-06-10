@@ -159,6 +159,24 @@ describe("history save / replace / cap", () => {
     expect(schema2.records).toHaveLength(1);
     expect(schema2.records[0].id).toBe("persist-1");
   });
+
+  it("persists printSettings on save and round-trips via loadHistory", () => {
+    const rec = {
+      ...makeRecord("print-settings", 1, "打印设置"),
+      printSettings: {
+        fontSize: 24,
+        lineHeight: 2.45,
+        letterSpacing: 6,
+        layoutMode: "preserve" as const,
+        indentFirstLine: false,
+        showTitle: false,
+        pageGuide: "grid" as const,
+      },
+    };
+    saveRecord(rec);
+    const loaded = loadHistory().records.find((r) => r.id === "print-settings");
+    expect(loaded?.printSettings).toEqual(rec.printSettings);
+  });
 });
 
 describe("history delete / clear", () => {

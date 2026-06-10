@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import type { LayoutMode, Paragraph, HistoryRecord } from "@/lib/types";
+import type { Paragraph, HistoryRecord, PrintSettings } from "@/lib/types";
 import { renderParagraphs } from "@/lib/render";
 import { loadHistory } from "@/lib/history";
+import { normalizePrintSettings } from "@/lib/print-settings";
 
 /**
  * 打印专用容器。
  * - 套 A4 视觉容器 (#previewInner)
  * - 屏幕上的「返回 / 打印」按钮带 .no-print，@media print 时隐藏
- * - 数据来源优先级：localStorage (用户已保存) > sessionStorage (usePrint 临时存)
+ * - 数据来源优先级：sessionStorage (usePrint 临时存) > localStorage (用户已保存)
  */
 export default function PrintOnly() {
   const [params] = useSearchParams();
@@ -16,14 +17,7 @@ export default function PrintOnly() {
   const [data, setData] = useState<{
     paragraphs: Paragraph[];
     title: string;
-    fontSize: number;
-    lineHeight: number;
-    letterSpacing: number;
-    layoutMode: LayoutMode;
-    indentFirstLine: boolean;
-    showTitle: boolean;
-    pageGuide: "plain" | "grid";
-  } | null>(null);
+  } & PrintSettings | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -36,20 +30,33 @@ export default function PrintOnly() {
     const temp = sessionStorage.getItem("pinyinPrince.print-temp");
     if (temp) {
       try {
-        const parsed = JSON.parse(temp);
+        const parsed = JSON.parse(temp) as {
+          id?: string;
+          paragraphs?: Paragraph[];
+          title?: string;
+          printSettings?: Partial<PrintSettings>;
+          fontSize?: number;
+          lineHeight?: number;
+          letterSpacing?: number;
+          layoutMode?: string;
+          indentFirstLine?: boolean;
+          showTitle?: boolean;
+          pageGuide?: string;
+        };
         if (parsed && parsed.id === id && Array.isArray(parsed.paragraphs)) {
+          const legacySettings = parsed.printSettings ?? {
+            fontSize: parsed.fontSize,
+            lineHeight: parsed.lineHeight,
+            letterSpacing: parsed.letterSpacing,
+            layoutMode: parsed.layoutMode,
+            indentFirstLine: parsed.indentFirstLine,
+            showTitle: parsed.showTitle,
+            pageGuide: parsed.pageGuide,
+          };
           setData({
             paragraphs: parsed.paragraphs,
             title: parsed.title ?? "",
-            fontSize: Number(parsed.fontSize) || 19,
-            lineHeight: Number(parsed.lineHeight) || 2.15,
-            letterSpacing: Number.isFinite(Number(parsed.letterSpacing))
-              ? Number(parsed.letterSpacing)
-              : 2,
-            layoutMode: parsed.layoutMode === "preserve" ? "preserve" : "auto",
-            indentFirstLine: parsed.indentFirstLine !== false,
-            showTitle: parsed.showTitle !== false,
-            pageGuide: parsed.pageGuide === "grid" ? "grid" : "plain",
+            ...normalizePrintSettings(legacySettings),
           });
           return;
         }
@@ -66,13 +73,7 @@ export default function PrintOnly() {
         setData({
           paragraphs: found.paragraphs,
           title: found.title,
-          fontSize: 19,
-          lineHeight: 2.15,
-          letterSpacing: 2,
-          layoutMode: "auto",
-          indentFirstLine: true,
-          showTitle: true,
-          pageGuide: "plain",
+          ...normalizePrintSettings(found.printSettings),
         });
         return;
       }
@@ -121,7 +122,6 @@ export default function PrintOnly() {
         {data.showTitle && (
           <h1 style={{ textAlign: "center", fontSize: "1.2em", marginBottom: 16 }}>{data.title}</h1>
         )}
-        {/* Agent A 的 renderParagraphs 导出会渲染 .line 段落 */}
         {renderParagraphs(data.paragraphs)}
       </div>
     </main>

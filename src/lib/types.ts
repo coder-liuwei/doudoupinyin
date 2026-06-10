@@ -21,6 +21,16 @@ export type Mode = "plain" | "dual";
 
 export type LayoutMode = "auto" | "preserve";
 
+export interface PrintSettings {
+  fontSize: number;
+  lineHeight: number;
+  letterSpacing: number;
+  layoutMode: LayoutMode;
+  indentFirstLine: boolean;
+  showTitle: boolean;
+  pageGuide: "plain" | "grid";
+}
+
 export interface HistoryRecord {
   id: string;
   ts: number;
@@ -28,4 +38,5 @@ export interface HistoryRecord {
   mode: Mode;
   sourceRaw: string;
   paragraphs: Paragraph[];
+  printSettings?: PrintSettings;
 }

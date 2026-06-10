@@ -3,6 +3,7 @@ import { Clock, Edit3, FileText, FolderOpen, RotateCw, Trash2 } from "lucide-rea
 import { useHistory } from "@/hooks/useHistory";
 import { useEditorStore } from "@/store/useEditorStore";
 import { countAnnotatedChars } from "@/lib/document";
+import { applyPrintSettingsToStore } from "@/lib/print-settings";
 
 export default function HistoryPanel() {
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -14,6 +15,13 @@ export default function HistoryPanel() {
   const setParagraphs = useEditorStore((s) => s.setParagraphs);
   const setCurrentId = useEditorStore((s) => s.setCurrentId);
   const setTitle = useEditorStore((s) => s.setTitle);
+  const setFontSize = useEditorStore((s) => s.setFontSize);
+  const setLineHeight = useEditorStore((s) => s.setLineHeight);
+  const setLetterSpacing = useEditorStore((s) => s.setLetterSpacing);
+  const setLayoutMode = useEditorStore((s) => s.setLayoutMode);
+  const setIndentFirstLine = useEditorStore((s) => s.setIndentFirstLine);
+  const setShowTitle = useEditorStore((s) => s.setShowTitle);
+  const setPageGuide = useEditorStore((s) => s.setPageGuide);
 
   function loadRecord(id: string): void {
     const r = records.find((x) => x.id === id);
@@ -23,6 +31,15 @@ export default function HistoryPanel() {
     setParagraphs(r.paragraphs);
     setTitle(r.title);
     setCurrentId(r.id);
+    applyPrintSettingsToStore(r.printSettings ?? {}, {
+      setFontSize,
+      setLineHeight,
+      setLetterSpacing,
+      setLayoutMode,
+      setIndentFirstLine,
+      setShowTitle,
+      setPageGuide,
+    });
   }
 
   return (
