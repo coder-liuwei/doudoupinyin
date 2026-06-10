@@ -13,7 +13,7 @@ describe("layout settings", () => {
       input: "床前明月光\n疑是地上霜",
       mode: "plain",
       paragraphs: [],
-      fontSize: 19,
+      fontSize: 20,
       lineHeight: 2.15,
       letterSpacing: 2,
       layoutMode: "auto",

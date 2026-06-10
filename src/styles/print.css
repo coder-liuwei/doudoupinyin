@@ -23,7 +23,7 @@
 .print-page #previewInner {
   --preview-cell-size: 32px;
   font-family: "Songti SC", "SimSun", "STSong", "Noto Serif SC", serif;
-  font-size: 19px;
+  font-size: 20px;
   line-height: 2.15;
   max-width: 170mm;
   margin: 0 auto;

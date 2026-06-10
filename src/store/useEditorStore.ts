@@ -46,7 +46,7 @@ export interface EditorState {
   reset: () => void;
 }
 
-// 沿用旧 pinyin-prince.html:69 的默认字号 19
+// 默认字号 20（大班预设），与 PrintSettingsPanel 选项对齐
 const INITIAL = {
   input: "",
   mode: "plain" as Mode,

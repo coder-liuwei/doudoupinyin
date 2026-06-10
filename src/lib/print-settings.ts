@@ -5,7 +5,7 @@ const LINE_HEIGHT_OPTIONS = [1.9, 2.15, 2.45] as const;
 const LETTER_SPACING_OPTIONS = [0, 2, 4, 6] as const;
 
 export const DEFAULT_PRINT_SETTINGS: PrintSettings = {
-  fontSize: 19,
+  fontSize: 20,
   lineHeight: 2.15,
   letterSpacing: 2,
   layoutMode: "auto",
