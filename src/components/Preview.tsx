@@ -7,30 +7,16 @@
  * 字号受 store.fontSize 控制（不是 viewport 自适应）—— 由用户主动选，
  * 三个档位：小学 16 / 大班 20 / 小班 24。
  */
-import { useState } from "react";
-import { ArrowLeft, ArrowRight, Check, MousePointer2, PencilLine, Printer, X } from "lucide-react";
+import { Fragment, useState } from "react";
+import { MousePointer2, PencilLine, Printer } from "lucide-react";
 import { useEditorStore } from "@/store/useEditorStore";
 import { usePrint } from "@/hooks/usePrint";
-import { Ruby } from "@/lib/render";
 import { countAnnotatedChars } from "@/lib/document";
-import { countBySource, countReviewRisks, isReviewRisk } from "@/lib/review";
-
-interface EditingRange {
-  paragraphIndex: number;
-  startIndex: number;
-  endIndex: number;
-  values: string[];
-}
-
-function isAsciiTokenChar(ch: string): boolean {
-  return /[A-Za-z0-9]/.test(ch);
-}
-
-function sourceClass(pair: { pySource?: string }): string {
-  if (pair.pySource === "manual") return "manual";
-  if (pair.pySource === "dual") return "dual";
-  return "auto";
-}
+import { countBySource, countReviewRisks } from "@/lib/review";
+import {
+  renderProofreadParagraph,
+  type EditingRange,
+} from "@/lib/render";
 
 export default function Preview() {
   const [editing, setEditing] = useState<EditingRange | null>(null);
@@ -99,120 +85,6 @@ export default function Preview() {
     setEditing(null);
   }
 
-  function renderParagraph(paragraph: typeof paragraphs[number], paragraphIndex: number) {
-    const nodes: JSX.Element[] = [];
-    let pairIndex = 0;
-    while (pairIndex < paragraph.length) {
-      const pair = paragraph[pairIndex];
-      const currentPairIndex = pairIndex;
-      const isEditing =
-        editing?.paragraphIndex === paragraphIndex &&
-        currentPairIndex >= (editing?.startIndex ?? -1) &&
-        currentPairIndex <= (editing?.endIndex ?? -1);
-
-      if (isEditing && currentPairIndex === editing?.startIndex && editing) {
-        const selectedPairs = paragraph.slice(editing.startIndex, editing.endIndex + 1);
-        nodes.push(
-          <span className="unit edit-unit range-edit-unit" key={`edit-${currentPairIndex}`}>
-            <span className="range-word">{selectedPairs.map((selectedPair) => selectedPair.ch).join("")}</span>
-            <span className="range-inputs">
-              {selectedPairs.map((selectedPair, i) => (
-                <label key={`${selectedPair.ch}-${i}`}>
-                  <span>{selectedPair.ch}</span>
-                  <input
-                    value={editing.values[i] ?? ""}
-                    autoFocus={i === 0}
-                    onChange={(e) => {
-                      const next = [...editing.values];
-                      next[i] = e.target.value;
-                      setEditing({ ...editing, values: next });
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") saveEditing();
-                      if (e.key === "Escape") setEditing(null);
-                    }}
-                  />
-                </label>
-              ))}
-            </span>
-            <button
-              type="button"
-              aria-label="向左扩一字"
-              disabled={!canUsePair(paragraphIndex, editing.startIndex - 1)}
-              onClick={() => expandEditing("left")}
-            >
-              <ArrowLeft size={12} />
-            </button>
-            <button
-              type="button"
-              aria-label="向右扩一字"
-              disabled={!canUsePair(paragraphIndex, editing.endIndex + 1)}
-              onClick={() => expandEditing("right")}
-            >
-              <ArrowRight size={12} />
-            </button>
-            <button type="button" aria-label="保存拼音" onClick={saveEditing}>
-              <Check size={12} />
-            </button>
-            <button type="button" aria-label="取消编辑" onClick={() => setEditing(null)}>
-              <X size={12} />
-            </button>
-          </span>,
-        );
-        pairIndex = editing.endIndex + 1;
-        continue;
-      }
-
-      if (pair.py && !pair.isPunct) {
-        const isSuspect = isReviewRisk(pair);
-        nodes.push(
-          <span
-            key={currentPairIndex}
-            className={[
-              "proof-unit",
-              sourceClass(pair),
-              isSuspect ? "suspect" : "",
-            ]
-              .filter(Boolean)
-              .join(" ")}
-            role="button"
-            tabIndex={0}
-            onClick={() => {
-              beginEdit(paragraphIndex, currentPairIndex);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                beginEdit(paragraphIndex, currentPairIndex);
-              }
-            }}
-          >
-            <Ruby ch={pair.ch} py={pair.py} onActivate={() => beginEdit(paragraphIndex, currentPairIndex)} />
-          </span>,
-        );
-        pairIndex++;
-        continue;
-      }
-
-      if (isAsciiTokenChar(pair.ch)) {
-        let token = pair.ch;
-        let end = pairIndex + 1;
-        while (end < paragraph.length && isAsciiTokenChar(paragraph[end].ch)) {
-          token += paragraph[end].ch;
-          end++;
-        }
-        nodes.push(
-          <Ruby key={`latin-${pairIndex}`} ch={token} py={null} className="unit latin" />,
-        );
-        pairIndex = end;
-        continue;
-      }
-
-      nodes.push(<Ruby key={pairIndex} ch={pair.ch} py={null} className="unit punct" />);
-      pairIndex++;
-    }
-    return nodes;
-  }
-
   if (paragraphs.length === 0) {
     return (
       <section className="preview-panel empty-preview" aria-label="预览">
@@ -263,9 +135,23 @@ export default function Preview() {
           ].join(" ")}
         >
           {paragraphs.map((paragraph, paragraphIndex) => (
-            <p className="line" key={paragraphIndex}>
-              {renderParagraph(paragraph, paragraphIndex)}
-            </p>
+            <Fragment key={paragraphIndex}>
+              {renderProofreadParagraph(paragraph, {
+                paragraphIndex,
+                editing,
+                canUsePair,
+                onBeginEdit: beginEdit,
+                onExpand: expandEditing,
+                onSave: saveEditing,
+                onCancel: () => setEditing(null),
+                onChangeValue: (index, value) => {
+                  if (!editing) return;
+                  const next = [...editing.values];
+                  next[index] = value;
+                  setEditing({ ...editing, values: next });
+                },
+              })}
+            </Fragment>
           ))}
         </div>
       </div>
