@@ -44,6 +44,13 @@ npm test             # vitest run (41 cases)
 
 `vercel.json` 已配 `framework: "vite"`，push 到 `main` 即自动部署。
 
+## Git 工作流
+
+- 功能改动在独立分支（如 `feat/xxx`）完成，**不要直接在 `main` 上改代码**。
+- 分支上 `npm test` + `npm run build` 通过后，**停住**并告知用户本地验证（`npm run dev`）；**未经用户明确确认，不要 merge 到 `main`，也不要 push**。
+- 用户确认合并后再 `git merge`；用户确认推送后再 `git push origin main`。
+- **不要** force push `main`。
+
 ## 不要
 
 - **不要**在 `print.css` 顶部加 `@import "tailwindcss"`（preflight 会破坏 ruby）
