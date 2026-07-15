@@ -25,6 +25,7 @@ import PdfImport from "@/components/PdfImport";
 import DualHelp from "@/components/DualHelp";
 import { useEditorStore } from "@/store/useEditorStore";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   const input = useEditorStore((s) => s.input);
@@ -46,6 +47,9 @@ export default function Home() {
       <header className="hero-band">
         <h1>兜兜拼音</h1>
         <p>给课文、故事和练习稿加上清晰拼音，家里打印、课堂备课都能用。</p>
+        <Link to="/changelog" className="hero-changelog-link">
+          更新日志
+        </Link>
       </header>
 
       <div className="workbench-layout">

@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import Changelog from "./routes/Changelog";
 import Home from "./routes/Home";
 import Print from "./routes/Print";
 
@@ -11,6 +12,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/changelog" element={<Changelog />} />
       <Route path="/print" element={<Print />} />
     </Routes>
   );

@@ -1,7 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
+import App from "@/App";
 import Changelog from "@/routes/Changelog";
+import Home from "@/routes/Home";
 
 describe("Changelog", () => {
   it("renders the latest user-facing update and contributor", () => {
@@ -28,5 +30,28 @@ describe("Changelog", () => {
 
     expect(screen.getByText("还没有更新记录")).not.toBeNull();
     expect(screen.queryByText("最新")).toBeNull();
+  });
+});
+
+describe("changelog routing", () => {
+  it("renders the changelog route", () => {
+    render(
+      <MemoryRouter initialEntries={["/changelog"]}>
+        <App />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole("heading", { name: "我们又进步咯" })).not.toBeNull();
+  });
+
+  it("links to the changelog from the home hero", () => {
+    render(
+      <MemoryRouter>
+        <Home />
+      </MemoryRouter>,
+    );
+
+    const link = screen.getByRole("link", { name: "更新日志" });
+    expect(link.getAttribute("href")).toBe("/changelog");
   });
 });
