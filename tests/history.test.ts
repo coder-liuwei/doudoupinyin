@@ -177,6 +177,20 @@ describe("history save / replace / cap", () => {
     const loaded = loadHistory().records.find((r) => r.id === "print-settings");
     expect(loaded?.printSettings).toEqual(rec.printSettings);
   });
+
+  it("人工确认的拼音来源在历史回放后保持", () => {
+    const rec = makeRecord("manual-reading", 1, "人工校对");
+    rec.paragraphs = [[{ ch: "行", py: "háng", isPunct: false, pySource: "manual" }]];
+
+    saveRecord(rec);
+
+    expect(loadHistory().records[0].paragraphs[0][0]).toEqual({
+      ch: "行",
+      py: "háng",
+      isPunct: false,
+      pySource: "manual",
+    });
+  });
 });
 
 describe("history delete / clear", () => {

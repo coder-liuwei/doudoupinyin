@@ -25,7 +25,7 @@
 
 import { ArrowLeft, ArrowRight, Check, X } from "lucide-react";
 import { Fragment, type JSX, type MouseEvent } from "react";
-import { isReviewRisk } from "./review";
+import { analyzeReviewRisks } from "./review";
 import type { Pair, Paragraph } from "./types";
 
 export interface EditingRange {
@@ -165,6 +165,7 @@ function renderProofreadNodes(
     onChangeValue,
   } = options;
   const nodes: JSX.Element[] = [];
+  const reviewRisks = analyzeReviewRisks(paragraph);
   let pairIndex = 0;
 
   while (pairIndex < paragraph.length) {
@@ -227,7 +228,7 @@ function renderProofreadNodes(
     }
 
     if (pair.py && !pair.isPunct) {
-      const isSuspect = isReviewRisk(pair);
+      const isSuspect = reviewRisks[currentPairIndex];
       nodes.push(
         <span
           key={currentPairIndex}

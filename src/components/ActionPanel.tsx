@@ -5,8 +5,6 @@ import { useEditorStore } from "@/store/useEditorStore";
 import { useHistory } from "@/hooks/useHistory";
 import { normalizeInput } from "@/lib/normalize";
 import { splitPlainBlocks, buildDualParagraphs } from "@/lib/split";
-import { applyTable, loadTable } from "@/lib/polyphone";
-import { fixParticles } from "@/lib/particles";
 import { deriveTitleFromInput } from "@/lib/document";
 import { printSettingsFromStore } from "@/lib/print-settings";
 import type { Paragraph } from "@/lib/types";
@@ -47,18 +45,6 @@ export default function ActionPanel() {
         setErr("输入为空或无法分段。");
         return;
       }
-      const flat = next.flat();
-      const table = loadTable();
-      try {
-        applyTable(flat, normalized, table);
-      } catch (e) {
-        console.warn("polyphone:", e);
-        setErr(
-          "多音字词表冲突，已降级到默认注音：" +
-            (e instanceof Error ? e.message : String(e)),
-        );
-      }
-      fixParticles(flat);
       setParagraphs(next);
       if (!title.trim() || title === "未命名") {
         setTitle(deriveTitleFromInput(normalized));

@@ -15,39 +15,17 @@ import { renderParagraphs } from "@/lib/render";
 import { SAMPLE_BAIGUJING } from "@/lib/samples";
 import { normalizeInput } from "@/lib/normalize";
 import { splitPlainBlocks } from "@/lib/split";
-import { pinyinOf } from "@/lib/pinyin";
-import { applyTable, loadTable } from "@/lib/polyphone";
-import { fixParticles } from "@/lib/particles";
 import type { Paragraph } from "@/lib/types";
-
-/** 把一段纯汉字文本构造成 Pair[]（与 lib/split.ts 行为一致）。 */
-function buildPairs(text: string): Paragraph {
-  const pairs: Paragraph = [];
-  for (const ch of text) {
-    if (ch === "\n" || ch === "\r") continue;
-    if (/[\u4e00-\u9fff]/.test(ch)) {
-      pairs.push({ ch, py: pinyinOf(ch), isPunct: false });
-    } else {
-      pairs.push({ ch, py: null, isPunct: true });
-    }
-  }
-  return pairs;
-}
 
 /** 把多段纯文本（以空行分隔）转成 Paragraph[]。 */
 function buildParagraphs(text: string): Paragraph[] {
-  const normalized = normalizeInput(text);
-  const blocks = splitPlainBlocks(normalized);
-  return blocks.map((b) => buildPairs(b.join("")));
+  return splitPlainBlocks(normalizeInput(text));
 }
 
 describe("render — ruby structure", () => {
   it("renders 白骨精想吃唐僧肉 with ruby + rt", () => {
     const text = "白骨精想吃唐僧肉";
     const paragraphs = buildParagraphs(text);
-    const allPairs = paragraphs.flat();
-    applyTable(allPairs, text, loadTable());
-    fixParticles(allPairs);
 
     const tree = TestRenderer.create(
       <div>{renderParagraphs(paragraphs)}</div>,
@@ -58,10 +36,6 @@ describe("render — ruby structure", () => {
   it("renders the full SAMPLE_BAIGUJING (8 paragraphs) and matches snapshot", () => {
     const paragraphs = buildParagraphs(SAMPLE_BAIGUJING);
     expect(paragraphs).toHaveLength(8);
-
-    const allPairs = paragraphs.flat();
-    applyTable(allPairs, SAMPLE_BAIGUJING, loadTable());
-    fixParticles(allPairs);
 
     const tree = TestRenderer.create(
       <div>{renderParagraphs(paragraphs)}</div>,
@@ -169,9 +143,6 @@ describe("render — ruby structure", () => {
 
   it("renders 8 <p class='line'> nodes in the right order for the sample", () => {
     const paragraphs = buildParagraphs(SAMPLE_BAIGUJING);
-    const allPairs = paragraphs.flat();
-    applyTable(allPairs, SAMPLE_BAIGUJING, loadTable());
-    fixParticles(allPairs);
 
     const tree = TestRenderer.create(
       <div>{renderParagraphs(paragraphs)}</div>,

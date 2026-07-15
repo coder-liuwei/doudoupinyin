@@ -13,11 +13,12 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@pinyin-pro/data": "^1.2.0",
     "@vercel/analytics": "^2.0.1",
     "js-yaml": "^4.1.0",
     "lucide-react": "^1.17.0",
     "pdfjs-dist": "^3.11.174",
-    "pinyin-pro": "^3.23.1",
+    "pinyin-pro": "^3.28.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0",

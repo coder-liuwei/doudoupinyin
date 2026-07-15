@@ -1,5 +1,5 @@
 /**
- * 单/双行分段 + 逐字 Pair 序列生成。
+ * 单/双行分段 + Pair 序列生成。
  *
  * 来源：pinyin-prince.html:422-530
  *   - splitPlainBlocks: 纯汉字分段（按空行 / 单换行）
@@ -14,22 +14,13 @@
  */
 
 import type { LayoutMode, Paragraph } from "./types";
-import { pinyinOf } from "./pinyin";
+import { fixParticles } from "./particles";
+import { pinyinPairs } from "./pinyin";
 
 const CJK_RE = /[\u4e00-\u9fff]/;
 
 function isCjk(ch: string): boolean {
   return CJK_RE.test(ch);
-}
-
-/**
- * 把字符标点化（用于 build 过程中的非 CJK 字符）。
- */
-function toPair(ch: string): import("./types").Pair {
-  if (isCjk(ch)) {
-    return { ch, py: pinyinOf(ch), isPunct: false, pySource: "auto" };
-  }
-  return { ch, py: null, isPunct: true };
 }
 
 /**
@@ -68,11 +59,8 @@ export function splitPlainBlocks(
   if (blocks.length === 0 && fallback.length > 0) blocks = fallback;
 
   return blocks.map((para) => {
-    const pairs: Paragraph = [];
-    for (const ch of para) {
-      if (ch === "\n" || ch === "\r") continue;
-      pairs.push(toPair(ch));
-    }
+    const pairs = pinyinPairs(para.replace(/[\r\n]/g, ""));
+    fixParticles(pairs);
     return pairs;
   });
 }

@@ -4,7 +4,10 @@ import { Analytics } from "@vercel/analytics/react";
 import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "sonner";
 import App from "./App";
+import { initializePinyinEngine } from "./lib/pinyin";
 import "./styles/global.css";
+
+initializePinyinEngine();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
