@@ -23,25 +23,9 @@ import Preview from "@/components/Preview";
 import HistoryPanel from "@/components/HistoryPanel";
 import PdfImport from "@/components/PdfImport";
 import DualHelp from "@/components/DualHelp";
-import { useEditorStore } from "@/store/useEditorStore";
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 export default function Home() {
-  const input = useEditorStore((s) => s.input);
-  const currentId = useEditorStore((s) => s.currentId);
-
-  useEffect(() => {
-    const hasDraft = input.trim().length > 0 && !currentId;
-    if (!hasDraft) return;
-    const warn = (event: BeforeUnloadEvent) => {
-      event.preventDefault();
-      event.returnValue = "";
-    };
-    window.addEventListener("beforeunload", warn);
-    return () => window.removeEventListener("beforeunload", warn);
-  }, [currentId, input]);
-
   return (
     <main className="app-shell">
       <header className="hero-band">

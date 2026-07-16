@@ -1,9 +1,10 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 import App from "@/App";
 import Changelog from "@/routes/Changelog";
 import Home from "@/routes/Home";
+import { useEditorStore } from "@/store/useEditorStore";
 
 describe("Changelog", () => {
   it("renders the latest user-facing update and contributor", () => {
@@ -31,6 +32,37 @@ describe("Changelog", () => {
     expect(screen.getByText("还没有更新记录")).not.toBeNull();
     expect(screen.queryByText("最新")).toBeNull();
   });
+
+  it("orders entries by date and marks the newest entry", () => {
+    const older = {
+      date: "2026-06-01",
+      title: "较早更新",
+      items: ["较早内容"],
+      contributors: ["兜兜"],
+    };
+    const newer = {
+      date: "2026-07-01",
+      title: "较新更新",
+      items: ["较新内容"],
+      contributors: ["兜兜"],
+    };
+
+    render(
+      <MemoryRouter>
+        <Changelog entries={[older, newer]} />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getAllByRole("heading", { level: 3 }).map((heading) => heading.textContent))
+      .toEqual(["较新更新", "较早更新"]);
+
+    const newerArticle = screen.getByRole("heading", { name: "较新更新" }).closest("article");
+    const olderArticle = screen.getByRole("heading", { name: "较早更新" }).closest("article");
+    expect(newerArticle).not.toBeNull();
+    expect(olderArticle).not.toBeNull();
+    expect(within(newerArticle!).getByText("最新")).not.toBeNull();
+    expect(within(olderArticle!).queryByText("最新")).toBeNull();
+  });
 });
 
 describe("changelog routing", () => {
@@ -42,6 +74,24 @@ describe("changelog routing", () => {
     );
 
     expect(screen.getByRole("heading", { name: "我们又进步咯" })).not.toBeNull();
+  });
+
+  it("protects an unsaved draft while the changelog route is open", () => {
+    useEditorStore.setState({ input: "未保存草稿", currentId: null });
+    const { unmount } = render(
+      <MemoryRouter initialEntries={["/changelog"]}>
+        <App />
+      </MemoryRouter>,
+    );
+
+    try {
+      const event = new Event("beforeunload", { cancelable: true });
+      window.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(true);
+    } finally {
+      unmount();
+      useEditorStore.setState({ input: "", currentId: null });
+    }
   });
 
   it("links to the changelog from the home hero", () => {

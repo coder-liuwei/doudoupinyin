@@ -12,6 +12,8 @@ function formatDate(date: string): string {
 }
 
 export default function Changelog({ entries = changelogEntries }: ChangelogProps) {
+  const orderedEntries = [...entries].sort((a, b) => b.date.localeCompare(a.date));
+
   return (
     <main className="changelog-shell">
       <nav className="changelog-backbar" aria-label="页面导航">
@@ -41,7 +43,7 @@ export default function Changelog({ entries = changelogEntries }: ChangelogProps
         ) : (
           <div className="changelog-scroll">
             <div className="changelog-timeline">
-              {entries.map((entry, index) => (
+              {orderedEntries.map((entry, index) => (
                 <article className="changelog-entry" key={`${entry.date}-${entry.title}`}>
                   <div className="changelog-entry-meta">
                     <time dateTime={entry.date}>{formatDate(entry.date)}</time>
