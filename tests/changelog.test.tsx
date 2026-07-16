@@ -15,13 +15,18 @@ describe("Changelog", () => {
     );
 
     expect(screen.getByRole("heading", { name: "我们又进步咯" })).not.toBeNull();
-    expect(screen.getByRole("heading", { name: "多音字校对更直观了" })).not.toBeNull();
+    const latestHeading = screen.getByRole("heading", {
+      name: "拍照也能快速生成注音稿了",
+    });
+    expect(latestHeading).not.toBeNull();
     expect(
       screen.getByText(
-        "新增多音字候选读音卡片，可直接选择正确读音；优化校对提醒，普通声调差异不再标红。",
+        "新增本地图片识字功能，支持拍照或上传课文图片，识别后可校对并填入正文；图片仅在当前设备处理，不会上传。",
       ),
     ).not.toBeNull();
-    expect(screen.getByText("贡献人：兜兜、高老师")).not.toBeNull();
+    expect(
+      within(latestHeading.closest("article")!).getByText("贡献人：兜兜"),
+    ).not.toBeNull();
     expect(screen.getAllByText("最新")).toHaveLength(1);
     expect(screen.getByRole("link", { name: "返回拼音工具" }).getAttribute("href")).toBe("/");
     expect(document.querySelector(".changelog-scroll")).not.toBeNull();
