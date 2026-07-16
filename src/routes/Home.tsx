@@ -21,6 +21,7 @@ import ActionPanel from "@/components/ActionPanel";
 import PrintSettingsPanel from "@/components/PrintSettingsPanel";
 import Preview from "@/components/Preview";
 import HistoryPanel from "@/components/HistoryPanel";
+import ImageOcrImport from "@/components/ImageOcrImport";
 import PdfImport from "@/components/PdfImport";
 import DualHelp from "@/components/DualHelp";
 import { Link } from "react-router-dom";
@@ -46,6 +47,7 @@ export default function Home() {
           <ActionPanel />
           <PrintSettingsPanel />
           <DualHelp />
+          <ImageOcrImport />
           <PdfImport />
         </section>
         <Preview />

@@ -777,7 +777,8 @@ button:disabled {
 }
 
 .help-card,
-.import-card {
+.import-card,
+.image-ocr-card {
   padding: 15px;
 }
 
@@ -827,6 +828,135 @@ button:disabled {
 
 .upload-drop.busy {
   opacity: 0.7;
+}
+
+.image-ocr-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.image-ocr-picker {
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 12px;
+  border: 1px dashed rgba(157, 52, 40, 0.38);
+  border-radius: 14px;
+  color: #8b382d;
+  background: #fff6e4;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.image-ocr-picker:hover {
+  border-color: rgba(157, 52, 40, 0.65);
+  background: #fff1d8;
+}
+
+.image-ocr-picker.disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.image-ocr-picker input {
+  display: none;
+}
+
+.image-ocr-privacy,
+.image-ocr-tip {
+  color: #7b6352;
+  font-size: 12px;
+}
+
+.image-ocr-privacy {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 12px 0 0;
+  color: #426852;
+  font-weight: 800;
+}
+
+.image-ocr-tip {
+  margin: 7px 0 0;
+  line-height: 1.6;
+}
+
+.image-ocr-progress {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 13px;
+  background: #f6ead3;
+}
+
+.image-ocr-progress-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #654d3e;
+  font-size: 12px;
+}
+
+.image-ocr-progress-label span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.image-ocr-progress-track {
+  height: 7px;
+  margin-top: 9px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(125, 61, 42, 0.13);
+}
+
+.image-ocr-progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #7d3d2a;
+  transition: width 180ms ease;
+}
+
+.image-ocr-review {
+  margin-top: 10px;
+}
+
+.image-ocr-result {
+  width: 100%;
+  min-height: 180px;
+  padding: 13px;
+  resize: vertical;
+  border: 1px solid rgba(91, 63, 44, 0.22);
+  border-radius: 12px;
+  color: #2a1d18;
+  background: #fffaf0;
+  outline: none;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.image-ocr-result:focus {
+  border-color: #b13a2e;
+  box-shadow: 0 0 0 3px rgba(177, 58, 46, 0.12);
+}
+
+.image-ocr-result-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.image-ocr-replace {
+  color: #9b1c1c;
+  border-color: rgba(155, 28, 28, 0.22);
+  background: #fff1ec;
 }
 
 .spin {
@@ -1336,8 +1466,13 @@ button:disabled {
 
   .print-settings,
   .action-grid,
-  .mode-tabs {
+  .mode-tabs,
+  .image-ocr-actions {
     grid-template-columns: 1fr;
+  }
+
+  .image-ocr-result-actions {
+    flex-direction: column;
   }
 
   .paper-sheet {
