@@ -7,19 +7,34 @@
  * 字号受 store.fontSize 控制（不是 viewport 自适应）—— 由用户主动选，
  * 三个档位：小学 16 / 大班 20 / 小班 24。
  */
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { MousePointer2, PencilLine, Printer } from "lucide-react";
+import PolyphoneCandidateCard from "@/components/PolyphoneCandidateCard";
 import { useEditorStore } from "@/store/useEditorStore";
 import { usePrint } from "@/hooks/usePrint";
 import { countAnnotatedChars } from "@/lib/document";
+import { getPairPinyinCandidates } from "@/lib/pinyin-candidates";
 import { countBySource, countReviewRisks } from "@/lib/review";
 import {
   renderProofreadParagraph,
   type EditingRange,
 } from "@/lib/render";
 
+interface CandidateTarget {
+  paragraphIndex: number;
+  pairIndex: number;
+  position: { left: number; top: number };
+}
+
+const CANDIDATE_CARD_WIDTH = 280;
+const CANDIDATE_CARD_HEIGHT = 220;
+const VIEWPORT_GAP = 12;
+
 export default function Preview() {
   const [editing, setEditing] = useState<EditingRange | null>(null);
+  const [candidateTarget, setCandidateTarget] =
+    useState<CandidateTarget | null>(null);
+  const candidateCardRef = useRef<HTMLElement>(null);
   const paragraphs = useEditorStore((s) => s.paragraphs);
   const fontSize = useEditorStore((s) => s.fontSize);
   const lineHeight = useEditorStore((s) => s.lineHeight);
@@ -33,6 +48,35 @@ export default function Preview() {
   const goPrint = usePrint();
   const gridOffset = (36 + fontSize * 2) % 32;
 
+  useEffect(() => {
+    setCandidateTarget(null);
+  }, [paragraphs]);
+
+  useEffect(() => {
+    if (!candidateTarget) return;
+
+    function closeOnPointerDown(event: PointerEvent): void {
+      if (
+        event.target instanceof Node &&
+        candidateCardRef.current?.contains(event.target)
+      ) {
+        return;
+      }
+      setCandidateTarget(null);
+    }
+
+    function closeOnEscape(event: KeyboardEvent): void {
+      if (event.key === "Escape") setCandidateTarget(null);
+    }
+
+    document.addEventListener("pointerdown", closeOnPointerDown);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOnPointerDown);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [candidateTarget]);
+
   function beginEdit(paragraphIndex: number, pairIndex: number): void {
     const pair = paragraphs[paragraphIndex]?.[pairIndex];
     if (!pair?.py) return;
@@ -41,6 +85,34 @@ export default function Preview() {
       startIndex: pairIndex,
       endIndex: pairIndex,
       values: [pair.py],
+    });
+  }
+
+  function openCandidates(
+    paragraphIndex: number,
+    pairIndex: number,
+    anchor: HTMLElement,
+  ): void {
+    const pair = paragraphs[paragraphIndex]?.[pairIndex];
+    if (!pair?.py || pair.isPunct) return;
+
+    const rect = anchor.getBoundingClientRect();
+    const maxLeft = Math.max(
+      VIEWPORT_GAP,
+      window.innerWidth - CANDIDATE_CARD_WIDTH - VIEWPORT_GAP,
+    );
+    const maxTop = Math.max(
+      VIEWPORT_GAP,
+      window.innerHeight - CANDIDATE_CARD_HEIGHT - VIEWPORT_GAP,
+    );
+    setEditing(null);
+    setCandidateTarget({
+      paragraphIndex,
+      pairIndex,
+      position: {
+        left: Math.min(Math.max(VIEWPORT_GAP, rect.left), maxLeft),
+        top: Math.min(Math.max(VIEWPORT_GAP, rect.bottom + 10), maxTop),
+      },
     });
   }
 
@@ -85,6 +157,17 @@ export default function Preview() {
     setEditing(null);
   }
 
+  const candidatePair = candidateTarget
+    ? paragraphs[candidateTarget.paragraphIndex]?.[candidateTarget.pairIndex]
+    : null;
+  const candidates =
+    candidateTarget && candidatePair
+      ? getPairPinyinCandidates(
+          paragraphs[candidateTarget.paragraphIndex],
+          candidateTarget.pairIndex,
+        )
+      : [];
+
   if (paragraphs.length === 0) {
     return (
       <section className="preview-panel empty-preview" aria-label="预览">
@@ -107,9 +190,16 @@ export default function Preview() {
         <div className="preview-actions">
           <p>
             <MousePointer2 size={14} />
-            点击拼音可修改，红点字建议重点检查
+            点击汉字选择读音，红点字建议重点检查
           </p>
-          <button type="button" className="new-doc-button preview-print-button" onClick={goPrint}>
+          <button
+            type="button"
+            className="new-doc-button preview-print-button"
+            onClick={() => {
+              setCandidateTarget(null);
+              goPrint();
+            }}
+          >
             <Printer size={15} />
             打印 / 存 PDF
           </button>
@@ -140,7 +230,7 @@ export default function Preview() {
                 paragraphIndex,
                 editing,
                 canUsePair,
-                onBeginEdit: beginEdit,
+                onOpenCandidates: openCandidates,
                 onExpand: expandEditing,
                 onSave: saveEditing,
                 onCancel: () => setEditing(null),
@@ -155,6 +245,34 @@ export default function Preview() {
           ))}
         </div>
       </div>
+
+      {candidateTarget && candidatePair?.py && (
+        <PolyphoneCandidateCard
+          ref={candidateCardRef}
+          ch={candidatePair.ch}
+          currentPy={candidatePair.py}
+          candidates={candidates}
+          position={candidateTarget.position}
+          onSelect={(py) => {
+            if (py !== candidatePair.py) {
+              updatePairPinyinRange(
+                candidateTarget.paragraphIndex,
+                candidateTarget.pairIndex,
+                [{ pairIndex: 0, py }],
+              );
+            }
+            setCandidateTarget(null);
+          }}
+          onManualEdit={() => {
+            beginEdit(
+              candidateTarget.paragraphIndex,
+              candidateTarget.pairIndex,
+            );
+            setCandidateTarget(null);
+          }}
+          onClose={() => setCandidateTarget(null)}
+        />
+      )}
 
       <div className="preview-stats">
         <span>{paragraphs.length} 段</span>

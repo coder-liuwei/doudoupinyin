@@ -2,6 +2,14 @@ import { analyzePinyinText, segmentPinyinText } from "./pinyin";
 import { loadTable, projectPinyinMap } from "./polyphone";
 import type { Pair, Paragraph } from "./types";
 
+function pinyinSyllable(py: string): string {
+  return py
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "");
+}
+
 function markResolvedSegments(text: string, resolved: boolean[]): void {
   const chars = Array.from(text);
   let cursor = 0;
@@ -55,8 +63,9 @@ export function analyzeReviewRisks(paragraph: Paragraph): boolean[] {
   return paragraph.map((pair, index) => {
     if (pair.isPunct || pair.py === null || pair.pySource === "manual") return false;
     const candidates = units[index].candidates;
-    if (!candidates.includes(pair.py)) return true;
-    return candidates.length > 1 && !resolved[index];
+    const candidateSyllables = new Set(candidates.map(pinyinSyllable));
+    if (!candidateSyllables.has(pinyinSyllable(pair.py))) return true;
+    return candidateSyllables.size > 1 && !resolved[index];
   });
 }
 
