@@ -847,6 +847,131 @@ button:disabled {
   font-weight: 800;
 }
 
+.polyphone-card {
+  position: fixed;
+  z-index: 40;
+  width: min(280px, calc(100vw - 24px));
+  padding: 16px;
+  border: 1px solid rgba(86, 54, 32, 0.18);
+  border-radius: 18px;
+  color: #2d1e17;
+  background: rgba(255, 252, 242, 0.98);
+  box-shadow: 0 18px 50px rgba(75, 45, 20, 0.2);
+}
+
+.polyphone-card__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(91, 63, 44, 0.12);
+  border-radius: 50%;
+  color: #806555;
+  background: #fffaf0;
+}
+
+.polyphone-card__summary {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding-right: 32px;
+}
+
+.polyphone-card__character {
+  width: 58px;
+  height: 58px;
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  border: 1px solid rgba(177, 58, 46, 0.16);
+  border-radius: 14px;
+  color: #2d1e17;
+  background: #fffdf6;
+  font-family: "Songti SC", "STSong", serif;
+  font-size: 34px;
+  line-height: 1;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+}
+
+.polyphone-card__pinyin {
+  display: block;
+  margin-bottom: 7px;
+  color: #7d3d2a;
+  font-family: "Helvetica Neue", "PingFang SC", sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.polyphone-card__tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  color: #3f5e84;
+  background: rgba(63, 94, 132, 0.1);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.polyphone-card__choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 15px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(86, 54, 32, 0.12);
+}
+
+.polyphone-card__choice {
+  min-width: 58px;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid rgba(91, 63, 44, 0.18);
+  border-radius: 10px;
+  color: #5d4739;
+  background: #fffdf6;
+  font-family: "Helvetica Neue", "PingFang SC", sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.polyphone-card__choice[aria-pressed="true"] {
+  border-color: rgba(177, 58, 46, 0.4);
+  color: #9f2f27;
+  background: #fff1e8;
+  box-shadow: 0 0 0 2px rgba(177, 58, 46, 0.08);
+}
+
+.polyphone-card__manual {
+  width: 100%;
+  height: 36px;
+  margin-top: 12px;
+  border: 1px solid rgba(91, 63, 44, 0.16);
+  border-radius: 10px;
+  color: #5d4739;
+  background: #f6ead3;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.polyphone-card__close:hover,
+.polyphone-card__choice:hover,
+.polyphone-card__manual:hover {
+  border-color: rgba(177, 58, 46, 0.3);
+  color: #9f2f27;
+  background: #fff1e8;
+}
+
+.polyphone-card button:focus-visible {
+  outline: 2px solid rgba(177, 58, 46, 0.55);
+  outline-offset: 2px;
+}
+
 .edit-unit {
   display: inline-flex;
   align-items: center;
