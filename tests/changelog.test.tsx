@@ -15,8 +15,13 @@ describe("Changelog", () => {
     );
 
     expect(screen.getByRole("heading", { name: "我们又进步咯" })).not.toBeNull();
-    expect(screen.getByRole("heading", { name: "更新动态看得见了" })).not.toBeNull();
-    expect(screen.getByText("贡献人：兜兜")).not.toBeNull();
+    expect(screen.getByRole("heading", { name: "多音字校对更直观了" })).not.toBeNull();
+    expect(
+      screen.getByText(
+        "新增多音字候选读音卡片，可直接选择正确读音；优化校对提醒，普通声调差异不再标红。",
+      ),
+    ).not.toBeNull();
+    expect(screen.getByText("贡献人：兜兜、高老师")).not.toBeNull();
     expect(screen.getAllByText("最新")).toHaveLength(1);
     expect(screen.getByRole("link", { name: "返回拼音工具" }).getAttribute("href")).toBe("/");
     expect(document.querySelector(".changelog-scroll")).not.toBeNull();
