@@ -98,7 +98,7 @@ button:disabled {
 
 .hero-changelog-link:focus-visible,
 .changelog-backlink:focus-visible {
-  outline: 3px solid rgba(157, 52, 40, 0.38);
+  outline: 3px solid #9d3428;
   outline-offset: 3px;
 }
 

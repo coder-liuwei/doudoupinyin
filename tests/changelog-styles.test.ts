@@ -26,6 +26,10 @@ describe("changelog styles", () => {
     const shellRule = baseCss.match(/\.changelog-shell\s*\{[^}]*\}/s)?.[0] ?? "";
     const sectionRule = baseCss.match(/\.changelog-section\s*\{[^}]*\}/s)?.[0] ?? "";
     const baseScrollRule = baseCss.match(/\.changelog-scroll\s*\{[^}]*\}/s)?.[0] ?? "";
+    const focusRule =
+      baseCss.match(
+        /\.hero-changelog-link:focus-visible,\s*\.changelog-backlink:focus-visible\s*\{[^}]*\}/s,
+      )?.[0] ?? "";
     const mobileScrollRule = mobileCss.match(/\.changelog-scroll\s*\{[^}]*\}/s)?.[0] ?? "";
     const mobileDeclarations = mobileScrollRule
       .slice(mobileScrollRule.indexOf("{") + 1, mobileScrollRule.lastIndexOf("}"))
@@ -45,6 +49,8 @@ describe("changelog styles", () => {
     expect(baseScrollRule).toMatch(/min-height:\s*0;/);
     expect(baseScrollRule).toMatch(/overflow-y:\s*auto;/);
     expect(baseScrollRule).not.toMatch(/(?:^|[;{])\s*height\s*:/);
+    expect(focusRule).toMatch(/outline:\s*3px solid #9d3428;/);
+    expect(focusRule).toMatch(/outline-offset:\s*3px;/);
     expect(mobileDeclarations).toEqual(["padding-right: 6px"]);
   });
 });
