@@ -56,3 +56,11 @@ npm test             # vitest run (41 cases)
 - **不要**在 `print.css` 顶部加 `@import "tailwindcss"`（preflight 会破坏 ruby）
 - **不要**把 `pinyin-pro` 改回 CDN（v0.1 旧版用过，已弃）
 - **不要**改 `src/lib/types.ts` 的契约（所有 agent 都依赖）
+
+## 更新日志发布流程
+
+- 准备 `git push` 前，先根据本次待发布差异推荐一段面向老师、家长的更新标题和内容，并等待用户确认。
+- 贡献人默认填写“兜兜”，同时必须询问用户是否增加其他贡献者。
+- 用户确认后，把记录追加到 `src/data/changelog.ts`，再执行最终验证和 push。
+- 只记录用户能够感知的新功能和体验优化，不逐条展示内部重构、依赖调整或拼写修复。
+- 普通本地提交不强制新增更新记录。
