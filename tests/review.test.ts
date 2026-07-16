@@ -27,6 +27,26 @@ describe("上下文风险分析", () => {
     expect(countBySource(invalid, "dual")).toBe(2);
   });
 
+  it("普通字只有声调差异时不标红，明显错误的音节仍标红", () => {
+    const toneOnly: Paragraph[] = [[
+      { ch: "啊", py: "a", isPunct: false, pySource: "dual" },
+    ]];
+    const wrongSyllable: Paragraph[] = [[
+      { ch: "啊", py: "ma", isPunct: false, pySource: "dual" },
+    ]];
+
+    expect(countReviewRisks(toneOnly)).toBe(0);
+    expect(countReviewRisks(wrongSyllable)).toBe(1);
+  });
+
+  it("候选包含不同音节的真正多音字仍标红", () => {
+    const paragraph: Paragraph[] = [[
+      { ch: "的", py: "de", isPunct: false, pySource: "dual" },
+    ]];
+
+    expect(countReviewRisks(paragraph)).toBe(1);
+  });
+
   it("人工确认、标点和无拼音单元不标红", () => {
     const paragraphs: Paragraph[] = [[
       { ch: "行", py: "xíng", isPunct: false, pySource: "manual" },
