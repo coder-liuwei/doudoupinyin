@@ -70,21 +70,69 @@ describe("Preview proofreading", () => {
     });
   });
 
-  it("updates one pinyin reading from the inline proofing editor", () => {
+  it("选择候选读音后保存为人工修改", () => {
     useEditorStore.setState({
-      title: "校对测试",
+      paragraphs: [[{ ch: "行", py: "xíng", isPunct: false, pySource: "auto" }]],
+    });
+
+    render(<Preview />);
+    fireEvent.click(screen.getByText("xíng"));
+    fireEvent.click(screen.getByRole("button", { name: "选择 háng" }));
+
+    expect(useEditorStore.getState().paragraphs[0][0]).toMatchObject({
+      py: "háng",
+      pySource: "manual",
+    });
+    expect(screen.queryByRole("dialog", { name: "行的读音" })).toBeNull();
+  });
+
+  it("选择当前读音不重复更新来源", () => {
+    useEditorStore.setState({
+      paragraphs: [[{ ch: "行", py: "xíng", isPunct: false, pySource: "auto" }]],
+    });
+
+    render(<Preview />);
+    fireEvent.click(screen.getByText("xíng"));
+    fireEvent.click(screen.getByRole("button", { name: "选择 xíng" }));
+
+    expect(useEditorStore.getState().paragraphs[0][0].pySource).toBe("auto");
+  });
+
+  it("单音字也能打开只包含当前读音的字卡", () => {
+    useEditorStore.setState({
       paragraphs: [[{ ch: "你", py: "nǐ", isPunct: false, pySource: "auto" }]],
     });
 
     render(<Preview />);
     fireEvent.click(screen.getByText("nǐ"));
-    fireEvent.change(screen.getByDisplayValue("nǐ"), {
-      target: { value: "ní" },
-    });
-    fireEvent.click(screen.getByLabelText("保存拼音"));
 
-    expect(useEditorStore.getState().paragraphs[0][0].py).toBe("ní");
-    expect(useEditorStore.getState().paragraphs[0][0].pySource).toBe("manual");
+    expect(screen.getByRole("dialog", { name: "你的读音" })).not.toBeNull();
+    expect(screen.getByText("当前读音")).not.toBeNull();
+    expect(screen.getAllByRole("button", { name: "选择 nǐ" })).toHaveLength(1);
+  });
+
+  it("按 Escape 关闭候选字卡", () => {
+    useEditorStore.setState({
+      paragraphs: [[{ ch: "行", py: "xíng", isPunct: false, pySource: "auto" }]],
+    });
+
+    render(<Preview />);
+    fireEvent.click(screen.getByText("xíng"));
+    fireEvent.keyDown(document, { key: "Escape" });
+
+    expect(screen.queryByRole("dialog", { name: "行的读音" })).toBeNull();
+  });
+
+  it("点击字卡外部关闭候选字卡", () => {
+    useEditorStore.setState({
+      paragraphs: [[{ ch: "行", py: "xíng", isPunct: false, pySource: "auto" }]],
+    });
+
+    render(<Preview />);
+    fireEvent.click(screen.getByText("xíng"));
+    fireEvent.pointerDown(document.body);
+
+    expect(screen.queryByRole("dialog", { name: "行的读音" })).toBeNull();
   });
 
   it("marks common polyphone characters as proofreading suspects", () => {
@@ -112,7 +160,7 @@ describe("Preview proofreading", () => {
     expect(preview?.className).toContain("no-first-indent");
   });
 
-  it("updates a selected word range and marks all selected pinyin as manual", () => {
+  it("手动输入入口继续使用现有范围编辑器", () => {
     useEditorStore.setState({
       title: "词组校对",
       paragraphs: [[
@@ -122,8 +170,9 @@ describe("Preview proofreading", () => {
     });
 
     render(<Preview />);
-    fireEvent.click(screen.getByText("yín"));
-    fireEvent.click(screen.getByLabelText("向右扩一字"));
+    fireEvent.click(screen.getByText("xíng"));
+    fireEvent.click(screen.getByRole("button", { name: "手动输入拼音" }));
+    fireEvent.click(screen.getByLabelText("向左扩一字"));
     fireEvent.change(screen.getByDisplayValue("xíng"), {
       target: { value: "háng" },
     });
@@ -133,5 +182,16 @@ describe("Preview proofreading", () => {
     expect(pairs.map((pair) => pair.py)).toEqual(["yín", "háng"]);
     expect(pairs.map((pair) => pair.pySource)).toEqual(["manual", "manual"]);
     expect(screen.getByText("2 个人工修改")).not.toBeNull();
+  });
+
+  it("标点和无拼音字符不会打开候选字卡", () => {
+    useEditorStore.setState({
+      paragraphs: [[{ ch: "，", py: null, isPunct: true }]],
+    });
+
+    render(<Preview />);
+    fireEvent.click(screen.getByText("，"));
+
+    expect(screen.queryByRole("dialog")).toBeNull();
   });
 });

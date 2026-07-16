@@ -39,7 +39,11 @@ export interface ProofreadParagraphOptions {
   paragraphIndex: number;
   editing: EditingRange | null;
   canUsePair: (paragraphIndex: number, pairIndex: number) => boolean;
-  onBeginEdit: (paragraphIndex: number, pairIndex: number) => void;
+  onOpenCandidates: (
+    paragraphIndex: number,
+    pairIndex: number,
+    anchor: HTMLElement,
+  ) => void;
   onExpand: (direction: "left" | "right") => void;
   onSave: () => void;
   onCancel: () => void;
@@ -158,7 +162,7 @@ function renderProofreadNodes(
     paragraphIndex,
     editing,
     canUsePair,
-    onBeginEdit,
+    onOpenCandidates,
     onExpand,
     onSave,
     onCancel,
@@ -237,18 +241,25 @@ function renderProofreadNodes(
             .join(" ")}
           role="button"
           tabIndex={0}
-          onClick={() => onBeginEdit(paragraphIndex, currentPairIndex)}
+          onClick={(event) =>
+            onOpenCandidates(
+              paragraphIndex,
+              currentPairIndex,
+              event.currentTarget,
+            )
+          }
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
-              onBeginEdit(paragraphIndex, currentPairIndex);
+              e.preventDefault();
+              onOpenCandidates(
+                paragraphIndex,
+                currentPairIndex,
+                e.currentTarget,
+              );
             }
           }}
         >
-          <Ruby
-            ch={pair.ch}
-            py={pair.py}
-            onActivate={() => onBeginEdit(paragraphIndex, currentPairIndex)}
-          />
+          <Ruby ch={pair.ch} py={pair.py} />
         </span>,
       );
       pairIndex++;
