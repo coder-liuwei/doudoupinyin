@@ -1,7 +1,55 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import PolyphoneCandidateCard from "@/components/PolyphoneCandidateCard";
 import Preview from "@/components/Preview";
 import { useEditorStore } from "@/store/useEditorStore";
+
+describe("PolyphoneCandidateCard", () => {
+  it("展示当前汉字、候选读音和多音字标签", () => {
+    render(
+      <PolyphoneCandidateCard
+        ch="行"
+        currentPy="háng"
+        candidates={["háng", "xíng"]}
+        position={{ left: 120, top: 80 }}
+        onSelect={vi.fn()}
+        onManualEdit={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByRole("dialog", { name: "行的读音" })).not.toBeNull();
+    expect(screen.getByText("多音字")).not.toBeNull();
+    expect(
+      screen
+        .getByRole("button", { name: "选择 háng" })
+        .getAttribute("aria-pressed"),
+    ).toBe("true");
+    expect(screen.getByRole("button", { name: "选择 xíng" })).not.toBeNull();
+  });
+
+  it("候选选择和手动输入通过回调交给上层", () => {
+    const onSelect = vi.fn();
+    const onManualEdit = vi.fn();
+    render(
+      <PolyphoneCandidateCard
+        ch="行"
+        currentPy="háng"
+        candidates={["háng", "xíng"]}
+        position={{ left: 120, top: 80 }}
+        onSelect={onSelect}
+        onManualEdit={onManualEdit}
+        onClose={vi.fn()}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "选择 xíng" }));
+    expect(onSelect).toHaveBeenCalledWith("xíng");
+
+    fireEvent.click(screen.getByRole("button", { name: "手动输入拼音" }));
+    expect(onManualEdit).toHaveBeenCalledOnce();
+  });
+});
 
 describe("Preview proofreading", () => {
   beforeEach(() => {
