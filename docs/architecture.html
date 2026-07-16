@@ -1,0 +1,1185 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>兜兜拼音 · 交互式项目架构图</title>
+  <style>
+    :root {
+      --paper: #f6f1e7;
+      --paper-deep: #ebe3d3;
+      --ink: #1d2540;
+      --ink-soft: #5d6478;
+      --indigo: #3446a8;
+      --indigo-dark: #273580;
+      --indigo-soft: #e7eaff;
+      --green: #23856d;
+      --green-soft: #dff1e9;
+      --orange: #c85f2c;
+      --orange-soft: #f9e6da;
+      --line: #cfc8b8;
+      --surface: rgba(255, 253, 247, 0.94);
+      --surface-solid: #fffdf7;
+      --white: #ffffff;
+      --shadow: 0 18px 42px rgba(35, 42, 73, 0.10), 0 2px 0 rgba(255, 255, 255, 0.88) inset;
+      --shadow-small: 0 8px 20px rgba(35, 42, 73, 0.08), 0 2px 0 rgba(255, 255, 255, 0.8) inset;
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --display: Georgia, "Songti SC", "Noto Serif CJK SC", serif;
+      --body: "Avenir Next", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 14% 6%, rgba(52, 70, 168, 0.10), transparent 28rem),
+        radial-gradient(circle at 92% 18%, rgba(35, 133, 109, 0.09), transparent 24rem),
+        linear-gradient(135deg, rgba(255,255,255,.5), transparent 45%),
+        var(--paper);
+      font-family: var(--body);
+      line-height: 1.6;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.23;
+      background-image:
+        linear-gradient(rgba(29,37,64,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(29,37,64,.035) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(to bottom, black, transparent 78%);
+    }
+
+    button, code { font: inherit; }
+
+    button { color: inherit; }
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: 3px solid rgba(52, 70, 168, 0.34);
+      outline-offset: 3px;
+    }
+
+    .page {
+      width: min(1540px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 34px 0 56px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 28px;
+      align-items: end;
+      padding: 24px 6px 26px;
+      border-bottom: 1px solid rgba(29, 37, 64, 0.14);
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--indigo);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 850px;
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(40px, 6vw, 76px);
+      font-weight: 700;
+      line-height: .98;
+      letter-spacing: -.055em;
+    }
+
+    h1 span {
+      color: var(--indigo);
+      text-decoration: underline;
+      text-decoration-color: rgba(52,70,168,.18);
+      text-decoration-thickness: .12em;
+      text-underline-offset: .10em;
+    }
+
+    .hero-copy {
+      max-width: 760px;
+      margin: 18px 0 0;
+      color: var(--ink-soft);
+      font-size: 16px;
+    }
+
+    .hero-mark {
+      width: 168px;
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      position: relative;
+      border: 1px solid rgba(52,70,168,.18);
+      border-radius: 50%;
+      background: rgba(255,253,247,.56);
+      box-shadow: var(--shadow-small);
+    }
+
+    .hero-mark::before,
+    .hero-mark::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      border: 1px dashed rgba(52,70,168,.28);
+    }
+
+    .hero-mark::before { inset: 13px; }
+    .hero-mark::after { inset: 31px; }
+
+    .ruby-sample {
+      position: relative;
+      z-index: 1;
+      font-family: var(--display);
+      font-size: 54px;
+      font-weight: 700;
+      color: var(--indigo-dark);
+    }
+
+    .ruby-sample ruby { ruby-position: over; }
+    .ruby-sample rt {
+      color: var(--green);
+      font-family: var(--body);
+      font-size: 12px;
+      letter-spacing: .08em;
+    }
+
+    .control-deck {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin: 22px 0;
+      padding: 14px 16px;
+      border: 1px solid rgba(29,37,64,.12);
+      border-radius: var(--radius-lg);
+      background: rgba(255,253,247,.76);
+      box-shadow: var(--shadow-small);
+      backdrop-filter: blur(14px);
+    }
+
+    .view-switcher {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .view-button,
+    .reset-button,
+    .close-button {
+      min-height: 44px;
+      border: 1px solid rgba(29,37,64,.14);
+      border-radius: 999px;
+      background: var(--surface-solid);
+      cursor: pointer;
+      transition: color 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    .view-button {
+      padding: 10px 17px;
+      font-size: 14px;
+      font-weight: 750;
+    }
+
+    .view-button:hover,
+    .reset-button:hover,
+    .close-button:hover {
+      border-color: rgba(52,70,168,.42);
+      box-shadow: 0 5px 16px rgba(35,42,73,.08);
+    }
+
+    .view-button[aria-pressed="true"] {
+      color: var(--white);
+      background: var(--indigo);
+      border-color: var(--indigo);
+      box-shadow: 0 8px 18px rgba(52,70,168,.2);
+    }
+
+    .view-description {
+      margin: 0;
+      color: var(--ink-soft);
+      font-size: 13px;
+      text-align: right;
+    }
+
+    .architecture-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 370px;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .map-card,
+    .detail-panel {
+      border: 1px solid rgba(29,37,64,.13);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .map-card {
+      min-width: 0;
+      overflow: hidden;
+      position: relative;
+      border-radius: var(--radius-xl);
+    }
+
+    .map-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 22px 24px;
+      border-bottom: 1px solid rgba(29,37,64,.11);
+      background: linear-gradient(110deg, rgba(52,70,168,.07), rgba(35,133,109,.035));
+    }
+
+    .map-heading h2,
+    .detail-panel h2 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: 24px;
+      letter-spacing: -.025em;
+    }
+
+    .legend {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: var(--ink-soft);
+      font-size: 12px;
+    }
+
+    .legend-item { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-line { width: 23px; border-top: 2px solid var(--green); }
+    .legend-line.risk { border-top-color: var(--orange); border-top-style: dashed; }
+
+    .map-canvas {
+      min-height: 1010px;
+      position: relative;
+      padding: 22px;
+    }
+
+    #edge-layer {
+      display: none;
+    }
+
+    .edge {
+      fill: none;
+      stroke: rgba(35,133,109,.58);
+      stroke-width: 2;
+      vector-effect: non-scaling-stroke;
+      transition: opacity 180ms ease, stroke 180ms ease, stroke-width 180ms ease;
+    }
+
+    .edge.is-risk {
+      stroke: rgba(200,95,44,.76);
+      stroke-dasharray: 6 6;
+    }
+
+    .edge.is-dimmed { opacity: .08; }
+    .edge.is-related { opacity: 1; stroke-width: 3; stroke: var(--indigo); }
+
+    .arch-layer {
+      display: grid;
+      grid-template-columns: 126px minmax(0, 1fr);
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+      padding: 16px 0;
+      transition: opacity 180ms ease, filter 180ms ease;
+    }
+
+    .arch-layer + .arch-layer { border-top: 1px dashed rgba(29,37,64,.13); }
+
+    .layer-label {
+      align-self: start;
+      padding-top: 8px;
+      position: sticky;
+      top: 12px;
+    }
+
+    .layer-number {
+      display: block;
+      color: var(--indigo);
+      font-family: var(--display);
+      font-size: 35px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .layer-label h3 { margin: 7px 0 3px; font-size: 14px; }
+    .layer-label p { margin: 0; color: var(--ink-soft); font-size: 11px; line-height: 1.45; }
+
+    .node-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(145px, 1fr));
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .node-card {
+      min-height: 126px;
+      padding: 14px;
+      border: 1px solid rgba(29,37,64,.14);
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,.86);
+      box-shadow: var(--shadow-small);
+      text-align: left;
+      cursor: pointer;
+      position: relative;
+      z-index: 2;
+      overflow: hidden;
+      transition: opacity 180ms ease, filter 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    }
+
+    .node-card::after {
+      content: "";
+      position: absolute;
+      right: -18px;
+      bottom: -24px;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--node-tint, var(--indigo-soft));
+      opacity: .72;
+    }
+
+    .node-card:hover {
+      border-color: rgba(52,70,168,.48);
+      box-shadow: 0 14px 30px rgba(35,42,73,.12), 0 2px 0 rgba(255,255,255,.9) inset;
+    }
+
+    .node-card[data-tone="green"] { --node-tint: var(--green-soft); }
+    .node-card[data-tone="orange"] { --node-tint: var(--orange-soft); }
+
+    .node-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .node-index {
+      color: var(--indigo);
+      font-family: var(--display);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+    }
+
+    .node-glyph {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      color: var(--indigo);
+      border: 1px solid rgba(52,70,168,.17);
+      border-radius: 9px;
+      background: rgba(255,255,255,.64);
+    }
+
+    .node-glyph svg { width: 15px; height: 15px; }
+    .node-card strong { display: block; margin-bottom: 4px; font-size: 15px; line-height: 1.32; }
+    .node-card code {
+      display: block;
+      color: var(--ink-soft);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 10px;
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
+
+    .product-tag {
+      display: none;
+      color: var(--ink-soft);
+      font-size: 11px;
+      line-height: 1.42;
+    }
+
+    body[data-view="product"] .node-card code { display: none; }
+    body[data-view="product"] .product-tag { display: block; }
+
+    .node-card.is-selected {
+      color: var(--white);
+      border-color: var(--indigo);
+      background: var(--indigo);
+      box-shadow: 0 16px 32px rgba(52,70,168,.26);
+    }
+
+    .node-card.is-selected .node-index,
+    .node-card.is-selected code,
+    .node-card.is-selected .product-tag { color: rgba(255,255,255,.82); }
+
+    .node-card.is-selected .node-glyph { color: var(--white); border-color: rgba(255,255,255,.3); background: rgba(255,255,255,.12); }
+    .node-card.is-related:not(.is-selected) { border-color: rgba(52,70,168,.5); background: #f5f6ff; }
+    .node-card.is-dimmed { opacity: .26; filter: grayscale(.6); }
+
+    .risk-note,
+    .processing-outlet {
+      grid-column: span 2;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 10px 12px;
+      border: 1px dashed rgba(200,95,44,.56);
+      border-radius: 12px;
+      color: #7f381a;
+      background: rgba(249,230,218,.82);
+      font-size: 11px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .risk-dot { width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; background: var(--orange); }
+
+    .processing-outlet {
+      display: none;
+      grid-column: 1 / -1;
+      justify-content: center;
+      color: var(--indigo-dark);
+      border-color: rgba(52,70,168,.36);
+      background: var(--indigo-soft);
+      font-weight: 700;
+    }
+
+    body[data-view="parsing"] .arch-layer[data-layer="language"],
+    body[data-view="parsing"] .arch-layer[data-layer="state"],
+    body[data-view="parsing"] .arch-layer[data-layer="output"] { display: none; }
+    body[data-view="parsing"] .processing-outlet { display: flex; }
+
+    .detail-panel {
+      min-height: 520px;
+      position: sticky;
+      top: 20px;
+      overflow: hidden;
+      border-radius: var(--radius-xl);
+    }
+
+    .detail-top {
+      min-height: 112px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 22px;
+      color: var(--white);
+      background: linear-gradient(145deg, var(--indigo), var(--indigo-dark));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .detail-top::after {
+      content: "";
+      width: 130px;
+      height: 130px;
+      position: absolute;
+      right: -48px;
+      bottom: -74px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 50%;
+      box-shadow: 0 0 0 20px rgba(255,255,255,.04), 0 0 0 42px rgba(255,255,255,.025);
+    }
+
+    .detail-kicker { margin: 0 0 5px; color: rgba(255,255,255,.72); font-size: 11px; font-weight: 800; letter-spacing: .14em; }
+    .detail-top h2 { color: var(--white); }
+    .close-button {
+      width: 44px;
+      padding: 0;
+      flex: 0 0 auto;
+      color: var(--white);
+      border-color: rgba(255,255,255,.28);
+      background: rgba(255,255,255,.10);
+    }
+
+    .detail-content { padding: 22px; }
+    .detail-summary { margin: 0 0 20px; color: var(--ink-soft); font-size: 14px; }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .detail-fact {
+      padding: 12px;
+      border: 1px solid rgba(29,37,64,.10);
+      border-radius: 12px;
+      background: rgba(246,241,231,.56);
+    }
+
+    .detail-fact span,
+    .detail-section h3 {
+      display: block;
+      margin: 0 0 5px;
+      color: var(--indigo);
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .detail-fact p { margin: 0; font-size: 12px; line-height: 1.45; }
+    .detail-section { margin-top: 17px; }
+    .detail-section ul { margin: 7px 0 0; padding-left: 18px; color: var(--ink-soft); font-size: 12px; }
+    .detail-section li + li { margin-top: 5px; }
+    .error-box { padding: 12px; border-left: 3px solid var(--orange); border-radius: 0 10px 10px 0; color: #743719; background: var(--orange-soft); font-size: 12px; }
+    .file-chip { display: block; margin-top: 7px; padding: 8px 9px; border-radius: 9px; color: var(--indigo-dark); background: var(--indigo-soft); font-family: "SFMono-Regular", Consolas, monospace; font-size: 10px; overflow-wrap: anywhere; }
+
+    .detail-empty {
+      min-height: 380px;
+      display: grid;
+      place-items: center;
+      padding: 42px 28px;
+      text-align: center;
+    }
+
+    .empty-orbit {
+      width: 112px;
+      height: 112px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 20px;
+      color: var(--indigo);
+      border: 1px dashed rgba(52,70,168,.33);
+      border-radius: 50%;
+      box-shadow: 0 0 0 15px rgba(52,70,168,.04), 0 0 0 30px rgba(52,70,168,.025);
+    }
+
+    .empty-orbit svg { width: 36px; height: 36px; }
+    .detail-empty h2 { margin-bottom: 8px; }
+    .detail-empty p { max-width: 260px; margin: 0; color: var(--ink-soft); font-size: 13px; }
+
+    .architecture-notes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .note-card {
+      padding: 16px 17px;
+      border: 1px solid rgba(29,37,64,.12);
+      border-radius: var(--radius-md);
+      background: rgba(255,253,247,.72);
+    }
+
+    .note-card strong { display: block; margin-bottom: 4px; color: var(--indigo); font-size: 13px; }
+    .note-card p { margin: 0; color: var(--ink-soft); font-size: 12px; }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-top: 30px;
+      padding: 20px 5px 0;
+      border-top: 1px solid rgba(29,37,64,.12);
+      color: var(--ink-soft);
+      font-size: 11px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .hero > *, .control-deck, .map-card, .detail-panel {
+        animation: reveal 520ms cubic-bezier(.2,.7,.2,1) both;
+      }
+      .hero-mark { animation-delay: 80ms; }
+      .control-deck { animation-delay: 110ms; }
+      .map-card { animation-delay: 170ms; }
+      .detail-panel { animation-delay: 230ms; }
+      @keyframes reveal {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+
+    @media (max-width: 1180px) {
+      .architecture-shell { grid-template-columns: minmax(0, 1fr) 330px; }
+      .node-grid { grid-template-columns: repeat(2, minmax(150px, 1fr)); }
+      .map-canvas { min-height: 1470px; }
+    }
+
+    @media (max-width: 900px) {
+      .page { width: min(100% - 28px, 760px); padding-top: 20px; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-mark { display: none; }
+      .architecture-shell { grid-template-columns: 1fr; }
+      .detail-panel { position: relative; top: auto; min-height: 0; }
+      .map-canvas { min-height: 1450px; }
+      .architecture-notes { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 620px) {
+      .page { width: min(100% - 20px, 560px); }
+      h1 { font-size: 42px; }
+      .hero-copy { font-size: 14px; }
+      .control-deck { align-items: stretch; flex-direction: column; }
+      .view-switcher { display: grid; grid-template-columns: 1fr; }
+      .view-button { width: 100%; }
+      .view-description { text-align: left; }
+      .map-heading { align-items: flex-start; flex-direction: column; padding: 18px; }
+      .map-canvas { min-height: 2460px; padding: 14px; }
+      .arch-layer { grid-template-columns: 1fr; gap: 10px; padding: 15px 0; }
+      .layer-label { position: static; display: grid; grid-template-columns: 50px 1fr; column-gap: 8px; }
+      .layer-number { grid-row: span 2; font-size: 30px; }
+      .layer-label h3 { margin: 1px 0 0; }
+      .node-grid { grid-template-columns: 1fr; }
+      .node-card { min-height: 108px; }
+      .risk-note { grid-column: 1; }
+      .detail-grid { grid-template-columns: 1fr; }
+      .footer { flex-direction: column; }
+    }
+  </style>
+</head>
+<body data-view="product">
+  <div class="page">
+    <header class="hero" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">Doudou Pinyin · System Atlas 02</p>
+        <h1 id="page-title">从一段课文，到一张<span>可打印注音稿</span></h1>
+        <p class="hero-copy">这张图不是概念架构，而是现有代码的可交互地图。沿着绿色主链路，可以看到内容如何被解析、注音、校正、人工兜底，最终进入预览、历史记录与独立打印页。</p>
+      </div>
+      <div class="hero-mark" aria-hidden="true">
+        <div class="ruby-sample"><ruby>兜<rt>dōu</rt></ruby></div>
+      </div>
+    </header>
+
+    <section class="control-deck" aria-label="架构图控制器">
+      <nav class="view-switcher" aria-label="架构视图">
+        <button class="view-button" type="button" data-view="product" aria-pressed="true">产品视角</button>
+        <button class="view-button" type="button" data-view="technical" aria-pressed="false">技术视角</button>
+        <button class="view-button" type="button" data-view="parsing" aria-pressed="false">聚焦内容解析</button>
+      </nav>
+      <p class="view-description" id="view-description">从用户动作理解完整产品闭环；点击任一节点继续下钻。</p>
+    </section>
+
+    <main class="architecture-shell">
+      <section class="map-card" id="architecture-map" aria-label="兜兜拼音系统架构图">
+        <div class="map-heading">
+          <div>
+            <p class="eyebrow">Live code map</p>
+            <h2>五层处理链路</h2>
+          </div>
+          <p class="view-description">按层阅读流程，点击节点查看职责、边界与代码坐标。</p>
+        </div>
+
+        <div class="map-canvas" id="map-canvas">
+          <svg id="edge-layer" aria-hidden="true"></svg>
+
+          <section class="arch-layer" data-layer="input" aria-labelledby="layer-input">
+            <div class="layer-label">
+              <span class="layer-number">01</span>
+              <h3 id="layer-input">内容输入层</h3>
+              <p>两种入口，都在浏览器端完成</p>
+            </div>
+            <div class="node-grid">
+              <button class="node-card" data-node-id="text-input" data-tone="green" type="button">
+                <span class="node-topline"><span class="node-index">01.1</span><span class="node-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16M4 10h12M4 15h16M4 20h9"/></svg></span></span>
+                <strong>文本直接输入</strong><code>Editor → input</code><span class="product-tag">粘贴课文、故事或练习内容</span>
+              </button>
+              <button class="node-card" data-node-id="pdf-import" data-tone="green" type="button">
+                <span class="node-topline"><span class="node-index">01.2</span><span class="node-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v5h5M9 15h6M12 12v6"/></svg></span></span>
+                <strong>PDF 文件导入</strong><code>PdfImport.onFile()</code><span class="product-tag">从现有讲义和阅读材料提取正文</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="arch-layer" data-layer="parse" aria-labelledby="layer-parse">
+            <div class="layer-label">
+              <span class="layer-number">02</span>
+              <h3 id="layer-parse">内容解析层</h3>
+              <p>清洗、分段与双行对齐校验</p>
+            </div>
+            <div class="node-grid">
+              <button class="node-card" data-node-id="pdf-extract" data-tone="orange" type="button">
+                <span class="node-topline"><span class="node-index">02.1</span><span class="node-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M7 3v6M17 3v6M5 12h14M5 16h9M5 20h12"/></svg></span></span>
+                <strong>PDF 文本抽取</strong><code>extractPdfText()</code><span class="product-tag">逐页读取，并恢复合理阅读顺序</span>
+              </button>
+              <button class="node-card" data-node-id="normalize" type="button">
+                <span class="node-topline"><span class="node-index">02.2</span><span class="node-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M7 4v6M6 13l3 3 6-7M13 17h7M16.5 14v6"/></svg></span></span>
+                <strong>输入规范化</strong><code>normalizeInput()</code><span class="product-tag">统一全半角、换行与多余空格</span>
+              </button>
+              <button class="node-card" data-node-id="plain-split" type="button">
+                <span class="node-topline"><span class="node-index">02.3A</span><span class="node-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 11h16M4 16h7M14 16h6M12 3v18"/></svg></span></span>
+                <strong>纯文本分段</strong><code>splitPlainBlocks()</code><span class="product-tag">按空行或单换行形成自然段</span>
+              </button>
+              <button class="node-card" data-node-id="dual-parse" data-tone="orange" type="button">
+                <span class="node-topline"><span class="node-index">02.3B</span><span class="node-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 17h16M8 4v6M16 14v6M12 3v18"/></svg></span></span>
+                <strong>双行配对校验</strong><code>buildDualParagraphs()</code><span class="product-tag">识别拼音行与汉字行并逐格对齐</span>
+              </button>
+              <div class="risk-note" data-risk-id="parse-risk"><span class="risk-dot"></span>格数、顺序或单字校验失败 → 给出第 N 组中文错误，不生成半成品</div>
+              <div class="processing-outlet">解析完成后进入 Pair 建模、注音校正与输出链路 ↓</div>
+            </div>
+          </section>
+
+          <section class="arch-layer" data-layer="language" aria-labelledby="layer-language">
+            <div class="layer-label">
+              <span class="layer-number">03</span>
+              <h3 id="layer-language">语言处理层</h3>
+              <p>基础注音、词组覆盖与轻量规则</p>
+            </div>
+            <div class="node-grid">
+              <button class="node-card" data-node-id="base-pinyin" data-tone="green" type="button">
+                <span class="node-topline"><span class="node-index">03.1</span><span class="node-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 19V5h6a4 4 0 0 1 0 8H5M14 19l5-12M16 15h5"/></svg></span></span>
+                <strong>基础拼音生成</strong><code>pinyinOf() / pinyin-pro</code><span class="product-tag">为纯文本中的每个汉字生成带声调拼音</span>
+              </button>
+              <button class="node-card" data-node-id="pair-model" type="button">
+                <span class="node-topline"><span class="node-index">03.2</span><span class="node-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="7" height="14" rx="2"/><rect x="14" y="5" width="7" height="14" rx="2"/><path d="M10 12h4"/></svg></span></span>
+                <strong>逐字 Pair 建模</strong><code>{ ch, py, isPunct, pySource }</code><span class="product-tag">统一汉字、拼音、标点和来源信息</span>
+              </button>
+              <button class="node-card" data-node-id="polyphone" data-tone="orange" type="button">
+                <span class="node-topline"><span class="node-index">03.3</span><span class="node-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5h14v14H5zM8 9h8M8 13h5M16 12v5"/></svg></span></span>
+                <strong>多音字词表覆盖</strong><code>loadTable() → applyTable()</code><span class="product-tag">词组优先覆盖，再使用单字兜底</span>
+              </button>
+              <button class="node-card" data-node-id="particles" data-tone="green" type="button">
+                <span class="node-topline"><span class="node-index">03.4</span><span class="node-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12h16M12 4v16M7 7l10 10M17 7 7 17"/></svg></span></span>
+                <strong>结构助词校正</strong><code>fixParticles()</code><span class="product-tag">补充“的、地、得”等轻声场景规则</span>
+              </button>
+              <div class="risk-note" data-risk-id="polyphone-risk"><span class="risk-dot"></span>词组 override 区间冲突 → 提示已降级，保留基础注音继续处理</div>
+            </div>
+          </section>
+
+          <section class="arch-layer" data-layer="state" aria-labelledby="layer-state">
+            <div class="layer-label">
+              <span class="layer-number">04</span>
+              <h3 id="layer-state">状态与校对层</h3>
+              <p>自动结果可追踪，也允许人工负责</p>
+            </div>
+            <div class="node-grid">
+              <button class="node-card" data-node-id="editor-state" type="button">
+                <span class="node-topline"><span class="node-index">04.1</span><span class="node-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4zM8 4v16M8 9h12M8 15h12"/></svg></span></span>
+                <strong>编辑器统一状态</strong><code>useEditorStore / Zustand</code><span class="product-tag">集中管理原文、段落、版式和当前记录</span>
+              </button>
+              <button class="node-card" data-node-id="proofread" data-tone="orange" type="button">
+                <span class="node-topline"><span class="node-index">04.2</span><span class="node-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19l4.5-1 9.8-9.8a2.1 2.1 0 0 0-3-3L5.5 15zM13.8 6.2l4 4M12 20h8"/></svg></span></span>
+                <strong>风险高亮与人工修订</strong><code>updatePairPinyin*()</code><span class="product-tag">对不确定读音进行单字或词组校对</span>
+              </button>
+              <button class="node-card" data-node-id="history" data-tone="green" type="button">
+                <span class="node-topline"><span class="node-index">04.3</span><span class="node-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16v13H4zM7 4h10v3H7zM8 11h8M8 15h5"/></svg></span></span>
+                <strong>本地历史记录</strong><code>pinyinPrince.v2.history</code><span class="product-tag">保留原文、校对结果和打印设置以便复用</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="arch-layer" data-layer="output" aria-labelledby="layer-output">
+            <div class="layer-label">
+              <span class="layer-number">05</span>
+              <h3 id="layer-output">展示输出层</h3>
+              <p>屏幕校对与打印交付保持一致</p>
+            </div>
+            <div class="node-grid">
+              <button class="node-card" data-node-id="ruby-render" data-tone="green" type="button">
+                <span class="node-topline"><span class="node-index">05.1</span><span class="node-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 8h14M8 4h8M7 12h10v8H7zM10 12v8M14 12v8"/></svg></span></span>
+                <strong>Ruby 注音渲染</strong><code>Ruby / render.tsx</code><span class="product-tag">将拼音稳定排在每个汉字上方</span>
+              </button>
+              <button class="node-card" data-node-id="print-route" data-tone="green" type="button">
+                <span class="node-topline"><span class="node-index">05.2</span><span class="node-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 8V3h10v5M6 18H4V9h16v9h-2M7 14h10v7H7zM16 11h1"/></svg></span></span>
+                <strong>独立打印路由</strong><code>/print?id=… / print.css</code><span class="product-tag">隔离屏幕样式，输出 A4 或保存 PDF</span>
+              </button>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <aside class="detail-panel" id="detail-panel" aria-live="polite" aria-label="节点技术详情">
+        <div class="detail-empty" id="detail-empty">
+          <div>
+            <div class="empty-orbit" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg></div>
+            <h2>选择一个节点</h2>
+            <p>查看它的职责、输入输出、关键规则、异常边界和真实代码路径。</p>
+          </div>
+        </div>
+        <div id="detail-view" hidden></div>
+      </aside>
+    </main>
+
+    <section class="architecture-notes" aria-label="架构原则">
+      <article class="note-card"><strong>端侧优先</strong><p>PDF 解析、注音、校对和历史数据均在浏览器内处理，不依赖业务后端。</p></article>
+      <article class="note-card"><strong>算法 + 规则 + 人工兜底</strong><p>基础引擎负责覆盖率，词表与规则提升场景准确性，人工修订负责最终质量。</p></article>
+      <article class="note-card"><strong>打印样式隔离</strong><p>屏幕端使用 Tailwind，打印端使用独立路由和 print.css，避免 preflight 破坏 ruby。</p></article>
+    </section>
+
+    <footer class="footer">
+      <span>兜兜拼音 v0.2 · Vite + React 18 + TypeScript</span>
+      <span>架构依据当前仓库实现生成 · 2026-07-14</span>
+    </footer>
+  </div>
+
+  <script>
+    const nodeDetails = {
+      "text-input": {
+        title: "文本直接输入", layer: "内容输入层",
+        summary: "用户在编辑器中直接粘贴或录入课文、故事和练习内容，是最短的内容入口。",
+        input: "浏览器中的纯文本", output: "Zustand input 字段",
+        rules: ["输入阶段不提前破坏换行结构", "生成动作发生前始终保留原始文本", "未保存草稿离开页面时触发提醒"],
+        errors: "空文本不会进入后续生成流程，ActionPanel 会显示“输入为空或无法分段”。",
+        files: ["src/components/Editor.tsx", "src/store/useEditorStore.ts · setInput"]
+      },
+      "pdf-import": {
+        title: "PDF 文件导入", layer: "内容输入层",
+        summary: "接收用户选择的 PDF，在浏览器端动态加载解析模块，并将抽取结果写回统一编辑器输入。",
+        input: "application/pdf File", output: "抽取后的正文 + plain 模式",
+        rules: ["只取文件选择器中的第一个文件", "动态 import 降低首屏负担", "成功后强制切换为纯文本模式", "重置 input value，允许重复选择同一文件"],
+        errors: "解析异常转成中文 toast；保留当前编辑器内容，并在组件内展示最近一次错误。",
+        files: ["src/components/PdfImport.tsx · onFile"]
+      },
+      "pdf-extract": {
+        title: "PDF 文本抽取", layer: "内容解析层",
+        summary: "利用 pdfjs-dist 逐页读取文本项，并依据 PDF 坐标恢复更接近人类阅读的顺序。",
+        input: "PDF ArrayBuffer", output: "按页拼接的纯文本",
+        rules: ["按页调用 getTextContent", "Y 坐标从上到下、X 坐标从左到右排序", "hasEOL 还原换行", "页间保留双换行", "连续三行以上空白折叠为双换行"],
+        errors: "任何 worker、文件或内容解析异常都会统一包装成“PDF 抽取失败: 原因”。扫描版图片 PDF 不具备 OCR 能力。",
+        files: ["src/lib/pdf-extract.ts · extractPdfText", "src/lib/pdf-extract.ts · textFromPageItems"]
+      },
+      normalize: {
+        title: "输入规范化", layer: "内容解析层",
+        summary: "为单行和双行两种解析策略建立稳定输入，处理来自网页、Word、PDF 和 OCR 的常见字符差异。",
+        input: "用户文本或 PDF 抽取结果", output: "规范化后的纯文本",
+        rules: ["执行 Unicode NFKC 规范化", "CRLF 与 CR 统一为 LF", "连续横向空白折叠为单空格", "去除首尾空白", "不合并单换行，保护双行模式结构"],
+        errors: "旧环境不支持 String.normalize 时仅跳过 NFKC，其余清洗继续执行。",
+        files: ["src/lib/normalize.ts · normalizeInput", "src/components/ActionPanel.tsx · handleGenerate"]
+      },
+      "plain-split": {
+        title: "纯文本分段", layer: "内容解析层",
+        summary: "将普通汉字正文拆成 Paragraph[]；不同换行习惯会采用不同策略，减少粘贴后的手工整理。",
+        input: "规范化文本 + layoutMode", output: "Paragraph[]，每段由 Pair[] 构成",
+        rules: ["保留模式：每个非空行是一段", "存在空行：按空行分段，段内折行合并", "无空行：按单换行分段", "CJK 字符进入注音，非 CJK 记为标点"],
+        errors: "清洗后没有有效块时返回空数组，由上层统一提示无法分段。",
+        files: ["src/lib/split.ts · splitPlainBlocks", "src/lib/split.ts · toPair"]
+      },
+      "dual-parse": {
+        title: "双行配对校验", layer: "内容解析层",
+        summary: "面向“拼音行 + 汉字行”的现成手稿，先识别行类型，再把每个拼音格与单个汉字严格配对。",
+        input: "按行组织的拼音与汉字文本", output: "pySource=dual 的 Paragraph[]",
+        rules: ["拉丁字母占优判定为拼音行", "连续拼音行和汉字行分别合并", "拼音格数必须等于汉字格数", "汉字格必须一格一字", "非 CJK 内容按标点处理"],
+        errors: "缺拼音块、缺汉字块、顺序错误、格数不等或汉字格非单字时立即抛出带组号的中文错误。",
+        files: ["src/lib/split.ts · looksLikePinyinLine", "src/lib/split.ts · buildDualParagraphs"]
+      },
+      "base-pinyin": {
+        title: "基础拼音生成", layer: "语言处理层",
+        summary: "对纯文本分支中的每个 CJK 字符调用 pinyin-pro，先获得覆盖面完整的带声调基础读音。",
+        input: "单个汉字字符", output: "带声调字符串或空值",
+        rules: ["使用 toneType=symbol 输出声调符号", "非汉字字符不进入拼音引擎", "基础结果标记 pySource=auto"],
+        errors: "基础引擎只解决单字默认读音；语境多音字由下一层词表覆盖，而非在此猜测。",
+        files: ["src/lib/pinyin.ts · pinyinOf", "src/lib/split.ts · toPair"]
+      },
+      "pair-model": {
+        title: "逐字 Pair 建模", layer: "语言处理层",
+        summary: "把两种输入模式统一为同一个最小数据单元，使后续覆盖、人工修订、预览和打印共享数据契约。",
+        input: "汉字/标点 + 自动或用户提供的拼音", output: "{ ch, py, isPunct, pySource }",
+        rules: ["plain 分支的来源为 auto", "dual 分支的来源为 dual", "非 CJK 标记 isPunct=true 且 py=null", "人工修改后来源改为 manual"],
+        errors: "共享类型契约集中定义，渲染层只消费 Pair，不重新推断文本语义。",
+        files: ["src/lib/types.ts · Pair", "src/lib/split.ts · Paragraph"]
+      },
+      polyphone: {
+        title: "多音字词表覆盖", layer: "语言处理层",
+        summary: "将可维护的 YAML 词表编译进前端包，按词组语境覆盖基础读音，再应用单字默认值和跳过字符。",
+        input: "扁平 Pair[] + 规范化原文 + PolyphoneTable", output: "就地修订后的 Pair[]",
+        rules: ["扫描全部 overrides 命中区间", "区间按起止位置排序", "词组级拼音优先", "skips 转为标点", "未命中词组时再看 defaults", "YAML 在编译期通过 ?raw 载入"],
+        errors: "不同词组命中区间重叠时抛出冲突；上层捕获后保留基础注音并提示已降级。",
+        files: ["src/lib/polyphone.ts · loadTable", "src/lib/polyphone.ts · applyTable", "src/data/polyphone.yaml"]
+      },
+      particles: {
+        title: "结构助词校正", layer: "语言处理层",
+        summary: "在多音字词表之后追加一组明确、可解释的轻量规则，修正特定“地、得”轻声场景。",
+        input: "已应用多音字词表的 Pair[]", output: "结构助词读音修订后的 Pair[]",
+        rules: ["“得”前字属于疼/气/笑/走时读 de", "五字窗口等于“依依不舍地”时“地”读 de", "修订结果继续标记为 auto"],
+        errors: "规则只覆盖已确认场景，不做开放式语义推断；其他情况保持上游结果。",
+        files: ["src/lib/particles.ts · fixParticles"]
+      },
+      "editor-state": {
+        title: "编辑器统一状态", layer: "状态与校对层",
+        summary: "Zustand 保存当前工作稿的输入、模式、段落、标题、打印设置、记录 ID 和错误，驱动预览与操作面板同步。",
+        input: "生成后的 Paragraph[] 与用户配置", output: "可响应更新的 EditorState",
+        rules: ["历史列表不放进全局 store，避免无谓重渲染", "PDF 临时状态保留在组件内", "人工改音会清空 currentId，防止误覆盖旧记录"],
+        errors: "reset 只恢复当前编辑器初始状态；历史记录不在此模块内，因此不会被误清空。",
+        files: ["src/store/useEditorStore.ts · useEditorStore"]
+      },
+      proofread: {
+        title: "风险高亮与人工修订", layer: "状态与校对层",
+        summary: "自动结果不是黑盒终点。界面标出风险读音，用户可对单字或连续词组进行最终确认和覆盖。",
+        input: "当前 Paragraph[] + 用户校对值", output: "pySource=manual 的修订 Pair",
+        rules: ["支持单字修改", "支持连续词组批量修改", "人工修改只更新目标段和索引", "预览与打印消费同一份修订数据"],
+        errors: "人工修订优先于展示层，避免在预览组件内维护第二份不一致数据。",
+        files: ["src/store/useEditorStore.ts · updatePairPinyin", "src/store/useEditorStore.ts · updatePairPinyinRange", "src/components/Preview.tsx"]
+      },
+      history: {
+        title: "本地历史记录", layer: "状态与校对层",
+        summary: "将可复用的学习资料保存在浏览器 localStorage，包含原文、最终段落和打印设置。",
+        input: "文档 ID、标题、模式、原文、Paragraph[]、打印设置", output: "schemaVersion=2 的本地记录",
+        rules: ["localStorage 键为 pinyinPrince.v2.history", "使用 schemaVersion=2 包装", "兼容读取旧 v1 数组并迁移", "旧 v1 键只读保留"],
+        errors: "浏览器存储不可用或数据损坏时由历史模块做安全读取，不影响当前编辑器生成。",
+        files: ["src/lib/history.ts", "src/hooks/useHistory.ts", "src/components/ActionPanel.tsx · handleSave"]
+      },
+      "ruby-render": {
+        title: "Ruby 注音渲染", layer: "展示输出层",
+        summary: "将每个 Pair 映射为语义化 ruby/rt 结构，使屏幕校对与打印输出共享同一套核心节点结构。",
+        input: "Paragraph[] + 字号/行高/字距等设置", output: "带字上拼音的 React 节点",
+        rules: ["有拼音的汉字使用 ruby + rt", "标点保持普通文本", "风险与人工来源可附加不同展示状态", "预览和打印复用渲染核心"],
+        errors: "渲染层不重新计算拼音；数据问题应在解析、校正或校对层解决。",
+        files: ["src/lib/render.tsx · Ruby", "src/components/Preview.tsx", "src/components/PrintOnly.tsx"]
+      },
+      "print-route": {
+        title: "独立打印路由", layer: "展示输出层",
+        summary: "通过可分享的 /print?id=… 路由读取历史记录，挂载独立 print.css，生成稳定 A4 打印稿或浏览器 PDF。",
+        input: "历史记录 ID + 打印设置", output: "A4 打印页面 / PDF",
+        rules: ["打印页不引入 Tailwind", "print.css 独立维护 ruby 关键样式", "URL 携带记录 ID", "支持学段字号、行高、字距和页面辅助线"],
+        errors: "记录不存在时打印页需要给出明确状态；禁止向 print.css 引入 Tailwind，避免 preflight 破坏 ruby。",
+        files: ["src/routes/Print.tsx", "src/styles/print.css", "src/hooks/usePrint.ts"]
+      }
+    };
+
+    const edges = [
+      ["text-input", "normalize"],
+      ["pdf-import", "pdf-extract"],
+      ["pdf-extract", "normalize"],
+      ["normalize", "plain-split"],
+      ["normalize", "dual-parse"],
+      ["plain-split", "base-pinyin"],
+      ["base-pinyin", "pair-model"],
+      ["dual-parse", "pair-model"],
+      ["pair-model", "polyphone"],
+      ["polyphone", "particles"],
+      ["particles", "editor-state"],
+      ["editor-state", "proofread"],
+      ["editor-state", "history"],
+      ["proofread", "ruby-render"],
+      ["history", "print-route"],
+      ["ruby-render", "print-route"]
+    ];
+
+    const riskEdges = [
+      ["dual-parse", "parse-risk"],
+      ["polyphone", "polyphone-risk"]
+    ];
+
+    const views = {
+      product: {
+        label: "产品视角",
+        description: "从用户动作理解完整产品闭环；点击任一节点继续下钻。"
+      },
+      technical: {
+        label: "技术视角",
+        description: "显示真实函数、状态和文件边界，适合技术评审与答辩追问。"
+      },
+      parsing: {
+        label: "聚焦内容解析",
+        description: "只看文本与 PDF 如何被清洗、分段、识别和校验，再进入统一数据模型。"
+      }
+    };
+
+    const nodeElements = new Map(
+      [...document.querySelectorAll("[data-node-id]")].map((element) => [element.dataset.nodeId, element])
+    );
+    const edgeLayer = document.querySelector("#edge-layer");
+    const mapCanvas = document.querySelector("#map-canvas");
+    const detailEmpty = document.querySelector("#detail-empty");
+    const detailView = document.querySelector("#detail-view");
+    const detailPanel = document.querySelector("#detail-panel");
+    let selectedNodeId = null;
+    let resizeFrame = 0;
+
+    function iconClose() {
+      return '<svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      })[char]);
+    }
+
+    function renderDetail(detail) {
+      const rules = detail.rules.map((rule) => `<li>${escapeHtml(rule)}</li>`).join("");
+      const files = detail.files.map((file) => `<span class="file-chip">${escapeHtml(file)}</span>`).join("");
+      detailView.innerHTML = `
+        <div class="detail-top">
+          <div><p class="detail-kicker">${escapeHtml(detail.layer)}</p><h2>${escapeHtml(detail.title)}</h2></div>
+          <button class="close-button" type="button" aria-label="关闭节点详情">${iconClose()}</button>
+        </div>
+        <div class="detail-content">
+          <p class="detail-summary">${escapeHtml(detail.summary)}</p>
+          <div class="detail-grid">
+            <div class="detail-fact"><span>Input</span><p>${escapeHtml(detail.input)}</p></div>
+            <div class="detail-fact"><span>Output</span><p>${escapeHtml(detail.output)}</p></div>
+          </div>
+          <section class="detail-section"><h3>关键规则</h3><ul>${rules}</ul></section>
+          <section class="detail-section"><h3>错误与边界</h3><div class="error-box">${escapeHtml(detail.errors)}</div></section>
+          <section class="detail-section"><h3>代码坐标</h3>${files}</section>
+        </div>`;
+      detailView.querySelector(".close-button").addEventListener("click", clearSelection);
+    }
+
+    function collectReachable(startId, direction) {
+      const adjacency = new Map();
+      edges.forEach(([source, target]) => {
+        const from = direction === "forward" ? source : target;
+        const to = direction === "forward" ? target : source;
+        if (!adjacency.has(from)) adjacency.set(from, []);
+        adjacency.get(from).push(to);
+      });
+      const visited = new Set([startId]);
+      const queue = [startId];
+      while (queue.length) {
+        const current = queue.shift();
+        (adjacency.get(current) || []).forEach((next) => {
+          if (!visited.has(next)) {
+            visited.add(next);
+            queue.push(next);
+          }
+        });
+      }
+      return visited;
+    }
+
+    function highlightFlow(nodeId) {
+      const related = new Set([
+        ...collectReachable(nodeId, "forward"),
+        ...collectReachable(nodeId, "backward")
+      ]);
+      nodeElements.forEach((element, id) => {
+        element.classList.toggle("is-selected", id === nodeId);
+        element.classList.toggle("is-related", id !== nodeId && related.has(id));
+        element.classList.toggle("is-dimmed", !related.has(id));
+      });
+      [...edgeLayer.querySelectorAll(".edge")].forEach((path) => {
+        const source = path.dataset.source;
+        const target = path.dataset.target;
+        const edgeRelated = related.has(source) && related.has(target);
+        path.classList.toggle("is-related", edgeRelated);
+        path.classList.toggle("is-dimmed", !edgeRelated);
+      });
+    }
+
+    function selectNode(nodeId) {
+      const detail = nodeDetails[nodeId];
+      if (!detail) return;
+      selectedNodeId = nodeId;
+      renderDetail(detail);
+      detailEmpty.hidden = true;
+      detailView.hidden = false;
+      detailPanel.dataset.open = "true";
+      highlightFlow(nodeId);
+      if (window.matchMedia("(max-width: 900px)").matches) {
+        detailPanel.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+      }
+    }
+
+    function clearSelection() {
+      selectedNodeId = null;
+      detailView.hidden = true;
+      detailView.innerHTML = "";
+      detailEmpty.hidden = false;
+      delete detailPanel.dataset.open;
+      nodeElements.forEach((element) => element.classList.remove("is-selected", "is-related", "is-dimmed"));
+      [...edgeLayer.querySelectorAll(".edge")].forEach((path) => path.classList.remove("is-related", "is-dimmed"));
+    }
+
+    function sourceElement(id) {
+      return nodeElements.get(id) || document.querySelector(`[data-risk-id="${id}"]`);
+    }
+
+    function makePath(sourceId, targetId, isRisk) {
+      const source = sourceElement(sourceId);
+      const target = sourceElement(targetId);
+      if (!source || !target || source.offsetParent === null || target.offsetParent === null) return null;
+      const canvasRect = mapCanvas.getBoundingClientRect();
+      const sourceRect = source.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
+      const x1 = sourceRect.left + sourceRect.width / 2 - canvasRect.left;
+      const y1 = sourceRect.bottom - canvasRect.top;
+      const x2 = targetRect.left + targetRect.width / 2 - canvasRect.left;
+      const y2 = targetRect.top - canvasRect.top;
+      const bend = Math.max(22, Math.abs(y2 - y1) * .45);
+      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      path.setAttribute("d", `M ${x1} ${y1} C ${x1} ${y1 + bend}, ${x2} ${y2 - bend}, ${x2} ${y2}`);
+      path.setAttribute("marker-end", isRisk ? "url(#arrow-risk)" : "url(#arrow-main)");
+      path.classList.add("edge");
+      if (isRisk) path.classList.add("is-risk");
+      path.dataset.source = sourceId;
+      path.dataset.target = targetId;
+      return path;
+    }
+
+    function drawConnections() {
+      const width = mapCanvas.clientWidth;
+      const height = mapCanvas.scrollHeight;
+      edgeLayer.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      edgeLayer.setAttribute("width", width);
+      edgeLayer.setAttribute("height", height);
+      edgeLayer.innerHTML = `
+        <defs>
+          <marker id="arrow-main" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="rgba(35,133,109,.72)"/></marker>
+          <marker id="arrow-risk" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="rgba(200,95,44,.82)"/></marker>
+        </defs>`;
+      edges.forEach(([source, target]) => {
+        const path = makePath(source, target, false);
+        if (path) edgeLayer.appendChild(path);
+      });
+      riskEdges.forEach(([source, target]) => {
+        const path = makePath(source, target, true);
+        if (path) edgeLayer.appendChild(path);
+      });
+      if (selectedNodeId) highlightFlow(selectedNodeId);
+    }
+
+    function selectView(viewId) {
+      if (!views[viewId]) return;
+      document.body.dataset.view = viewId;
+      document.querySelector("#view-description").textContent = views[viewId].description;
+      document.querySelectorAll("[data-view]").forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.view === viewId));
+      });
+      clearSelection();
+      requestAnimationFrame(drawConnections);
+    }
+
+    nodeElements.forEach((element, nodeId) => {
+      element.addEventListener("click", () => selectNode(nodeId));
+    });
+
+    document.querySelectorAll(".view-button").forEach((button) => {
+      button.addEventListener("click", () => selectView(button.dataset.view));
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") clearSelection();
+    });
+
+    window.addEventListener("resize", () => {
+      cancelAnimationFrame(resizeFrame);
+      resizeFrame = requestAnimationFrame(drawConnections);
+    });
+
+    requestAnimationFrame(drawConnections);
+  </script>
+</body>
+</html>
