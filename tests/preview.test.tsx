@@ -1,9 +1,18 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import PolyphoneCandidateCard from "@/components/PolyphoneCandidateCard";
 import Preview from "@/components/Preview";
 import PrintSettingsPanel from "@/components/PrintSettingsPanel";
 import { useEditorStore } from "@/store/useEditorStore";
+
+function renderPreview() {
+  return render(
+    <MemoryRouter>
+      <Preview />
+    </MemoryRouter>,
+  );
+}
 
 describe("PolyphoneCandidateCard", () => {
   it("展示当前汉字、候选读音和多音字标签", () => {
@@ -78,7 +87,7 @@ describe("Preview proofreading", () => {
       paragraphs: [[{ ch: "行", py: "xíng", isPunct: false, pySource: "auto" }]],
     });
 
-    render(<Preview />);
+    renderPreview();
     fireEvent.click(screen.getByText("xíng"));
     fireEvent.click(screen.getByRole("button", { name: "选择 háng" }));
 
@@ -94,7 +103,7 @@ describe("Preview proofreading", () => {
       paragraphs: [[{ ch: "行", py: "xíng", isPunct: false, pySource: "auto" }]],
     });
 
-    render(<Preview />);
+    renderPreview();
     fireEvent.click(screen.getByText("xíng"));
     fireEvent.click(screen.getByRole("button", { name: "选择 xíng" }));
 
@@ -106,7 +115,7 @@ describe("Preview proofreading", () => {
       paragraphs: [[{ ch: "你", py: "nǐ", isPunct: false, pySource: "auto" }]],
     });
 
-    render(<Preview />);
+    renderPreview();
     fireEvent.click(screen.getByText("nǐ"));
 
     expect(screen.getByRole("dialog", { name: "你的读音" })).not.toBeNull();
@@ -119,7 +128,7 @@ describe("Preview proofreading", () => {
       paragraphs: [[{ ch: "行", py: "xíng", isPunct: false, pySource: "auto" }]],
     });
 
-    render(<Preview />);
+    renderPreview();
     fireEvent.click(screen.getByText("xíng"));
     fireEvent.keyDown(document, { key: "Escape" });
 
@@ -131,7 +140,7 @@ describe("Preview proofreading", () => {
       paragraphs: [[{ ch: "行", py: "xíng", isPunct: false, pySource: "auto" }]],
     });
 
-    render(<Preview />);
+    renderPreview();
     fireEvent.click(screen.getByText("xíng"));
     fireEvent.pointerDown(document.body);
 
@@ -143,7 +152,7 @@ describe("Preview proofreading", () => {
       paragraphs: [[{ ch: "行", py: "xíng", isPunct: false, pySource: "auto" }]],
     });
 
-    const { container } = render(<Preview />);
+    const { container } = renderPreview();
 
     expect(container.querySelector(".proof-unit.suspect")).not.toBeNull();
     expect(screen.getByText("1 个待核对")).not.toBeNull();
@@ -156,7 +165,7 @@ describe("Preview proofreading", () => {
       paragraphs: [[{ ch: "床", py: "chuáng", isPunct: false, pySource: "auto" }]],
     });
 
-    const { container } = render(<Preview />);
+    const { container } = renderPreview();
     const preview = container.querySelector("#previewInner");
 
     expect(preview?.className).toContain("layout-preserve");
@@ -172,7 +181,7 @@ describe("Preview proofreading", () => {
       ]],
     });
 
-    render(<Preview />);
+    renderPreview();
     fireEvent.click(screen.getByText("xíng"));
     fireEvent.click(screen.getByRole("button", { name: "手动输入拼音" }));
     fireEvent.click(screen.getByLabelText("向左扩一字"));
@@ -192,7 +201,7 @@ describe("Preview proofreading", () => {
       paragraphs: [[{ ch: "，", py: null, isPunct: true }]],
     });
 
-    render(<Preview />);
+    renderPreview();
     fireEvent.click(screen.getByText("，"));
 
     expect(screen.queryByRole("dialog")).toBeNull();
@@ -221,7 +230,7 @@ describe("Preview proofreading", () => {
       ]],
     });
 
-    const { container } = render(<Preview />);
+    const { container } = renderPreview();
     const characters = screen.getAllByText("行");
     const pinyin = screen.getAllByText("xíng");
 
@@ -253,7 +262,7 @@ describe("Preview proofreading", () => {
       ]],
     });
 
-    render(<Preview />);
+    renderPreview();
 
     expect(screen.getByText("chūn").getAttribute("aria-hidden")).toBe("true");
     expect(screen.getByText("xíng").getAttribute("aria-hidden")).toBeNull();
@@ -268,7 +277,7 @@ describe("Preview proofreading", () => {
       ]],
     });
 
-    render(<Preview />);
+    renderPreview();
     fireEvent.click(screen.getByRole("button", { name: "完成选择" }));
     fireEvent.click(screen.getByText("行"));
     fireEvent.click(screen.getByRole("button", { name: "手动输入拼音" }));

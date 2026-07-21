@@ -6,9 +6,10 @@
  * - 否则生成 temp-{ts} 临时 id，把当前 paragraphs/title 写进 sessionStorage
  *   让 /print 路由读出来——单次打印，刷新即丢，不污染历史。
  *
- * 走 window.location.assign 而非 react-router 的 navigate：触发完整页面导航，
- * 打印页可以完全脱壳（Agent C 的 PrintOnly 容器会另挂样式）。
+ * 使用应用内路由进入打印页，避免嵌入式浏览器忽略 location.assign。
+ * `/print` 路由只渲染 PrintOnly，并单独挂载打印样式。
  */
+import { useNavigate } from "react-router-dom";
 import { useEditorStore } from "@/store/useEditorStore";
 import { printSettingsFromStore } from "@/lib/print-settings";
 import type { Paragraph, PrintSettings } from "@/lib/types";
@@ -25,6 +26,7 @@ interface TempPayload {
 }
 
 export function usePrint(): () => void {
+  const navigate = useNavigate();
   const currentId = useEditorStore((s) => s.currentId);
   const paragraphs = useEditorStore((s) => s.paragraphs);
   const title = useEditorStore((s) => s.title);
@@ -63,6 +65,6 @@ export function usePrint(): () => void {
     } catch {
       // 写入失败不阻塞跳转；Print 路由会按缺省态降级
     }
-    window.location.assign(`/print?id=${encodeURIComponent(id)}`);
+    navigate(`/print?id=${encodeURIComponent(id)}`);
   };
 }
