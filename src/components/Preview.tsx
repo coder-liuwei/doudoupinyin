@@ -8,12 +8,12 @@
  * 三个档位：小学 16 / 大班 20 / 小班 24。
  */
 import { Fragment, useEffect, useRef, useState } from "react";
-import { MousePointer2, PencilLine, Printer } from "lucide-react";
+import { Check, MousePointer2, PencilLine, Printer } from "lucide-react";
 import PolyphoneCandidateCard from "@/components/PolyphoneCandidateCard";
 import { useEditorStore } from "@/store/useEditorStore";
 import { usePrint } from "@/hooks/usePrint";
-import { countAnnotatedChars } from "@/lib/document";
 import { getPairPinyinCandidates } from "@/lib/pinyin-candidates";
+import { buildAnnotationVisibility } from "@/lib/annotation";
 import { countBySource, countReviewRisks } from "@/lib/review";
 import {
   renderProofreadParagraph,
@@ -34,6 +34,7 @@ export default function Preview() {
   const [editing, setEditing] = useState<EditingRange | null>(null);
   const [candidateTarget, setCandidateTarget] =
     useState<CandidateTarget | null>(null);
+  const [isSelectingAnnotations, setIsSelectingAnnotations] = useState(false);
   const candidateCardRef = useRef<HTMLElement>(null);
   const paragraphs = useEditorStore((s) => s.paragraphs);
   const fontSize = useEditorStore((s) => s.fontSize);
@@ -43,14 +44,31 @@ export default function Preview() {
   const indentFirstLine = useEditorStore((s) => s.indentFirstLine);
   const showTitle = useEditorStore((s) => s.showTitle);
   const pageGuide = useEditorStore((s) => s.pageGuide);
+  const annotationMode = useEditorStore((s) => s.annotationMode);
+  const manualAnnotationKeys = useEditorStore((s) => s.manualAnnotationKeys);
   const title = useEditorStore((s) => s.title);
   const updatePairPinyinRange = useEditorStore((s) => s.updatePairPinyinRange);
+  const toggleManualAnnotation = useEditorStore((s) => s.toggleManualAnnotation);
+  const clearManualAnnotations = useEditorStore((s) => s.clearManualAnnotations);
   const goPrint = usePrint();
   const gridOffset = (36 + fontSize * 2) % 32;
+  const annotationVisibility = buildAnnotationVisibility(paragraphs, {
+    mode: annotationMode,
+    manualKeys: manualAnnotationKeys,
+  });
+  const visibleAnnotationCount = annotationVisibility
+    .flat()
+    .filter(Boolean).length;
 
   useEffect(() => {
     setCandidateTarget(null);
   }, [paragraphs]);
+
+  useEffect(() => {
+    setCandidateTarget(null);
+    setEditing(null);
+    setIsSelectingAnnotations(annotationMode === "manual");
+  }, [annotationMode]);
 
   useEffect(() => {
     if (!candidateTarget) return;
@@ -206,6 +224,37 @@ export default function Preview() {
         </div>
       </div>
 
+      {annotationMode === "manual" && (
+        <div className="annotation-selection-bar" aria-label="手动注音选择">
+          <div>
+            <strong>
+              {isSelectingAnnotations ? "正在选择注音" : "手动注音已选好"}
+            </strong>
+            <span>已选 {manualAnnotationKeys.length} 处</span>
+          </div>
+          {isSelectingAnnotations ? (
+            <>
+              <button type="button" onClick={clearManualAnnotations}>清空</button>
+              <button
+                type="button"
+                className="primary"
+                onClick={() => setIsSelectingAnnotations(false)}
+              >
+                <Check size={14} />
+                完成选择
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setIsSelectingAnnotations(true)}
+            >
+              调整选择
+            </button>
+          )}
+        </div>
+      )}
+
       <div
         className={`paper-sheet ${pageGuide === "grid" ? "practice-grid" : ""}`}
         style={{
@@ -240,6 +289,12 @@ export default function Preview() {
                   next[index] = value;
                   setEditing({ ...editing, values: next });
                 },
+                annotationVisibility:
+                  annotationVisibility[paragraphIndex] ?? [],
+                annotationSelectionActive:
+                  annotationMode === "manual" && isSelectingAnnotations,
+                onToggleAnnotation: (pairIndex) =>
+                  toggleManualAnnotation(paragraphIndex, pairIndex),
               })}
             </Fragment>
           ))}
@@ -276,7 +331,7 @@ export default function Preview() {
 
       <div className="preview-stats">
         <span>{paragraphs.length} 段</span>
-        <span>{countAnnotatedChars(paragraphs)} 个注音字</span>
+        <span>{visibleAnnotationCount} 个注音字</span>
         <span>{countReviewRisks(paragraphs)} 个待核对</span>
         <span>{countBySource(paragraphs, "dual")} 个用户录入</span>
         <span>{countBySource(paragraphs, "manual")} 个人工修改</span>

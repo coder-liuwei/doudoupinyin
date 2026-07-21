@@ -4,6 +4,11 @@ import type { Paragraph, HistoryRecord, PrintSettings } from "@/lib/types";
 import { renderParagraphs } from "@/lib/render";
 import { loadHistory } from "@/lib/history";
 import { normalizePrintSettings } from "@/lib/print-settings";
+import {
+  annotationSettingsFromRecord,
+  normalizeAnnotationSettings,
+  type AnnotationSettings,
+} from "@/lib/annotation";
 
 /**
  * 打印专用容器。
@@ -17,6 +22,7 @@ export default function PrintOnly() {
   const [data, setData] = useState<{
     paragraphs: Paragraph[];
     title: string;
+    annotationSettings: AnnotationSettings;
   } & PrintSettings | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -42,6 +48,7 @@ export default function PrintOnly() {
           indentFirstLine?: boolean;
           showTitle?: boolean;
           pageGuide?: string;
+          annotationSettings?: unknown;
         };
         if (parsed && parsed.id === id && Array.isArray(parsed.paragraphs)) {
           const legacySettings = parsed.printSettings ?? {
@@ -57,6 +64,9 @@ export default function PrintOnly() {
             paragraphs: parsed.paragraphs,
             title: parsed.title ?? "",
             ...normalizePrintSettings(legacySettings),
+            annotationSettings: normalizeAnnotationSettings(
+              parsed.annotationSettings,
+            ),
           });
           return;
         }
@@ -74,6 +84,7 @@ export default function PrintOnly() {
           paragraphs: found.paragraphs,
           title: found.title,
           ...normalizePrintSettings(found.printSettings),
+          annotationSettings: annotationSettingsFromRecord(found),
         });
         return;
       }
@@ -122,7 +133,7 @@ export default function PrintOnly() {
         {data.showTitle && (
           <h1 style={{ textAlign: "center", fontSize: "1.2em", marginBottom: 16 }}>{data.title}</h1>
         )}
-        {renderParagraphs(data.paragraphs)}
+        {renderParagraphs(data.paragraphs, data.annotationSettings)}
       </div>
     </main>
   );

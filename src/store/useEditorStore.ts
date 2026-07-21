@@ -6,6 +6,13 @@
  * 也不持有 PDF 抽取状态（临时态，组件内 useState 即可）。
  */
 import { create } from "zustand";
+import {
+  annotationKey,
+  DEFAULT_ANNOTATION_SETTINGS,
+  normalizeAnnotationSettings,
+  type AnnotationMode,
+  type AnnotationSettings,
+} from "@/lib/annotation";
 import { DEFAULT_PRINT_SETTINGS } from "@/lib/print-settings";
 import type { LayoutMode, Mode, Paragraph } from "@/lib/types";
 
@@ -20,6 +27,8 @@ export interface EditorState {
   indentFirstLine: boolean;
   showTitle: boolean;
   pageGuide: "plain" | "grid";
+  annotationMode: AnnotationMode;
+  manualAnnotationKeys: string[];
   title: string;
   currentId: string | null;
   err: string | null;
@@ -34,6 +43,10 @@ export interface EditorState {
   setIndentFirstLine: (v: boolean) => void;
   setShowTitle: (v: boolean) => void;
   setPageGuide: (v: "plain" | "grid") => void;
+  setAnnotationMode: (mode: AnnotationMode) => void;
+  setAnnotationSettings: (settings: unknown) => void;
+  toggleManualAnnotation: (paragraphIndex: number, pairIndex: number) => void;
+  clearManualAnnotations: () => void;
   setTitle: (s: string) => void;
   setCurrentId: (id: string | null) => void;
   setErr: (e: string | null) => void;
@@ -52,6 +65,8 @@ const INITIAL = {
   mode: "plain" as Mode,
   paragraphs: [] as Paragraph[],
   ...DEFAULT_PRINT_SETTINGS,
+  annotationMode: DEFAULT_ANNOTATION_SETTINGS.mode,
+  manualAnnotationKeys: [] as string[],
   title: "未命名",
   currentId: null as string | null,
   err: null as string | null,
@@ -61,7 +76,12 @@ export const useEditorStore = create<EditorState>((set) => ({
   ...INITIAL,
   setInput: (v) => set({ input: v }),
   setMode: (m) => set({ mode: m }),
-  setParagraphs: (p) => set({ paragraphs: p }),
+  setParagraphs: (p) =>
+    set({
+      paragraphs: p,
+      annotationMode: DEFAULT_ANNOTATION_SETTINGS.mode,
+      manualAnnotationKeys: [],
+    }),
   setFontSize: (n) => set({ fontSize: n }),
   setLineHeight: (n) => set({ lineHeight: n }),
   setLetterSpacing: (n) => set({ letterSpacing: n }),
@@ -69,6 +89,24 @@ export const useEditorStore = create<EditorState>((set) => ({
   setIndentFirstLine: (v) => set({ indentFirstLine: v }),
   setShowTitle: (v) => set({ showTitle: v }),
   setPageGuide: (v) => set({ pageGuide: v }),
+  setAnnotationMode: (annotationMode) => set({ annotationMode }),
+  setAnnotationSettings: (rawSettings) => {
+    const settings: AnnotationSettings = normalizeAnnotationSettings(rawSettings);
+    set({
+      annotationMode: settings.mode,
+      manualAnnotationKeys: settings.manualKeys,
+    });
+  },
+  toggleManualAnnotation: (paragraphIndex, pairIndex) =>
+    set((state) => {
+      const key = annotationKey(paragraphIndex, pairIndex);
+      const keys = new Set(state.manualAnnotationKeys);
+      if (keys.has(key)) keys.delete(key);
+      else keys.add(key);
+      return { manualAnnotationKeys: Array.from(keys), currentId: null };
+    }),
+  clearManualAnnotations: () =>
+    set({ manualAnnotationKeys: [], currentId: null }),
   setTitle: (s) => set({ title: s }),
   setCurrentId: (id) => set({ currentId: id }),
   setErr: (e) => set({ err: e }),

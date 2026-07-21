@@ -26,6 +26,10 @@
 import { ArrowLeft, ArrowRight, Check, X } from "lucide-react";
 import { Fragment, type JSX, type MouseEvent } from "react";
 import { analyzeReviewRisks } from "./review";
+import {
+  buildAnnotationVisibility,
+  type AnnotationSettings,
+} from "./annotation";
 import type { Pair, Paragraph } from "./types";
 
 export interface EditingRange {
@@ -48,6 +52,9 @@ export interface ProofreadParagraphOptions {
   onSave: () => void;
   onCancel: () => void;
   onChangeValue: (index: number, value: string) => void;
+  annotationVisibility: boolean[];
+  annotationSelectionActive: boolean;
+  onToggleAnnotation: (pairIndex: number) => void;
 }
 
 function sourceClass(pair: Pair): string {
@@ -65,11 +72,13 @@ export function Ruby({
   py,
   className = "unit",
   onActivate,
+  hidePinyin = false,
 }: {
   ch: string;
   py: string | null;
   className?: string;
   onActivate?: () => void;
+  hidePinyin?: boolean;
 }): JSX.Element {
   const activationProps = onActivate
     ? {
@@ -81,25 +90,37 @@ export function Ruby({
     : {};
 
   return (
-    <span className={className}>
+    <span className={[className, hidePinyin ? "annotation-hidden" : ""]
+      .filter(Boolean)
+      .join(" ")}>
       <ruby>
         <span className="rb" {...activationProps}>{ch}</span>
         {py === null ? (
           <rt aria-hidden="true">{"\u00a0"}</rt>
         ) : (
-          <rt {...activationProps}>{py}</rt>
+          <rt aria-hidden={hidePinyin ? "true" : undefined} {...activationProps}>{py}</rt>
         )}
       </ruby>
     </span>
   );
 }
 
-function renderUnitNodes(paragraph: Paragraph): JSX.Element[] {
+function renderUnitNodes(
+  paragraph: Paragraph,
+  visibility?: boolean[],
+): JSX.Element[] {
   const nodes: JSX.Element[] = [];
   for (let i = 0; i < paragraph.length; ) {
     const pair = paragraph[i];
     if (pair.py && !pair.isPunct) {
-      nodes.push(<Ruby key={i} ch={pair.ch} py={pair.py} />);
+      nodes.push(
+        <Ruby
+          key={i}
+          ch={pair.ch}
+          py={pair.py}
+          hidePinyin={visibility ? !visibility[i] : false}
+        />,
+      );
       i++;
       continue;
     }
@@ -125,8 +146,11 @@ function renderUnitNodes(paragraph: Paragraph): JSX.Element[] {
 }
 
 /** 渲染单段：`<p class="line">...</p>`。 */
-export function renderParagraph(paragraph: Paragraph): JSX.Element {
-  const nodes = renderUnitNodes(paragraph);
+export function renderParagraph(
+  paragraph: Paragraph,
+  visibility?: boolean[],
+): JSX.Element {
+  const nodes = renderUnitNodes(paragraph, visibility);
   return (
     <p className="line">
       {nodes}
@@ -135,11 +159,17 @@ export function renderParagraph(paragraph: Paragraph): JSX.Element {
 }
 
 /** 渲染多段：每段一个 `<p class="line">`，外层用 Fragment 包裹。 */
-export function renderParagraphs(paragraphs: Paragraph[]): JSX.Element {
+export function renderParagraphs(
+  paragraphs: Paragraph[],
+  annotationSettings?: AnnotationSettings,
+): JSX.Element {
+  const visibility = annotationSettings
+    ? buildAnnotationVisibility(paragraphs, annotationSettings)
+    : null;
   return (
     <>
       {paragraphs.map((p, i) => (
-        <Fragment key={i}>{renderParagraph(p)}</Fragment>
+        <Fragment key={i}>{renderParagraph(p, visibility?.[i])}</Fragment>
       ))}
     </>
   );
@@ -167,6 +197,9 @@ function renderProofreadNodes(
     onSave,
     onCancel,
     onChangeValue,
+    annotationVisibility,
+    annotationSelectionActive,
+    onToggleAnnotation,
   } = options;
   const nodes: JSX.Element[] = [];
   const reviewRisks = analyzeReviewRisks(paragraph);
@@ -233,24 +266,40 @@ function renderProofreadNodes(
 
     if (pair.py && !pair.isPunct) {
       const isSuspect = reviewRisks[currentPairIndex];
+      const isAnnotationVisible = annotationVisibility[currentPairIndex] ?? true;
       nodes.push(
         <span
           key={currentPairIndex}
-          className={["proof-unit", sourceClass(pair), isSuspect ? "suspect" : ""]
+          className={[
+            "proof-unit",
+            sourceClass(pair),
+            isSuspect ? "suspect" : "",
+            annotationSelectionActive && isAnnotationVisible
+              ? "annotation-selected"
+              : "",
+          ]
             .filter(Boolean)
             .join(" ")}
           role="button"
           tabIndex={0}
-          onClick={(event) =>
+          onClick={(event) => {
+            if (annotationSelectionActive) {
+              onToggleAnnotation(currentPairIndex);
+              return;
+            }
             onOpenCandidates(
               paragraphIndex,
               currentPairIndex,
               event.currentTarget,
-            )
-          }
+            );
+          }}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
+              if (annotationSelectionActive) {
+                onToggleAnnotation(currentPairIndex);
+                return;
+              }
               onOpenCandidates(
                 paragraphIndex,
                 currentPairIndex,
@@ -259,7 +308,11 @@ function renderProofreadNodes(
             }
           }}
         >
-          <Ruby ch={pair.ch} py={pair.py} />
+          <Ruby
+            ch={pair.ch}
+            py={pair.py}
+            hidePinyin={!isAnnotationVisible}
+          />
         </span>,
       );
       pairIndex++;

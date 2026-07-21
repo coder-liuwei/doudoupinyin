@@ -103,6 +103,10 @@
   white-space: nowrap;
 }
 
+.print-page #previewInner .annotation-hidden rt {
+  opacity: 0;
+}
+
 .print-page #previewInner .unit.punct {
   margin-right: 3px;
 }

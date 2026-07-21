@@ -12,6 +12,7 @@
 import { useEditorStore } from "@/store/useEditorStore";
 import { printSettingsFromStore } from "@/lib/print-settings";
 import type { Paragraph, PrintSettings } from "@/lib/types";
+import type { AnnotationSettings } from "@/lib/annotation";
 
 const TEMP_KEY = "pinyinPrince.print-temp";
 
@@ -20,6 +21,7 @@ interface TempPayload {
   paragraphs: Paragraph[];
   title: string;
   printSettings: PrintSettings;
+  annotationSettings: AnnotationSettings;
 }
 
 export function usePrint(): () => void {
@@ -33,6 +35,8 @@ export function usePrint(): () => void {
   const indentFirstLine = useEditorStore((s) => s.indentFirstLine);
   const showTitle = useEditorStore((s) => s.showTitle);
   const pageGuide = useEditorStore((s) => s.pageGuide);
+  const annotationMode = useEditorStore((s) => s.annotationMode);
+  const manualAnnotationKeys = useEditorStore((s) => s.manualAnnotationKeys);
 
   return function go() {
     const id = currentId ?? `temp-${Date.now()}`;
@@ -49,6 +53,10 @@ export function usePrint(): () => void {
         showTitle,
         pageGuide,
       }),
+      annotationSettings: {
+        mode: annotationMode,
+        manualKeys: manualAnnotationKeys,
+      },
     };
     try {
       sessionStorage.setItem(TEMP_KEY, JSON.stringify(payload));

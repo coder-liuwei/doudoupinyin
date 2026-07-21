@@ -615,6 +615,39 @@ button:disabled {
   margin-top: 0;
 }
 
+.annotation-setting {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 8px;
+}
+
+.annotation-setting > span {
+  color: #6f5b4c;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.annotation-mode-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.annotation-mode-buttons button {
+  min-height: 36px;
+  border: 1px solid rgba(86, 54, 32, 0.18);
+  border-radius: 10px;
+  color: #6f5b4c;
+  background: #fffdf7;
+  cursor: pointer;
+}
+
+.annotation-mode-buttons button[aria-pressed="true"] {
+  border-color: #4860b8;
+  color: #fff;
+  background: #4860b8;
+}
+
 .compact-heading {
   margin-bottom: 10px;
 }
@@ -1119,6 +1152,10 @@ button:disabled {
   white-space: nowrap;
 }
 
+.screen-preview .annotation-hidden rt {
+  opacity: 0;
+}
+
 .screen-preview .unit.punct {
   margin-right: 3px;
 }
@@ -1145,6 +1182,51 @@ button:disabled {
 
 .proof-unit[role="button"]:hover {
   background: rgba(177, 58, 46, 0.08);
+}
+
+.proof-unit.annotation-selected {
+  background: rgba(72, 96, 184, 0.12);
+  box-shadow: 0 0 0 1px rgba(72, 96, 184, 0.32);
+}
+
+.annotation-selection-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 24px 14px;
+  padding: 10px 12px;
+  border: 1px solid rgba(72, 96, 184, 0.2);
+  border-radius: 12px;
+  background: rgba(72, 96, 184, 0.08);
+}
+
+.annotation-selection-bar > div {
+  display: grid;
+  gap: 2px;
+  margin-right: auto;
+}
+
+.annotation-selection-bar span {
+  color: #6b7191;
+  font-size: 0.78rem;
+}
+
+.annotation-selection-bar button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 34px;
+  padding: 0 11px;
+  border: 1px solid rgba(72, 96, 184, 0.28);
+  border-radius: 9px;
+  color: #4055a7;
+  background: #fff;
+  cursor: pointer;
+}
+
+.annotation-selection-bar button.primary {
+  color: #fff;
+  background: #4860b8;
 }
 
 .proof-unit.suspect::after {

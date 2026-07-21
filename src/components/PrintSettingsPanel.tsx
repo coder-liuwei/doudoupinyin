@@ -9,6 +9,7 @@ export default function PrintSettingsPanel() {
   const indentFirstLine = useEditorStore((s) => s.indentFirstLine);
   const showTitle = useEditorStore((s) => s.showTitle);
   const pageGuide = useEditorStore((s) => s.pageGuide);
+  const annotationMode = useEditorStore((s) => s.annotationMode);
   const setFontSize = useEditorStore((s) => s.setFontSize);
   const setLineHeight = useEditorStore((s) => s.setLineHeight);
   const setLetterSpacing = useEditorStore((s) => s.setLetterSpacing);
@@ -16,6 +17,7 @@ export default function PrintSettingsPanel() {
   const setIndentFirstLine = useEditorStore((s) => s.setIndentFirstLine);
   const setShowTitle = useEditorStore((s) => s.setShowTitle);
   const setPageGuide = useEditorStore((s) => s.setPageGuide);
+  const setAnnotationMode = useEditorStore((s) => s.setAnnotationMode);
 
   return (
     <section className="workbench-card settings-panel" aria-label="打印设置">
@@ -25,6 +27,25 @@ export default function PrintSettingsPanel() {
       </div>
 
       <div className="print-settings">
+        <div className="annotation-setting" role="group" aria-label="注音范围">
+          <span>注音范围</span>
+          <div className="annotation-mode-buttons">
+            {([
+              ["full", "全文注音"],
+              ["risk", "风险字"],
+              ["manual", "手动选择"],
+            ] as const).map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                aria-pressed={annotationMode === value}
+                onClick={() => setAnnotationMode(value)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
         <label>
           <span>字号</span>
           <select value={fontSize} onChange={(e) => setFontSize(Number(e.target.value))}>
