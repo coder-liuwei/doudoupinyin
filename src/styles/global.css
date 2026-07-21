@@ -1180,6 +1180,10 @@ button:disabled {
   border-radius: 6px;
 }
 
+.proof-unit[role="button"] {
+  cursor: pointer;
+}
+
 .proof-unit[role="button"]:hover {
   background: rgba(177, 58, 46, 0.08);
 }
