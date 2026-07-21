@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import type { Paragraph, HistoryRecord, PrintSettings } from "@/lib/types";
 import { renderParagraphs } from "@/lib/render";
 import { loadHistory } from "@/lib/history";
@@ -100,7 +100,7 @@ export default function PrintOnly() {
       <main className="print-page" style={{ padding: 24, fontFamily: "sans-serif" }}>
         <h1>无法打开打印视图</h1>
         <p>{error}</p>
-        <a href="/" className="no-print">返回首页</a>
+        <Link to="/" className="no-print">返回首页</Link>
       </main>
     );
   }
@@ -112,8 +112,8 @@ export default function PrintOnly() {
   return (
     <main className="print-page">
       {/* 屏幕上的返回/打印按钮，打印时隐藏 */}
-      <div className="no-print" style={{ position: "fixed", top: 12, right: 12, zIndex: 10 }}>
-        <a href="/" style={{ marginRight: 8 }}>← 返回</a>
+      <div className="print-actions no-print">
+        <Link to="/" className="print-back-action">← 返回</Link>
         <button onClick={() => window.print()}>打印 / 存为 PDF</button>
       </div>
 
