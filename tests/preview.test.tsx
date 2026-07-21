@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import PolyphoneCandidateCard from "@/components/PolyphoneCandidateCard";
@@ -220,7 +220,7 @@ describe("Preview proofreading", () => {
     expect(useEditorStore.getState().manualAnnotationKeys).toEqual([]);
   });
 
-  it("手动选择只切换当前字，完成后仍可校对读音", () => {
+  it("手动模式每次点击都只切换当前字且不打开校音弹窗", () => {
     useEditorStore.setState({
       annotationMode: "manual",
       manualAnnotationKeys: [],
@@ -230,7 +230,7 @@ describe("Preview proofreading", () => {
       ]],
     });
 
-    const { container } = renderPreview();
+    renderPreview();
     const characters = screen.getAllByText("行");
     const pinyin = screen.getAllByText("xíng");
 
@@ -242,14 +242,11 @@ describe("Preview proofreading", () => {
     expect(useEditorStore.getState().manualAnnotationKeys).toEqual(["0:0"]);
     expect(pinyin[0].getAttribute("aria-hidden")).toBeNull();
     expect(pinyin[1].getAttribute("aria-hidden")).toBe("true");
-    expect(container.querySelector('[role="dialog"]')).toBeNull();
+    expect(screen.queryByRole("dialog")).toBeNull();
 
-    fireEvent.click(screen.getByRole("button", { name: "完成选择" }));
     fireEvent.click(characters[0]);
-    fireEvent.click(screen.getByRole("button", { name: "选择 háng" }));
-
-    expect(useEditorStore.getState().paragraphs[0][0].py).toBe("háng");
-    expect(useEditorStore.getState().manualAnnotationKeys).toEqual(["0:0"]);
+    expect(useEditorStore.getState().manualAnnotationKeys).toEqual([]);
+    expect(screen.queryByRole("dialog")).toBeNull();
   });
 
   it("风险字模式只显示读音风险位置", () => {
@@ -268,7 +265,7 @@ describe("Preview proofreading", () => {
     expect(screen.getByText("xíng").getAttribute("aria-hidden")).toBeNull();
   });
 
-  it("手动选择完成后仍保留手动输入拼音", () => {
+  it("切换范围模式保留手动选择且只有清空注音会删除", () => {
     useEditorStore.setState({
       annotationMode: "manual",
       manualAnnotationKeys: ["0:0"],
@@ -278,18 +275,16 @@ describe("Preview proofreading", () => {
     });
 
     renderPreview();
-    fireEvent.click(screen.getByRole("button", { name: "完成选择" }));
-    fireEvent.click(screen.getByText("行"));
-    fireEvent.click(screen.getByRole("button", { name: "手动输入拼音" }));
-    fireEvent.change(screen.getByDisplayValue("xíng"), {
-      target: { value: "háng" },
-    });
-    fireEvent.click(screen.getByLabelText("保存拼音"));
+    expect(screen.queryByRole("button", { name: "完成选择" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "调整选择" })).toBeNull();
 
-    expect(useEditorStore.getState().paragraphs[0][0]).toMatchObject({
-      py: "háng",
-      pySource: "manual",
+    act(() => {
+      useEditorStore.getState().setAnnotationMode("full");
+      useEditorStore.getState().setAnnotationMode("manual");
     });
     expect(useEditorStore.getState().manualAnnotationKeys).toEqual(["0:0"]);
+
+    fireEvent.click(screen.getByRole("button", { name: "清空注音" }));
+    expect(useEditorStore.getState().manualAnnotationKeys).toEqual([]);
   });
 });

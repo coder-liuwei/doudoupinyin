@@ -8,7 +8,7 @@
  * 三个档位：小学 16 / 大班 20 / 小班 24。
  */
 import { Fragment, useEffect, useRef, useState } from "react";
-import { Check, MousePointer2, PencilLine, Printer } from "lucide-react";
+import { MousePointer2, PencilLine, Printer } from "lucide-react";
 import PolyphoneCandidateCard from "@/components/PolyphoneCandidateCard";
 import { useEditorStore } from "@/store/useEditorStore";
 import { usePrint } from "@/hooks/usePrint";
@@ -34,7 +34,6 @@ export default function Preview() {
   const [editing, setEditing] = useState<EditingRange | null>(null);
   const [candidateTarget, setCandidateTarget] =
     useState<CandidateTarget | null>(null);
-  const [isSelectingAnnotations, setIsSelectingAnnotations] = useState(false);
   const candidateCardRef = useRef<HTMLElement>(null);
   const paragraphs = useEditorStore((s) => s.paragraphs);
   const fontSize = useEditorStore((s) => s.fontSize);
@@ -67,7 +66,6 @@ export default function Preview() {
   useEffect(() => {
     setCandidateTarget(null);
     setEditing(null);
-    setIsSelectingAnnotations(annotationMode === "manual");
   }, [annotationMode]);
 
   useEffect(() => {
@@ -227,31 +225,12 @@ export default function Preview() {
       {annotationMode === "manual" && (
         <div className="annotation-selection-bar" aria-label="手动注音选择">
           <div>
-            <strong>
-              {isSelectingAnnotations ? "正在选择注音" : "手动注音已选好"}
-            </strong>
+            <strong>手动选择注音</strong>
             <span>已选 {manualAnnotationKeys.length} 处</span>
           </div>
-          {isSelectingAnnotations ? (
-            <>
-              <button type="button" onClick={clearManualAnnotations}>清空</button>
-              <button
-                type="button"
-                className="primary"
-                onClick={() => setIsSelectingAnnotations(false)}
-              >
-                <Check size={14} />
-                完成选择
-              </button>
-            </>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setIsSelectingAnnotations(true)}
-            >
-              调整选择
-            </button>
-          )}
+          <button type="button" onClick={clearManualAnnotations}>
+            清空注音
+          </button>
         </div>
       )}
 
@@ -292,7 +271,7 @@ export default function Preview() {
                 annotationVisibility:
                   annotationVisibility[paragraphIndex] ?? [],
                 annotationSelectionActive:
-                  annotationMode === "manual" && isSelectingAnnotations,
+                  annotationMode === "manual",
                 onToggleAnnotation: (pairIndex) =>
                   toggleManualAnnotation(paragraphIndex, pairIndex),
               })}
