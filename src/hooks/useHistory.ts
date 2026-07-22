@@ -7,7 +7,7 @@
  * 不做防抖：保存是用户显式动作，频率低，写盘同步即可。
  */
 import { useCallback, useEffect, useState } from "react";
-import type { HistoryRecord } from "@/lib/types";
+import type { AnnotatedHistoryRecord } from "@/lib/annotation";
 import {
   loadHistory,
   saveRecord,
@@ -19,8 +19,8 @@ import {
 const HISTORY_EVENT = "pinyin-prince-history-change";
 
 export interface UseHistoryResult {
-  records: HistoryRecord[];
-  save: (rec: HistoryRecord) => void;
+  records: AnnotatedHistoryRecord[];
+  save: (rec: AnnotatedHistoryRecord) => void;
   remove: (id: string) => void;
   rename: (id: string, title: string) => void;
   clear: () => void;
@@ -29,7 +29,7 @@ export interface UseHistoryResult {
 }
 
 export function useHistory(): UseHistoryResult {
-  const [records, setRecords] = useState<HistoryRecord[]>([]);
+  const [records, setRecords] = useState<AnnotatedHistoryRecord[]>([]);
 
   useEffect(() => {
     setRecords(loadHistory().records);
@@ -38,7 +38,7 @@ export function useHistory(): UseHistoryResult {
     return () => window.removeEventListener(HISTORY_EVENT, sync);
   }, []);
 
-  const save = useCallback((rec: HistoryRecord) => {
+  const save = useCallback((rec: AnnotatedHistoryRecord) => {
     const next = saveRecord(rec);
     setRecords(next.records);
     window.dispatchEvent(new Event(HISTORY_EVENT));

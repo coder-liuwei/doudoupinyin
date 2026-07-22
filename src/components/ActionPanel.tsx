@@ -23,6 +23,10 @@ export default function ActionPanel() {
   const indentFirstLine = useEditorStore((s) => s.indentFirstLine);
   const showTitle = useEditorStore((s) => s.showTitle);
   const pageGuide = useEditorStore((s) => s.pageGuide);
+  const annotationMode = useEditorStore((s) => s.annotationMode);
+  const fullAnnotationKeys = useEditorStore((s) => s.fullAnnotationKeys);
+  const riskAnnotationKeys = useEditorStore((s) => s.riskAnnotationKeys);
+  const manualAnnotationKeys = useEditorStore((s) => s.manualAnnotationKeys);
   const setParagraphs = useEditorStore((s) => s.setParagraphs);
   const setErr = useEditorStore((s) => s.setErr);
   const setCurrentId = useEditorStore((s) => s.setCurrentId);
@@ -79,6 +83,12 @@ export default function ActionPanel() {
         showTitle,
         pageGuide,
       }),
+      annotationSettings: {
+        mode: annotationMode,
+        fullKeys: fullAnnotationKeys,
+        riskKeys: riskAnnotationKeys,
+        manualKeys: manualAnnotationKeys,
+      },
     });
     setTitle(nextTitle);
     setCurrentId(id);

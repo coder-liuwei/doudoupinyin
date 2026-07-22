@@ -1,9 +1,14 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import type { Paragraph, HistoryRecord, PrintSettings } from "@/lib/types";
 import { renderParagraphs } from "@/lib/render";
 import { loadHistory } from "@/lib/history";
 import { normalizePrintSettings } from "@/lib/print-settings";
+import {
+  annotationSettingsFromRecord,
+  normalizeAnnotationSettings,
+  type AnnotationSettings,
+} from "@/lib/annotation";
 
 /**
  * 打印专用容器。
@@ -17,6 +22,7 @@ export default function PrintOnly() {
   const [data, setData] = useState<{
     paragraphs: Paragraph[];
     title: string;
+    annotationSettings: AnnotationSettings;
   } & PrintSettings | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -42,6 +48,7 @@ export default function PrintOnly() {
           indentFirstLine?: boolean;
           showTitle?: boolean;
           pageGuide?: string;
+          annotationSettings?: unknown;
         };
         if (parsed && parsed.id === id && Array.isArray(parsed.paragraphs)) {
           const legacySettings = parsed.printSettings ?? {
@@ -57,6 +64,10 @@ export default function PrintOnly() {
             paragraphs: parsed.paragraphs,
             title: parsed.title ?? "",
             ...normalizePrintSettings(legacySettings),
+            annotationSettings: normalizeAnnotationSettings(
+              parsed.annotationSettings,
+              parsed.paragraphs,
+            ),
           });
           return;
         }
@@ -74,6 +85,7 @@ export default function PrintOnly() {
           paragraphs: found.paragraphs,
           title: found.title,
           ...normalizePrintSettings(found.printSettings),
+          annotationSettings: annotationSettingsFromRecord(found),
         });
         return;
       }
@@ -89,7 +101,7 @@ export default function PrintOnly() {
       <main className="print-page" style={{ padding: 24, fontFamily: "sans-serif" }}>
         <h1>无法打开打印视图</h1>
         <p>{error}</p>
-        <a href="/" className="no-print">返回首页</a>
+        <Link to="/" className="no-print">返回首页</Link>
       </main>
     );
   }
@@ -101,8 +113,8 @@ export default function PrintOnly() {
   return (
     <main className="print-page">
       {/* 屏幕上的返回/打印按钮，打印时隐藏 */}
-      <div className="no-print" style={{ position: "fixed", top: 12, right: 12, zIndex: 10 }}>
-        <a href="/" style={{ marginRight: 8 }}>← 返回</a>
+      <div className="print-actions no-print">
+        <Link to="/" className="print-back-action">← 返回</Link>
         <button onClick={() => window.print()}>打印 / 存为 PDF</button>
       </div>
 
@@ -122,7 +134,7 @@ export default function PrintOnly() {
         {data.showTitle && (
           <h1 style={{ textAlign: "center", fontSize: "1.2em", marginBottom: 16 }}>{data.title}</h1>
         )}
-        {renderParagraphs(data.paragraphs)}
+        {renderParagraphs(data.paragraphs, data.annotationSettings)}
       </div>
     </main>
   );

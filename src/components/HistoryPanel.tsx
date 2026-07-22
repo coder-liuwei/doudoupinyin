@@ -4,6 +4,7 @@ import { useHistory } from "@/hooks/useHistory";
 import { useEditorStore } from "@/store/useEditorStore";
 import { countAnnotatedChars } from "@/lib/document";
 import { applyPrintSettingsToStore } from "@/lib/print-settings";
+import { annotationSettingsFromRecord } from "@/lib/annotation";
 
 export default function HistoryPanel() {
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -22,6 +23,7 @@ export default function HistoryPanel() {
   const setIndentFirstLine = useEditorStore((s) => s.setIndentFirstLine);
   const setShowTitle = useEditorStore((s) => s.setShowTitle);
   const setPageGuide = useEditorStore((s) => s.setPageGuide);
+  const setAnnotationSettings = useEditorStore((s) => s.setAnnotationSettings);
 
   function loadRecord(id: string): void {
     const r = records.find((x) => x.id === id);
@@ -31,6 +33,7 @@ export default function HistoryPanel() {
     setParagraphs(r.paragraphs);
     setTitle(r.title);
     setCurrentId(r.id);
+    setAnnotationSettings(annotationSettingsFromRecord(r));
     applyPrintSettingsToStore(r.printSettings ?? {}, {
       setFontSize,
       setLineHeight,

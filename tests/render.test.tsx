@@ -155,4 +155,34 @@ describe("render — ruby structure", () => {
       expect(child.props.className).toBe("line");
     }
   });
+
+  it("按注音范围隐藏拼音但保留 ruby 节点", () => {
+    const paragraph: Paragraph = [
+      { ch: "春", py: "chūn", isPunct: false },
+      { ch: "行", py: "xíng", isPunct: false },
+    ];
+
+    const tree = TestRenderer.create(
+      <div>
+        {renderParagraphs([paragraph], {
+          mode: "manual",
+          fullKeys: ["0:0", "0:1"],
+          riskKeys: [],
+          manualKeys: ["0:1"],
+        })}
+      </div>,
+    ).toJSON() as {
+      children: Array<{
+        children: Array<{
+          props: { className?: string };
+          children: Array<{ children: Array<{ props: { "aria-hidden"?: string } }> }>;
+        }>;
+      }>;
+    };
+
+    const units = tree.children[0].children;
+    expect(units[0].props.className).toContain("annotation-hidden");
+    expect(units[0].children[0].children[1].props["aria-hidden"]).toBe("true");
+    expect(units[1].props.className).toBe("unit");
+  });
 });

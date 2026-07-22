@@ -12,8 +12,8 @@ import { MousePointer2, PencilLine, Printer } from "lucide-react";
 import PolyphoneCandidateCard from "@/components/PolyphoneCandidateCard";
 import { useEditorStore } from "@/store/useEditorStore";
 import { usePrint } from "@/hooks/usePrint";
-import { countAnnotatedChars } from "@/lib/document";
 import { getPairPinyinCandidates } from "@/lib/pinyin-candidates";
+import { buildAnnotationVisibility } from "@/lib/annotation";
 import { countBySource, countReviewRisks } from "@/lib/review";
 import {
   renderProofreadParagraph,
@@ -43,14 +43,36 @@ export default function Preview() {
   const indentFirstLine = useEditorStore((s) => s.indentFirstLine);
   const showTitle = useEditorStore((s) => s.showTitle);
   const pageGuide = useEditorStore((s) => s.pageGuide);
+  const annotationMode = useEditorStore((s) => s.annotationMode);
+  const fullAnnotationKeys = useEditorStore((s) => s.fullAnnotationKeys);
+  const riskAnnotationKeys = useEditorStore((s) => s.riskAnnotationKeys);
+  const manualAnnotationKeys = useEditorStore((s) => s.manualAnnotationKeys);
   const title = useEditorStore((s) => s.title);
   const updatePairPinyinRange = useEditorStore((s) => s.updatePairPinyinRange);
+  const setAnnotationAt = useEditorStore((s) => s.setAnnotationAt);
+  const clearCurrentAnnotations = useEditorStore(
+    (s) => s.clearCurrentAnnotations,
+  );
   const goPrint = usePrint();
   const gridOffset = (36 + fontSize * 2) % 32;
+  const annotationVisibility = buildAnnotationVisibility(paragraphs, {
+    mode: annotationMode,
+    fullKeys: fullAnnotationKeys,
+    riskKeys: riskAnnotationKeys,
+    manualKeys: manualAnnotationKeys,
+  });
+  const visibleAnnotationCount = annotationVisibility
+    .flat()
+    .filter(Boolean).length;
 
   useEffect(() => {
     setCandidateTarget(null);
   }, [paragraphs]);
+
+  useEffect(() => {
+    setCandidateTarget(null);
+    setEditing(null);
+  }, [annotationMode]);
 
   useEffect(() => {
     if (!candidateTarget) return;
@@ -154,6 +176,13 @@ export default function Preview() {
         py: py.trim() || null,
       })),
     );
+    editing.values.forEach((_, pairIndex) => {
+      setAnnotationAt(
+        editing.paragraphIndex,
+        editing.startIndex + pairIndex,
+        true,
+      );
+    });
     setEditing(null);
   }
 
@@ -167,6 +196,13 @@ export default function Preview() {
           candidateTarget.pairIndex,
         )
       : [];
+  const candidateIsAnnotated = candidateTarget
+    ? Boolean(
+        annotationVisibility[candidateTarget.paragraphIndex]?.[
+          candidateTarget.pairIndex
+        ],
+      )
+    : false;
 
   if (paragraphs.length === 0) {
     return (
@@ -206,6 +242,22 @@ export default function Preview() {
         </div>
       </div>
 
+      <div className="annotation-selection-bar" aria-label="注音选择">
+        <div>
+          <strong>
+            {annotationMode === "full"
+              ? "全文注音调整"
+              : annotationMode === "risk"
+                ? "风险字注音"
+                : "手动选择注音"}
+          </strong>
+          <span>已选 {visibleAnnotationCount} 处</span>
+        </div>
+        <button type="button" onClick={clearCurrentAnnotations}>
+          清空注音
+        </button>
+      </div>
+
       <div
         className={`paper-sheet ${pageGuide === "grid" ? "practice-grid" : ""}`}
         style={{
@@ -240,6 +292,9 @@ export default function Preview() {
                   next[index] = value;
                   setEditing({ ...editing, values: next });
                 },
+                annotationVisibility:
+                  annotationVisibility[paragraphIndex] ?? [],
+                highlightSelectedAnnotations: annotationMode !== "full",
               })}
             </Fragment>
           ))}
@@ -251,14 +306,31 @@ export default function Preview() {
           ref={candidateCardRef}
           ch={candidatePair.ch}
           currentPy={candidatePair.py}
+          selectedPy={candidateIsAnnotated ? candidatePair.py : null}
           candidates={candidates}
           position={candidateTarget.position}
           onSelect={(py) => {
-            if (py !== candidatePair.py) {
-              updatePairPinyinRange(
+            if (
+              candidateIsAnnotated &&
+              py === candidatePair.py
+            ) {
+              setAnnotationAt(
                 candidateTarget.paragraphIndex,
                 candidateTarget.pairIndex,
-                [{ pairIndex: 0, py }],
+                false,
+              );
+            } else {
+              if (py !== candidatePair.py) {
+                updatePairPinyinRange(
+                  candidateTarget.paragraphIndex,
+                  candidateTarget.pairIndex,
+                  [{ pairIndex: 0, py }],
+                );
+              }
+              setAnnotationAt(
+                candidateTarget.paragraphIndex,
+                candidateTarget.pairIndex,
+                true,
               );
             }
             setCandidateTarget(null);
@@ -276,7 +348,7 @@ export default function Preview() {
 
       <div className="preview-stats">
         <span>{paragraphs.length} 段</span>
-        <span>{countAnnotatedChars(paragraphs)} 个注音字</span>
+        <span>{visibleAnnotationCount} 个注音字</span>
         <span>{countReviewRisks(paragraphs)} 个待核对</span>
         <span>{countBySource(paragraphs, "dual")} 个用户录入</span>
         <span>{countBySource(paragraphs, "manual")} 个人工修改</span>

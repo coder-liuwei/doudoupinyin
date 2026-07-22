@@ -11,7 +11,7 @@
  *    v1 key 保留只读，不回滚（用户清缓存后即便 v1 没了，v2 仍可继续）。
  * 3. 都没有：返回空 schema。
  */
-import type { HistoryRecord } from "@/lib/types";
+import type { AnnotatedHistoryRecord } from "@/lib/annotation";
 
 const V1_KEY = "pinyinPrince.v1.history";
 const V2_KEY = "pinyinPrince.v2.history";
@@ -19,14 +19,14 @@ export const MAX_HISTORY = 40;
 
 export interface HistorySchema {
   schemaVersion: 2;
-  records: HistoryRecord[];
+  records: AnnotatedHistoryRecord[];
 }
 
-function isRecordArray(x: unknown): x is HistoryRecord[] {
+function isRecordArray(x: unknown): x is AnnotatedHistoryRecord[] {
   return Array.isArray(x);
 }
 
-function readV1Records(): HistoryRecord[] | null {
+function readV1Records(): AnnotatedHistoryRecord[] | null {
   try {
     const raw = localStorage.getItem(V1_KEY);
     if (!raw) return null;
@@ -86,7 +86,7 @@ export function loadHistory(): HistorySchema {
 }
 
 /** 保存/覆盖一条记录：同 id 替换，新记录置顶；超过 MAX_HISTORY 截断。 */
-export function saveRecord(rec: HistoryRecord): HistorySchema {
+export function saveRecord(rec: AnnotatedHistoryRecord): HistorySchema {
   const cur = loadHistory();
   const filtered = cur.records.filter((r) => r.id !== rec.id);
   filtered.unshift(rec);

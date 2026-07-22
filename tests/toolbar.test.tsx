@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it } from "vitest";
 import ActionPanel from "@/components/ActionPanel";
 import Editor from "@/components/Editor";
@@ -52,12 +53,12 @@ describe("layout settings", () => {
 
   it("keeps mode selection near the editor and moves printing to the preview", () => {
     const { rerender } = render(
-      <>
+      <MemoryRouter>
         <ModePanel />
         <Editor />
         <ActionPanel />
         <Preview />
-      </>,
+      </MemoryRouter>,
     );
 
     expect(screen.getByRole("radio", { name: "自动注音" })).not.toBeNull();
@@ -69,12 +70,12 @@ describe("layout settings", () => {
       });
     });
     rerender(
-      <>
+      <MemoryRouter>
         <ModePanel />
         <Editor />
         <ActionPanel />
         <Preview />
-      </>,
+      </MemoryRouter>,
     );
 
     expect(screen.getByRole("button", { name: "打印 / 存 PDF" })).not.toBeNull();

@@ -28,6 +28,7 @@ import {
   type HistorySchema,
 } from "@/lib/history";
 import type { HistoryRecord } from "@/lib/types";
+import type { AnnotatedHistoryRecord } from "@/lib/annotation";
 
 const V1_KEY = "pinyinPrince.v1.history";
 const V2_KEY = "pinyinPrince.v2.history";
@@ -189,6 +190,29 @@ describe("history save / replace / cap", () => {
       py: "háng",
       isPunct: false,
       pySource: "manual",
+    });
+  });
+
+  it("风险与手动注音位置分别持久化", () => {
+    const rec: AnnotatedHistoryRecord = {
+      ...makeRecord("annotation-settings", 1, "注音范围"),
+      annotationSettings: {
+        mode: "risk",
+        fullKeys: ["0:0"],
+        riskKeys: [],
+        manualKeys: ["0:0"],
+      },
+    };
+
+    saveRecord(rec);
+
+    expect(
+      (loadHistory().records[0] as AnnotatedHistoryRecord).annotationSettings,
+    ).toEqual({
+      mode: "risk",
+      fullKeys: ["0:0"],
+      riskKeys: [],
+      manualKeys: ["0:0"],
     });
   });
 });

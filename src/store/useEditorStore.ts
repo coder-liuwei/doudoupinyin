@@ -6,6 +6,15 @@
  * 也不持有 PDF 抽取状态（临时态，组件内 useState 即可）。
  */
 import { create } from "zustand";
+import {
+  annotationKey,
+  collectAnnotationKeys,
+  collectRiskAnnotationKeys,
+  DEFAULT_ANNOTATION_SETTINGS,
+  normalizeAnnotationSettings,
+  type AnnotationMode,
+  type AnnotationSettings,
+} from "@/lib/annotation";
 import { DEFAULT_PRINT_SETTINGS } from "@/lib/print-settings";
 import type { LayoutMode, Mode, Paragraph } from "@/lib/types";
 
@@ -20,6 +29,10 @@ export interface EditorState {
   indentFirstLine: boolean;
   showTitle: boolean;
   pageGuide: "plain" | "grid";
+  annotationMode: AnnotationMode;
+  fullAnnotationKeys: string[];
+  riskAnnotationKeys: string[];
+  manualAnnotationKeys: string[];
   title: string;
   currentId: string | null;
   err: string | null;
@@ -34,6 +47,14 @@ export interface EditorState {
   setIndentFirstLine: (v: boolean) => void;
   setShowTitle: (v: boolean) => void;
   setPageGuide: (v: "plain" | "grid") => void;
+  setAnnotationMode: (mode: AnnotationMode) => void;
+  setAnnotationSettings: (settings: unknown) => void;
+  setAnnotationAt: (
+    paragraphIndex: number,
+    pairIndex: number,
+    annotated: boolean,
+  ) => void;
+  clearCurrentAnnotations: () => void;
   setTitle: (s: string) => void;
   setCurrentId: (id: string | null) => void;
   setErr: (e: string | null) => void;
@@ -52,6 +73,10 @@ const INITIAL = {
   mode: "plain" as Mode,
   paragraphs: [] as Paragraph[],
   ...DEFAULT_PRINT_SETTINGS,
+  annotationMode: DEFAULT_ANNOTATION_SETTINGS.mode,
+  fullAnnotationKeys: [] as string[],
+  riskAnnotationKeys: [] as string[],
+  manualAnnotationKeys: [] as string[],
   title: "未命名",
   currentId: null as string | null,
   err: null as string | null,
@@ -61,7 +86,14 @@ export const useEditorStore = create<EditorState>((set) => ({
   ...INITIAL,
   setInput: (v) => set({ input: v }),
   setMode: (m) => set({ mode: m }),
-  setParagraphs: (p) => set({ paragraphs: p }),
+  setParagraphs: (p) =>
+    set({
+      paragraphs: p,
+      annotationMode: DEFAULT_ANNOTATION_SETTINGS.mode,
+      fullAnnotationKeys: collectAnnotationKeys(p),
+      riskAnnotationKeys: collectRiskAnnotationKeys(p),
+      manualAnnotationKeys: [],
+    }),
   setFontSize: (n) => set({ fontSize: n }),
   setLineHeight: (n) => set({ lineHeight: n }),
   setLetterSpacing: (n) => set({ letterSpacing: n }),
@@ -69,6 +101,47 @@ export const useEditorStore = create<EditorState>((set) => ({
   setIndentFirstLine: (v) => set({ indentFirstLine: v }),
   setShowTitle: (v) => set({ showTitle: v }),
   setPageGuide: (v) => set({ pageGuide: v }),
+  setAnnotationMode: (annotationMode) => set({ annotationMode }),
+  setAnnotationSettings: (rawSettings) =>
+    set((state) => {
+      const settings: AnnotationSettings = normalizeAnnotationSettings(
+        rawSettings,
+        state.paragraphs,
+      );
+      return {
+        annotationMode: settings.mode,
+        fullAnnotationKeys: settings.fullKeys,
+        riskAnnotationKeys: settings.riskKeys,
+        manualAnnotationKeys: settings.manualKeys,
+      };
+    }),
+  setAnnotationAt: (paragraphIndex, pairIndex, annotated) =>
+    set((state) => {
+      const key = annotationKey(paragraphIndex, pairIndex);
+      const field =
+        state.annotationMode === "full"
+          ? "fullAnnotationKeys"
+          : state.annotationMode === "risk"
+          ? "riskAnnotationKeys"
+          : "manualAnnotationKeys";
+      const keys = new Set(state[field]);
+      if (annotated) keys.add(key);
+      else keys.delete(key);
+      return { [field]: Array.from(keys), currentId: null };
+    }),
+  clearCurrentAnnotations: () =>
+    set((state) => {
+      if (state.annotationMode === "full") {
+        return { fullAnnotationKeys: [], currentId: null };
+      }
+      if (state.annotationMode === "risk") {
+        return { riskAnnotationKeys: [], currentId: null };
+      }
+      if (state.annotationMode === "manual") {
+        return { manualAnnotationKeys: [], currentId: null };
+      }
+      return { manualAnnotationKeys: [], currentId: null };
+    }),
   setTitle: (s) => set({ title: s }),
   setCurrentId: (id) => set({ currentId: id }),
   setErr: (e) => set({ err: e }),
