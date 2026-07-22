@@ -336,6 +336,6 @@ Start `npm run dev -- --host 127.0.0.1`, open the reported local URL, and verify
 2. 风险模式初始只显示风险字；点击已注音字可切音或点当前音取消。
 3. 手动模式初始为空；点击字只打开弹窗，点击候选后才出现注音。
 4. 全文、风险与手动分别保留选择；各自清空互不影响。
-5. 打印后返回仍保留正文与两个模式的选择。
+5. 打印后返回仍保留正文与三种模式的选择。
 
 Stop after local verification. Do not merge to `main` or push without explicit user confirmation.
