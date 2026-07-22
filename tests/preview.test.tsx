@@ -20,6 +20,7 @@ describe("PolyphoneCandidateCard", () => {
       <PolyphoneCandidateCard
         ch="行"
         currentPy="háng"
+        selectedPy="háng"
         candidates={["háng", "xíng"]}
         position={{ left: 120, top: 80 }}
         onSelect={vi.fn()}
@@ -45,6 +46,7 @@ describe("PolyphoneCandidateCard", () => {
       <PolyphoneCandidateCard
         ch="行"
         currentPy="háng"
+        selectedPy="háng"
         candidates={["háng", "xíng"]}
         position={{ left: 120, top: 80 }}
         onSelect={onSelect}
@@ -58,6 +60,30 @@ describe("PolyphoneCandidateCard", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "手动输入拼音" }));
     expect(onManualEdit).toHaveBeenCalledOnce();
+  });
+
+  it("未注音时仍展示当前读音但没有候选被选中", () => {
+    render(
+      <PolyphoneCandidateCard
+        ch="行"
+        currentPy="xíng"
+        selectedPy={null}
+        candidates={["xíng", "háng"]}
+        position={{ left: 120, top: 80 }}
+        onSelect={vi.fn()}
+        onManualEdit={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText("xíng", { selector: ".polyphone-card__pinyin" }))
+      .not.toBeNull();
+    expect(
+      screen.getByRole("button", { name: "选择 xíng" }).getAttribute("aria-pressed"),
+    ).toBe("false");
+    expect(
+      screen.getByRole("button", { name: "选择 háng" }).getAttribute("aria-pressed"),
+    ).toBe("false");
   });
 });
 

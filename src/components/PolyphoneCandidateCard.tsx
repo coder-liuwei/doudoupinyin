@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 interface PolyphoneCandidateCardProps {
   ch: string;
   currentPy: string;
+  selectedPy: string | null;
   candidates: string[];
   position: { left: number; top: number };
   onSelect: (py: string) => void;
@@ -18,6 +19,7 @@ const PolyphoneCandidateCard = forwardRef<
   {
     ch,
     currentPy,
+    selectedPy,
     candidates,
     position,
     onSelect,
@@ -61,7 +63,7 @@ const PolyphoneCandidateCard = forwardRef<
             type="button"
             className="polyphone-card__choice"
             aria-label={`选择 ${py}`}
-            aria-pressed={py === currentPy}
+            aria-pressed={py === selectedPy}
             key={py}
             onClick={() => onSelect(py)}
           >

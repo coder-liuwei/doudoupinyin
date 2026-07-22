@@ -285,6 +285,7 @@ export default function Preview() {
           ref={candidateCardRef}
           ch={candidatePair.ch}
           currentPy={candidatePair.py}
+          selectedPy={candidatePair.py}
           candidates={candidates}
           position={candidateTarget.position}
           onSelect={(py) => {
