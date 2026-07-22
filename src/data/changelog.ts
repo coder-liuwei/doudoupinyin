@@ -7,6 +7,16 @@ export interface ChangelogEntry {
 
 export const changelogEntries: readonly ChangelogEntry[] = [
   {
+    date: "2026-07-22",
+    title: "注音选择更灵活了",
+    items: [
+      "可选择全文注音、风险字注音或手动注音。",
+      "点击文字即可添加、更换或取消拼音，三种模式操作一致。",
+      "切换模式会分别保留已选结果，打印返回后内容也不会丢失。",
+    ],
+    contributors: ["兜兜"],
+  },
+  {
     date: "2026-07-16",
     title: "拍照也能快速生成注音稿了",
     items: [
