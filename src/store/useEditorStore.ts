@@ -8,6 +8,7 @@
 import { create } from "zustand";
 import {
   annotationKey,
+  collectAnnotationKeys,
   collectRiskAnnotationKeys,
   DEFAULT_ANNOTATION_SETTINGS,
   normalizeAnnotationSettings,
@@ -29,6 +30,7 @@ export interface EditorState {
   showTitle: boolean;
   pageGuide: "plain" | "grid";
   annotationMode: AnnotationMode;
+  fullAnnotationKeys: string[];
   riskAnnotationKeys: string[];
   manualAnnotationKeys: string[];
   title: string;
@@ -72,6 +74,7 @@ const INITIAL = {
   paragraphs: [] as Paragraph[],
   ...DEFAULT_PRINT_SETTINGS,
   annotationMode: DEFAULT_ANNOTATION_SETTINGS.mode,
+  fullAnnotationKeys: [] as string[],
   riskAnnotationKeys: [] as string[],
   manualAnnotationKeys: [] as string[],
   title: "未命名",
@@ -87,6 +90,7 @@ export const useEditorStore = create<EditorState>((set) => ({
     set({
       paragraphs: p,
       annotationMode: DEFAULT_ANNOTATION_SETTINGS.mode,
+      fullAnnotationKeys: collectAnnotationKeys(p),
       riskAnnotationKeys: collectRiskAnnotationKeys(p),
       manualAnnotationKeys: [],
     }),
@@ -106,16 +110,18 @@ export const useEditorStore = create<EditorState>((set) => ({
       );
       return {
         annotationMode: settings.mode,
+        fullAnnotationKeys: settings.fullKeys,
         riskAnnotationKeys: settings.riskKeys,
         manualAnnotationKeys: settings.manualKeys,
       };
     }),
   setAnnotationAt: (paragraphIndex, pairIndex, annotated) =>
     set((state) => {
-      if (state.annotationMode === "full") return state;
       const key = annotationKey(paragraphIndex, pairIndex);
       const field =
-        state.annotationMode === "risk"
+        state.annotationMode === "full"
+          ? "fullAnnotationKeys"
+          : state.annotationMode === "risk"
           ? "riskAnnotationKeys"
           : "manualAnnotationKeys";
       const keys = new Set(state[field]);
@@ -125,13 +131,16 @@ export const useEditorStore = create<EditorState>((set) => ({
     }),
   clearCurrentAnnotations: () =>
     set((state) => {
+      if (state.annotationMode === "full") {
+        return { fullAnnotationKeys: [], currentId: null };
+      }
       if (state.annotationMode === "risk") {
         return { riskAnnotationKeys: [], currentId: null };
       }
       if (state.annotationMode === "manual") {
         return { manualAnnotationKeys: [], currentId: null };
       }
-      return state;
+      return { manualAnnotationKeys: [], currentId: null };
     }),
   setTitle: (s) => set({ title: s }),
   setCurrentId: (id) => set({ currentId: id }),

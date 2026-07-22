@@ -198,6 +198,7 @@ describe("history save / replace / cap", () => {
       ...makeRecord("annotation-settings", 1, "注音范围"),
       annotationSettings: {
         mode: "risk",
+        fullKeys: ["0:0"],
         riskKeys: [],
         manualKeys: ["0:0"],
       },
@@ -209,6 +210,7 @@ describe("history save / replace / cap", () => {
       (loadHistory().records[0] as AnnotatedHistoryRecord).annotationSettings,
     ).toEqual({
       mode: "risk",
+      fullKeys: ["0:0"],
       riskKeys: [],
       manualKeys: ["0:0"],
     });

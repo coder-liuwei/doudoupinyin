@@ -44,6 +44,7 @@ export default function Preview() {
   const showTitle = useEditorStore((s) => s.showTitle);
   const pageGuide = useEditorStore((s) => s.pageGuide);
   const annotationMode = useEditorStore((s) => s.annotationMode);
+  const fullAnnotationKeys = useEditorStore((s) => s.fullAnnotationKeys);
   const riskAnnotationKeys = useEditorStore((s) => s.riskAnnotationKeys);
   const manualAnnotationKeys = useEditorStore((s) => s.manualAnnotationKeys);
   const title = useEditorStore((s) => s.title);
@@ -56,6 +57,7 @@ export default function Preview() {
   const gridOffset = (36 + fontSize * 2) % 32;
   const annotationVisibility = buildAnnotationVisibility(paragraphs, {
     mode: annotationMode,
+    fullKeys: fullAnnotationKeys,
     riskKeys: riskAnnotationKeys,
     manualKeys: manualAnnotationKeys,
   });
@@ -174,15 +176,13 @@ export default function Preview() {
         py: py.trim() || null,
       })),
     );
-    if (annotationMode !== "full") {
-      editing.values.forEach((_, pairIndex) => {
-        setAnnotationAt(
-          editing.paragraphIndex,
-          editing.startIndex + pairIndex,
-          true,
-        );
-      });
-    }
+    editing.values.forEach((_, pairIndex) => {
+      setAnnotationAt(
+        editing.paragraphIndex,
+        editing.startIndex + pairIndex,
+        true,
+      );
+    });
     setEditing(null);
   }
 
@@ -309,7 +309,6 @@ export default function Preview() {
           position={candidateTarget.position}
           onSelect={(py) => {
             if (
-              annotationMode !== "full" &&
               candidateIsAnnotated &&
               py === candidatePair.py
             ) {
@@ -326,13 +325,11 @@ export default function Preview() {
                   [{ pairIndex: 0, py }],
                 );
               }
-              if (annotationMode !== "full") {
-                setAnnotationAt(
-                  candidateTarget.paragraphIndex,
-                  candidateTarget.pairIndex,
-                  true,
-                );
-              }
+              setAnnotationAt(
+                candidateTarget.paragraphIndex,
+                candidateTarget.pairIndex,
+                true,
+              );
             }
             setCandidateTarget(null);
           }}

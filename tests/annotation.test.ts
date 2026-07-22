@@ -4,6 +4,7 @@ import {
   annotationKey,
   buildAnnotationVisibility,
   annotationSettingsFromRecord,
+  collectAnnotationKeys,
   collectRiskAnnotationKeys,
   normalizeAnnotationSettings,
 } from "@/lib/annotation";
@@ -19,12 +20,30 @@ const paragraph: Paragraph = [
 
 describe("annotation settings", () => {
   it("旧数据默认使用全文注音", () => {
+    expect(collectAnnotationKeys([paragraph])).toEqual(["0:0", "0:1"]);
     expect(normalizeAnnotationSettings(undefined)).toEqual(
       DEFAULT_ANNOTATION_SETTINGS,
     );
     expect(buildAnnotationVisibility([paragraph], undefined)).toEqual([
       [true, true, false],
     ]);
+  });
+
+  it("全文模式按独立位置集合显示，并保留显式清空", () => {
+    expect(
+      buildAnnotationVisibility([paragraph], {
+        mode: "full",
+        fullKeys: ["0:1"],
+        riskKeys: [],
+        manualKeys: [],
+      }),
+    ).toEqual([[false, true, false]]);
+    expect(
+      normalizeAnnotationSettings(
+        { mode: "full", fullKeys: [], riskKeys: [], manualKeys: [] },
+        [paragraph],
+      ).fullKeys,
+    ).toEqual([]);
   });
 
   it("手动模式只显示选中的当前出现位置", () => {
@@ -57,6 +76,7 @@ describe("annotation settings", () => {
       }),
     ).toEqual({
       mode: "full",
+      fullKeys: [],
       riskKeys: ["0:1"],
       manualKeys: ["0:1"],
     });
@@ -69,7 +89,12 @@ describe("annotation settings", () => {
         { mode: "risk", manualKeys: [] },
         [paragraph],
       ),
-    ).toEqual({ mode: "risk", riskKeys: ["0:1"], manualKeys: [] });
+    ).toEqual({
+      mode: "risk",
+      fullKeys: ["0:0", "0:1"],
+      riskKeys: ["0:1"],
+      manualKeys: [],
+    });
   });
 
   it("显式清空的 riskKeys 不会被重新生成", () => {
@@ -78,7 +103,12 @@ describe("annotation settings", () => {
         { mode: "risk", riskKeys: [], manualKeys: [] },
         [paragraph],
       ),
-    ).toEqual({ mode: "risk", riskKeys: [], manualKeys: [] });
+    ).toEqual({
+      mode: "risk",
+      fullKeys: ["0:0", "0:1"],
+      riskKeys: [],
+      manualKeys: [],
+    });
   });
 
   it("风险和手动模式分别按自己的位置显示", () => {
@@ -98,6 +128,10 @@ describe("annotation settings", () => {
 
   it("store 在两个过滤模式中分别增删和清空位置", () => {
     useEditorStore.getState().setParagraphs([paragraph]);
+    expect(useEditorStore.getState().fullAnnotationKeys).toEqual([
+      "0:0",
+      "0:1",
+    ]);
     expect(useEditorStore.getState().riskAnnotationKeys).toEqual(["0:1"]);
     expect(useEditorStore.getState().manualAnnotationKeys).toEqual([]);
 
@@ -120,9 +154,22 @@ describe("annotation settings", () => {
     ]);
   });
 
+  it("store 在全文模式可取消并恢复当前位置", () => {
+    useEditorStore.getState().setParagraphs([paragraph]);
+    useEditorStore.getState().setAnnotationAt(0, 0, false);
+    expect(useEditorStore.getState().fullAnnotationKeys).toEqual(["0:1"]);
+
+    useEditorStore.getState().setAnnotationAt(0, 0, true);
+    expect(useEditorStore.getState().fullAnnotationKeys).toEqual([
+      "0:1",
+      "0:0",
+    ]);
+  });
+
   it("reset 清空两个集合，重新生成正文只重建风险集合", () => {
     useEditorStore.setState({
       annotationMode: "manual",
+      fullAnnotationKeys: ["7:7"],
       riskAnnotationKeys: ["8:8"],
       manualAnnotationKeys: ["9:9"],
     });
@@ -130,6 +177,7 @@ describe("annotation settings", () => {
     useEditorStore.getState().reset();
     expect(useEditorStore.getState()).toMatchObject({
       annotationMode: "full",
+      fullAnnotationKeys: [],
       riskAnnotationKeys: [],
       manualAnnotationKeys: [],
     });
@@ -137,6 +185,7 @@ describe("annotation settings", () => {
     useEditorStore.getState().setParagraphs([paragraph]);
     expect(useEditorStore.getState()).toMatchObject({
       annotationMode: "full",
+      fullAnnotationKeys: ["0:0", "0:1"],
       riskAnnotationKeys: ["0:1"],
       manualAnnotationKeys: [],
     });
@@ -150,6 +199,7 @@ describe("annotation settings", () => {
 
     expect(annotationSettingsFromRecord(record)).toEqual({
       mode: "manual",
+      fullKeys: ["0:0", "0:1"],
       riskKeys: ["0:1"],
       manualKeys: ["0:1"],
     });

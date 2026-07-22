@@ -24,6 +24,7 @@ export default function ActionPanel() {
   const showTitle = useEditorStore((s) => s.showTitle);
   const pageGuide = useEditorStore((s) => s.pageGuide);
   const annotationMode = useEditorStore((s) => s.annotationMode);
+  const fullAnnotationKeys = useEditorStore((s) => s.fullAnnotationKeys);
   const riskAnnotationKeys = useEditorStore((s) => s.riskAnnotationKeys);
   const manualAnnotationKeys = useEditorStore((s) => s.manualAnnotationKeys);
   const setParagraphs = useEditorStore((s) => s.setParagraphs);
@@ -84,6 +85,7 @@ export default function ActionPanel() {
       }),
       annotationSettings: {
         mode: annotationMode,
+        fullKeys: fullAnnotationKeys,
         riskKeys: riskAnnotationKeys,
         manualKeys: manualAnnotationKeys,
       },

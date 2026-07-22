@@ -38,6 +38,7 @@ export function usePrint(): () => void {
   const showTitle = useEditorStore((s) => s.showTitle);
   const pageGuide = useEditorStore((s) => s.pageGuide);
   const annotationMode = useEditorStore((s) => s.annotationMode);
+  const fullAnnotationKeys = useEditorStore((s) => s.fullAnnotationKeys);
   const riskAnnotationKeys = useEditorStore((s) => s.riskAnnotationKeys);
   const manualAnnotationKeys = useEditorStore((s) => s.manualAnnotationKeys);
 
@@ -58,6 +59,7 @@ export function usePrint(): () => void {
       }),
       annotationSettings: {
         mode: annotationMode,
+        fullKeys: fullAnnotationKeys,
         riskKeys: riskAnnotationKeys,
         manualKeys: manualAnnotationKeys,
       },

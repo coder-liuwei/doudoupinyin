@@ -101,6 +101,7 @@ describe("Preview proofreading", () => {
       showTitle: true,
       pageGuide: "plain",
       annotationMode: "full",
+      fullAnnotationKeys: [],
       riskAnnotationKeys: [],
       manualAnnotationKeys: [],
       title: "未命名",
@@ -135,6 +136,34 @@ describe("Preview proofreading", () => {
     fireEvent.click(screen.getByRole("button", { name: "选择 xíng" }));
 
     expect(useEditorStore.getState().paragraphs[0][0].pySource).toBe("auto");
+  });
+
+  it("全文模式点击当前读音取消，再点击候选恢复注音", () => {
+    useEditorStore.setState({
+      annotationMode: "full",
+      fullAnnotationKeys: ["0:0"],
+      riskAnnotationKeys: [],
+      manualAnnotationKeys: [],
+      paragraphs: [[
+        { ch: "行", py: "xíng", isPunct: false, pySource: "auto" },
+      ]],
+    });
+
+    renderPreview();
+    fireEvent.click(screen.getByText("行"));
+    fireEvent.click(screen.getByRole("button", { name: "选择 xíng" }));
+
+    expect(useEditorStore.getState().fullAnnotationKeys).toEqual([]);
+    expect(screen.getByText("xíng").getAttribute("aria-hidden")).toBe("true");
+
+    fireEvent.click(screen.getByText("行"));
+    expect(
+      screen.getByRole("button", { name: "选择 xíng" }).getAttribute("aria-pressed"),
+    ).toBe("false");
+    fireEvent.click(screen.getByRole("button", { name: "选择 xíng" }));
+
+    expect(useEditorStore.getState().fullAnnotationKeys).toEqual(["0:0"]);
+    expect(screen.getByText("xíng").getAttribute("aria-hidden")).toBeNull();
   });
 
   it("单音字也能打开只包含当前读音的字卡", () => {
