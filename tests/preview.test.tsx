@@ -150,6 +150,8 @@ describe("Preview proofreading", () => {
     });
 
     renderPreview();
+    expect(screen.getByLabelText("注音选择")).not.toBeNull();
+    expect(screen.getByText("全文注音调整")).not.toBeNull();
     fireEvent.click(screen.getByText("行"));
     fireEvent.click(screen.getByRole("button", { name: "选择 xíng" }));
 

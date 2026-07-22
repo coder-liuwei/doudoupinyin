@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** 让全文、风险字、手动注音统一通过点击文字打开候选弹窗，并让风险字与手动注音分别维护、持久化各自的注音位置。
+**Goal:** 让全文、风险字、手动注音统一通过点击文字打开候选弹窗，并分别维护、持久化各自的注音位置。
 
-**Architecture:** `Pair.py` 继续保存底层读音，`AnnotationSettings` 只保存显示范围。全文模式固定显示全部；风险字和手动模式分别使用 `riskKeys`、`manualKeys`。候选卡片把“当前读音”和“当前是否已注音”拆开：未注音时仍展示当前读音，但没有候选处于选中状态。旧记录缺少 `riskKeys` 时从段落风险分析补齐，显式空数组则保留为空。
+**Architecture:** `Pair.py` 继续保存底层读音，`AnnotationSettings` 只保存显示范围。三种模式分别使用 `fullKeys`、`riskKeys`、`manualKeys`；全文初始为全部可注音位置，风险字初始为风险位置，手动初始为空。候选卡片把“当前读音”和“当前是否已注音”拆开：未注音时仍展示当前读音，但没有候选处于选中状态。旧记录缺少集合时从段落派生对应默认值，显式空数组则保留为空。
 
 **Tech Stack:** React 18、TypeScript、Zustand、Vitest、Testing Library、Vite
 
@@ -61,6 +61,7 @@ In `src/lib/annotation.ts`:
 ```ts
 export interface AnnotationSettings {
   mode: AnnotationMode;
+  fullKeys: string[];
   riskKeys: string[];
   manualKeys: string[];
 }
@@ -81,7 +82,7 @@ setAnnotationAt(paragraphIndex: number, pairIndex: number, annotated: boolean): 
 clearCurrentAnnotations(): void;
 ```
 
-`setAnnotationAt` updates only the currently active risk/manual array. `setParagraphs` initializes risk keys from the new paragraphs and empties manual keys. `setAnnotationSettings` normalizes against the current paragraphs so old saved data can derive risk keys.
+`setAnnotationAt` updates only the currently active full/risk/manual array. `setParagraphs` initializes full keys from all annotatable positions, risk keys from the new paragraphs, and empties manual keys. `setAnnotationSettings` normalizes against the current paragraphs so old saved data can derive missing keys.
 
 - [ ] **Step 4: Run tests to verify GREEN**
 
@@ -179,8 +180,9 @@ it("点击其他读音会换音并保持注音", () => {
   // click another candidate and assert Pair.py changes and key remains present
 });
 
-it("全文模式点击当前读音不会取消注音", () => {
-  // click current candidate and assert full visibility remains
+it("全文模式点击当前读音取消，再点击候选恢复", () => {
+  // click current candidate and assert only that position becomes hidden,
+  // then click its candidate again and assert the annotation returns
 });
 ```
 
@@ -198,14 +200,12 @@ Remove `annotationSelectionActive` and `onToggleAnnotation` from `ProofreadParag
 
 In `Preview`:
 
-1. Build visibility from `{ mode, riskKeys: riskAnnotationKeys, manualKeys: manualAnnotationKeys }`.
+1. Build visibility from `{ mode, fullKeys: fullAnnotationKeys, riskKeys: riskAnnotationKeys, manualKeys: manualAnnotationKeys }`.
 2. Pass `selectedPy={isTargetAnnotated ? candidatePair.py : null}`.
 3. Handle candidate selection with this state table:
 
 ```ts
-if (annotationMode === "full") {
-  if (py !== pair.py) updatePairPy(paragraphIndex, pairIndex, py);
-} else if (isTargetAnnotated && py === pair.py) {
+if (isTargetAnnotated && py === pair.py) {
   setAnnotationAt(paragraphIndex, pairIndex, false);
 } else {
   if (py !== pair.py) updatePairPy(paragraphIndex, pairIndex, py);
@@ -213,8 +213,8 @@ if (annotationMode === "full") {
 }
 ```
 
-4. Show the selection count and `清空注音` toolbar for both risk and manual modes; clear only the active mode.
-5. On manual-input save, update the reading and annotate every edited position in risk/manual mode. Closing, Escape, or outside click must not change keys.
+4. Always show the selection count and `清空注音` toolbar in the same stable layout slot for all three modes; clear only the active mode.
+5. On manual-input save, update the reading and annotate every edited position in the active mode. Closing, Escape, or outside click must not change keys.
 
 - [ ] **Step 4: Run tests to verify GREEN**
 
@@ -229,7 +229,7 @@ git add src/lib/render.tsx src/components/Preview.tsx tests/render.test.tsx test
 git commit -m "feat: unify annotation candidate interaction"
 ```
 
-### Task 4: Persist both filters through history and print
+### Task 4: Persist all three filters through history and print
 
 **Files:**
 - Modify: `src/components/ActionPanel.tsx`
@@ -264,9 +264,9 @@ Run: `npm test -- tests/history.test.ts tests/print-navigation.test.tsx tests/pr
 
 Expected: FAIL because saved and temporary payloads currently include only `manualKeys`.
 
-- [ ] **Step 3: Carry both arrays through existing boundaries**
+- [ ] **Step 3: Carry all three arrays through existing boundaries**
 
-Add `riskKeys` anywhere `annotationSettings` is assembled. Normalize restored history and print settings with their saved paragraphs. Do not change `src/lib/types.ts` or the history schema version.
+Add `fullKeys` and `riskKeys` anywhere `annotationSettings` is assembled. Normalize restored history and print settings with their saved paragraphs. Do not change `src/lib/types.ts` or the history schema version.
 
 - [ ] **Step 4: Run tests to verify GREEN**
 
@@ -332,10 +332,10 @@ Expected: no whitespace errors and a clean feature worktree. No changes to `src/
 
 Start `npm run dev -- --host 127.0.0.1`, open the reported local URL, and verify:
 
-1. 全文模式所有字有注音，候选当前音选中且不能点掉。
+1. 全文模式默认所有字有注音；候选当前音选中，点击可取消，再次点击可恢复。
 2. 风险模式初始只显示风险字；点击已注音字可切音或点当前音取消。
 3. 手动模式初始为空；点击字只打开弹窗，点击候选后才出现注音。
-4. 风险与手动分别保留选择；各自清空互不影响。
+4. 全文、风险与手动分别保留选择；各自清空互不影响。
 5. 打印后返回仍保留正文与两个模式的选择。
 
 Stop after local verification. Do not merge to `main` or push without explicit user confirmation.

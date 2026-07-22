@@ -242,19 +242,21 @@ export default function Preview() {
         </div>
       </div>
 
-      {annotationMode !== "full" && (
-        <div className="annotation-selection-bar" aria-label="注音选择">
-          <div>
-            <strong>
-              {annotationMode === "risk" ? "风险字注音" : "手动选择注音"}
-            </strong>
-            <span>已选 {visibleAnnotationCount} 处</span>
-          </div>
-          <button type="button" onClick={clearCurrentAnnotations}>
-            清空注音
-          </button>
+      <div className="annotation-selection-bar" aria-label="注音选择">
+        <div>
+          <strong>
+            {annotationMode === "full"
+              ? "全文注音调整"
+              : annotationMode === "risk"
+                ? "风险字注音"
+                : "手动选择注音"}
+          </strong>
+          <span>已选 {visibleAnnotationCount} 处</span>
         </div>
-      )}
+        <button type="button" onClick={clearCurrentAnnotations}>
+          清空注音
+        </button>
+      </div>
 
       <div
         className={`paper-sheet ${pageGuide === "grid" ? "practice-grid" : ""}`}
