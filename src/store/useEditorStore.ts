@@ -8,6 +8,7 @@
 import { create } from "zustand";
 import {
   annotationKey,
+  collectRiskAnnotationKeys,
   DEFAULT_ANNOTATION_SETTINGS,
   normalizeAnnotationSettings,
   type AnnotationMode,
@@ -28,6 +29,7 @@ export interface EditorState {
   showTitle: boolean;
   pageGuide: "plain" | "grid";
   annotationMode: AnnotationMode;
+  riskAnnotationKeys: string[];
   manualAnnotationKeys: string[];
   title: string;
   currentId: string | null;
@@ -45,6 +47,12 @@ export interface EditorState {
   setPageGuide: (v: "plain" | "grid") => void;
   setAnnotationMode: (mode: AnnotationMode) => void;
   setAnnotationSettings: (settings: unknown) => void;
+  setAnnotationAt: (
+    paragraphIndex: number,
+    pairIndex: number,
+    annotated: boolean,
+  ) => void;
+  clearCurrentAnnotations: () => void;
   toggleManualAnnotation: (paragraphIndex: number, pairIndex: number) => void;
   clearManualAnnotations: () => void;
   setTitle: (s: string) => void;
@@ -66,6 +74,7 @@ const INITIAL = {
   paragraphs: [] as Paragraph[],
   ...DEFAULT_PRINT_SETTINGS,
   annotationMode: DEFAULT_ANNOTATION_SETTINGS.mode,
+  riskAnnotationKeys: [] as string[],
   manualAnnotationKeys: [] as string[],
   title: "未命名",
   currentId: null as string | null,
@@ -80,6 +89,7 @@ export const useEditorStore = create<EditorState>((set) => ({
     set({
       paragraphs: p,
       annotationMode: DEFAULT_ANNOTATION_SETTINGS.mode,
+      riskAnnotationKeys: collectRiskAnnotationKeys(p),
       manualAnnotationKeys: [],
     }),
   setFontSize: (n) => set({ fontSize: n }),
@@ -90,13 +100,41 @@ export const useEditorStore = create<EditorState>((set) => ({
   setShowTitle: (v) => set({ showTitle: v }),
   setPageGuide: (v) => set({ pageGuide: v }),
   setAnnotationMode: (annotationMode) => set({ annotationMode }),
-  setAnnotationSettings: (rawSettings) => {
-    const settings: AnnotationSettings = normalizeAnnotationSettings(rawSettings);
-    set({
-      annotationMode: settings.mode,
-      manualAnnotationKeys: settings.manualKeys,
-    });
-  },
+  setAnnotationSettings: (rawSettings) =>
+    set((state) => {
+      const settings: AnnotationSettings = normalizeAnnotationSettings(
+        rawSettings,
+        state.paragraphs,
+      );
+      return {
+        annotationMode: settings.mode,
+        riskAnnotationKeys: settings.riskKeys,
+        manualAnnotationKeys: settings.manualKeys,
+      };
+    }),
+  setAnnotationAt: (paragraphIndex, pairIndex, annotated) =>
+    set((state) => {
+      if (state.annotationMode === "full") return state;
+      const key = annotationKey(paragraphIndex, pairIndex);
+      const field =
+        state.annotationMode === "risk"
+          ? "riskAnnotationKeys"
+          : "manualAnnotationKeys";
+      const keys = new Set(state[field]);
+      if (annotated) keys.add(key);
+      else keys.delete(key);
+      return { [field]: Array.from(keys), currentId: null };
+    }),
+  clearCurrentAnnotations: () =>
+    set((state) => {
+      if (state.annotationMode === "risk") {
+        return { riskAnnotationKeys: [], currentId: null };
+      }
+      if (state.annotationMode === "manual") {
+        return { manualAnnotationKeys: [], currentId: null };
+      }
+      return state;
+    }),
   toggleManualAnnotation: (paragraphIndex, pairIndex) =>
     set((state) => {
       const key = annotationKey(paragraphIndex, pairIndex);
