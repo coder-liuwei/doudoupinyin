@@ -66,6 +66,7 @@ export default function PrintOnly() {
             ...normalizePrintSettings(legacySettings),
             annotationSettings: normalizeAnnotationSettings(
               parsed.annotationSettings,
+              parsed.paragraphs,
             ),
           });
           return;

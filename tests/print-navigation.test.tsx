@@ -26,6 +26,7 @@ describe("usePrint navigation", () => {
         { ch: "行", py: "xíng", isPunct: false, pySource: "auto" },
       ]],
       annotationMode: "manual",
+      riskAnnotationKeys: [],
       manualAnnotationKeys: ["0:0"],
     });
   });
@@ -42,6 +43,7 @@ describe("usePrint navigation", () => {
     );
     expect(payload.annotationSettings).toEqual({
       mode: "manual",
+      riskKeys: [],
       manualKeys: ["0:0"],
     });
   });

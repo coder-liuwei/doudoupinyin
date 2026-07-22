@@ -21,7 +21,11 @@ describe("PrintOnly annotation settings", () => {
           { ch: "行", py: "xíng", isPunct: false },
         ]],
         printSettings: {},
-        annotationSettings: { mode: "manual", manualKeys: ["0:1"] },
+        annotationSettings: {
+          mode: "manual",
+          riskKeys: ["0:0"],
+          manualKeys: ["0:1"],
+        },
       }),
     );
 
@@ -33,6 +37,58 @@ describe("PrintOnly annotation settings", () => {
 
     await waitFor(() => expect(screen.getByText("部分注音")).not.toBeNull());
     expect(screen.getByText("chūn").getAttribute("aria-hidden")).toBe("true");
+    expect(screen.getByText("xíng").getAttribute("aria-hidden")).toBeNull();
+  });
+
+  it("显式清空风险字后打印页保持无风险注音", async () => {
+    sessionStorage.setItem(
+      "pinyinPrince.print-temp",
+      JSON.stringify({
+        id: "temp-empty-risk",
+        title: "风险已清空",
+        paragraphs: [[
+          { ch: "行", py: "xíng", isPunct: false, pySource: "auto" },
+        ]],
+        printSettings: {},
+        annotationSettings: {
+          mode: "risk",
+          riskKeys: [],
+          manualKeys: ["0:0"],
+        },
+      }),
+    );
+
+    render(
+      <MemoryRouter initialEntries={["/print?id=temp-empty-risk"]}>
+        <PrintOnly />
+      </MemoryRouter>,
+    );
+
+    await waitFor(() => expect(screen.getByText("风险已清空")).not.toBeNull());
+    expect(screen.getByText("xíng").getAttribute("aria-hidden")).toBe("true");
+  });
+
+  it("旧打印载荷缺少 riskKeys 时从段落补回风险字", async () => {
+    sessionStorage.setItem(
+      "pinyinPrince.print-temp",
+      JSON.stringify({
+        id: "temp-legacy-risk",
+        title: "旧风险载荷",
+        paragraphs: [[
+          { ch: "行", py: "xíng", isPunct: false, pySource: "auto" },
+        ]],
+        printSettings: {},
+        annotationSettings: { mode: "risk", manualKeys: [] },
+      }),
+    );
+
+    render(
+      <MemoryRouter initialEntries={["/print?id=temp-legacy-risk"]}>
+        <PrintOnly />
+      </MemoryRouter>,
+    );
+
+    await waitFor(() => expect(screen.getByText("旧风险载荷")).not.toBeNull());
     expect(screen.getByText("xíng").getAttribute("aria-hidden")).toBeNull();
   });
 
