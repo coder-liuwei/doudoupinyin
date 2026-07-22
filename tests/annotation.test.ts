@@ -120,6 +120,28 @@ describe("annotation settings", () => {
     ]);
   });
 
+  it("reset 清空两个集合，重新生成正文只重建风险集合", () => {
+    useEditorStore.setState({
+      annotationMode: "manual",
+      riskAnnotationKeys: ["8:8"],
+      manualAnnotationKeys: ["9:9"],
+    });
+
+    useEditorStore.getState().reset();
+    expect(useEditorStore.getState()).toMatchObject({
+      annotationMode: "full",
+      riskAnnotationKeys: [],
+      manualAnnotationKeys: [],
+    });
+
+    useEditorStore.getState().setParagraphs([paragraph]);
+    expect(useEditorStore.getState()).toMatchObject({
+      annotationMode: "full",
+      riskAnnotationKeys: ["0:1"],
+      manualAnnotationKeys: [],
+    });
+  });
+
   it("历史记录缺少新字段时按全文读取", () => {
     const record = {
       annotationSettings: { mode: "manual", manualKeys: ["0:1"] },

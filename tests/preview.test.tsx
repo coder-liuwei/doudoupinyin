@@ -174,6 +174,37 @@ describe("Preview proofreading", () => {
     expect(screen.queryByRole("dialog", { name: "行的读音" })).toBeNull();
   });
 
+  it("手动模式用键盘打开或关闭弹窗都不会误加注音", () => {
+    useEditorStore.setState({
+      annotationMode: "manual",
+      riskAnnotationKeys: ["0:0"],
+      manualAnnotationKeys: [],
+      paragraphs: [[
+        { ch: "行", py: "xíng", isPunct: false, pySource: "auto" },
+      ]],
+    });
+
+    renderPreview();
+    const character = screen.getByRole("button", { name: "行" });
+
+    fireEvent.keyDown(character, { key: "Enter" });
+    expect(screen.getByRole("dialog", { name: "行的读音" })).not.toBeNull();
+    expect(useEditorStore.getState().manualAnnotationKeys).toEqual([]);
+
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("dialog", { name: "行的读音" })).toBeNull();
+    expect(useEditorStore.getState().manualAnnotationKeys).toEqual([]);
+
+    fireEvent.keyDown(character, { key: " " });
+    fireEvent.click(screen.getByRole("button", { name: "关闭读音选择" }));
+    expect(useEditorStore.getState().manualAnnotationKeys).toEqual([]);
+
+    fireEvent.click(character);
+    fireEvent.pointerDown(document.body);
+    expect(useEditorStore.getState().manualAnnotationKeys).toEqual([]);
+    expect(useEditorStore.getState().riskAnnotationKeys).toEqual(["0:0"]);
+  });
+
   it("marks common polyphone characters as proofreading suspects", () => {
     useEditorStore.setState({
       paragraphs: [[{ ch: "行", py: "xíng", isPunct: false, pySource: "auto" }]],
