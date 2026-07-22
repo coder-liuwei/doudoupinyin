@@ -53,8 +53,6 @@ export interface EditorState {
     annotated: boolean,
   ) => void;
   clearCurrentAnnotations: () => void;
-  toggleManualAnnotation: (paragraphIndex: number, pairIndex: number) => void;
-  clearManualAnnotations: () => void;
   setTitle: (s: string) => void;
   setCurrentId: (id: string | null) => void;
   setErr: (e: string | null) => void;
@@ -135,16 +133,6 @@ export const useEditorStore = create<EditorState>((set) => ({
       }
       return state;
     }),
-  toggleManualAnnotation: (paragraphIndex, pairIndex) =>
-    set((state) => {
-      const key = annotationKey(paragraphIndex, pairIndex);
-      const keys = new Set(state.manualAnnotationKeys);
-      if (keys.has(key)) keys.delete(key);
-      else keys.add(key);
-      return { manualAnnotationKeys: Array.from(keys), currentId: null };
-    }),
-  clearManualAnnotations: () =>
-    set({ manualAnnotationKeys: [], currentId: null }),
   setTitle: (s) => set({ title: s }),
   setCurrentId: (id) => set({ currentId: id }),
   setErr: (e) => set({ err: e }),

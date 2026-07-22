@@ -44,15 +44,19 @@ export default function Preview() {
   const showTitle = useEditorStore((s) => s.showTitle);
   const pageGuide = useEditorStore((s) => s.pageGuide);
   const annotationMode = useEditorStore((s) => s.annotationMode);
+  const riskAnnotationKeys = useEditorStore((s) => s.riskAnnotationKeys);
   const manualAnnotationKeys = useEditorStore((s) => s.manualAnnotationKeys);
   const title = useEditorStore((s) => s.title);
   const updatePairPinyinRange = useEditorStore((s) => s.updatePairPinyinRange);
-  const toggleManualAnnotation = useEditorStore((s) => s.toggleManualAnnotation);
-  const clearManualAnnotations = useEditorStore((s) => s.clearManualAnnotations);
+  const setAnnotationAt = useEditorStore((s) => s.setAnnotationAt);
+  const clearCurrentAnnotations = useEditorStore(
+    (s) => s.clearCurrentAnnotations,
+  );
   const goPrint = usePrint();
   const gridOffset = (36 + fontSize * 2) % 32;
   const annotationVisibility = buildAnnotationVisibility(paragraphs, {
     mode: annotationMode,
+    riskKeys: riskAnnotationKeys,
     manualKeys: manualAnnotationKeys,
   });
   const visibleAnnotationCount = annotationVisibility
@@ -170,6 +174,15 @@ export default function Preview() {
         py: py.trim() || null,
       })),
     );
+    if (annotationMode !== "full") {
+      editing.values.forEach((_, pairIndex) => {
+        setAnnotationAt(
+          editing.paragraphIndex,
+          editing.startIndex + pairIndex,
+          true,
+        );
+      });
+    }
     setEditing(null);
   }
 
@@ -183,6 +196,13 @@ export default function Preview() {
           candidateTarget.pairIndex,
         )
       : [];
+  const candidateIsAnnotated = candidateTarget
+    ? Boolean(
+        annotationVisibility[candidateTarget.paragraphIndex]?.[
+          candidateTarget.pairIndex
+        ],
+      )
+    : false;
 
   if (paragraphs.length === 0) {
     return (
@@ -222,13 +242,15 @@ export default function Preview() {
         </div>
       </div>
 
-      {annotationMode === "manual" && (
-        <div className="annotation-selection-bar" aria-label="手动注音选择">
+      {annotationMode !== "full" && (
+        <div className="annotation-selection-bar" aria-label="注音选择">
           <div>
-            <strong>手动选择注音</strong>
-            <span>已选 {manualAnnotationKeys.length} 处</span>
+            <strong>
+              {annotationMode === "risk" ? "风险字注音" : "手动选择注音"}
+            </strong>
+            <span>已选 {visibleAnnotationCount} 处</span>
           </div>
-          <button type="button" onClick={clearManualAnnotations}>
+          <button type="button" onClick={clearCurrentAnnotations}>
             清空注音
           </button>
         </div>
@@ -270,10 +292,7 @@ export default function Preview() {
                 },
                 annotationVisibility:
                   annotationVisibility[paragraphIndex] ?? [],
-                annotationSelectionActive:
-                  annotationMode === "manual",
-                onToggleAnnotation: (pairIndex) =>
-                  toggleManualAnnotation(paragraphIndex, pairIndex),
+                highlightSelectedAnnotations: annotationMode !== "full",
               })}
             </Fragment>
           ))}
@@ -285,16 +304,35 @@ export default function Preview() {
           ref={candidateCardRef}
           ch={candidatePair.ch}
           currentPy={candidatePair.py}
-          selectedPy={candidatePair.py}
+          selectedPy={candidateIsAnnotated ? candidatePair.py : null}
           candidates={candidates}
           position={candidateTarget.position}
           onSelect={(py) => {
-            if (py !== candidatePair.py) {
-              updatePairPinyinRange(
+            if (
+              annotationMode !== "full" &&
+              candidateIsAnnotated &&
+              py === candidatePair.py
+            ) {
+              setAnnotationAt(
                 candidateTarget.paragraphIndex,
                 candidateTarget.pairIndex,
-                [{ pairIndex: 0, py }],
+                false,
               );
+            } else {
+              if (py !== candidatePair.py) {
+                updatePairPinyinRange(
+                  candidateTarget.paragraphIndex,
+                  candidateTarget.pairIndex,
+                  [{ pairIndex: 0, py }],
+                );
+              }
+              if (annotationMode !== "full") {
+                setAnnotationAt(
+                  candidateTarget.paragraphIndex,
+                  candidateTarget.pairIndex,
+                  true,
+                );
+              }
             }
             setCandidateTarget(null);
           }}

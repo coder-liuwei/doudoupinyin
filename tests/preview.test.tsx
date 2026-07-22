@@ -101,6 +101,7 @@ describe("Preview proofreading", () => {
       showTitle: true,
       pageGuide: "plain",
       annotationMode: "full",
+      riskAnnotationKeys: [],
       manualAnnotationKeys: [],
       title: "未命名",
       currentId: null,
@@ -201,6 +202,9 @@ describe("Preview proofreading", () => {
   it("手动输入入口继续使用现有范围编辑器", () => {
     useEditorStore.setState({
       title: "词组校对",
+      annotationMode: "manual",
+      riskAnnotationKeys: [],
+      manualAnnotationKeys: [],
       paragraphs: [[
         { ch: "银", py: "yín", isPunct: false, pySource: "auto" },
         { ch: "行", py: "xíng", isPunct: false, pySource: "auto" },
@@ -219,6 +223,10 @@ describe("Preview proofreading", () => {
     const pairs = useEditorStore.getState().paragraphs[0];
     expect(pairs.map((pair) => pair.py)).toEqual(["yín", "háng"]);
     expect(pairs.map((pair) => pair.pySource)).toEqual(["manual", "manual"]);
+    expect(useEditorStore.getState().manualAnnotationKeys).toEqual([
+      "0:0",
+      "0:1",
+    ]);
     expect(screen.getByText("2 个人工修改")).not.toBeNull();
   });
 
@@ -246,9 +254,10 @@ describe("Preview proofreading", () => {
     expect(useEditorStore.getState().manualAnnotationKeys).toEqual([]);
   });
 
-  it("手动模式每次点击都只切换当前字且不打开校音弹窗", () => {
+  it("手动模式点击文字只打开弹窗且未注音时没有候选被选中", () => {
     useEditorStore.setState({
       annotationMode: "manual",
+      riskAnnotationKeys: [],
       manualAnnotationKeys: [],
       paragraphs: [[
         { ch: "行", py: "xíng", isPunct: false, pySource: "auto" },
@@ -265,19 +274,69 @@ describe("Preview proofreading", () => {
 
     fireEvent.click(characters[0]);
 
-    expect(useEditorStore.getState().manualAnnotationKeys).toEqual(["0:0"]);
-    expect(pinyin[0].getAttribute("aria-hidden")).toBeNull();
-    expect(pinyin[1].getAttribute("aria-hidden")).toBe("true");
-    expect(screen.queryByRole("dialog")).toBeNull();
-
-    fireEvent.click(characters[0]);
     expect(useEditorStore.getState().manualAnnotationKeys).toEqual([]);
-    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(pinyin[0].getAttribute("aria-hidden")).toBe("true");
+    expect(pinyin[1].getAttribute("aria-hidden")).toBe("true");
+    expect(screen.getByRole("dialog", { name: "行的读音" })).not.toBeNull();
+    expect(
+      screen.getByRole("button", { name: "选择 xíng" }).getAttribute("aria-pressed"),
+    ).toBe("false");
+  });
+
+  it("未注音时点击当前读音添加，已注音时再次点击当前读音取消", () => {
+    useEditorStore.setState({
+      annotationMode: "manual",
+      riskAnnotationKeys: [],
+      manualAnnotationKeys: [],
+      paragraphs: [[
+        { ch: "行", py: "xíng", isPunct: false, pySource: "auto" },
+        { ch: "行", py: "xíng", isPunct: false, pySource: "auto" },
+      ]],
+    });
+
+    renderPreview();
+    fireEvent.click(screen.getAllByText("行")[0]);
+    fireEvent.click(screen.getByRole("button", { name: "选择 xíng" }));
+
+    expect(useEditorStore.getState().manualAnnotationKeys).toEqual(["0:0"]);
+    expect(useEditorStore.getState().paragraphs[0][0].py).toBe("xíng");
+    expect(screen.getAllByText("xíng")[0].getAttribute("aria-hidden")).toBeNull();
+
+    fireEvent.click(screen.getAllByText("行")[0]);
+    expect(
+      screen.getByRole("button", { name: "选择 xíng" }).getAttribute("aria-pressed"),
+    ).toBe("true");
+    fireEvent.click(screen.getByRole("button", { name: "选择 xíng" }));
+
+    expect(useEditorStore.getState().manualAnnotationKeys).toEqual([]);
+    expect(useEditorStore.getState().paragraphs[0][0].py).toBe("xíng");
+  });
+
+  it("点击其他读音会换音并保持当前位置已注音", () => {
+    useEditorStore.setState({
+      annotationMode: "risk",
+      riskAnnotationKeys: ["0:0"],
+      manualAnnotationKeys: [],
+      paragraphs: [[
+        { ch: "行", py: "xíng", isPunct: false, pySource: "auto" },
+      ]],
+    });
+
+    renderPreview();
+    fireEvent.click(screen.getByText("行"));
+    fireEvent.click(screen.getByRole("button", { name: "选择 háng" }));
+
+    expect(useEditorStore.getState().paragraphs[0][0]).toMatchObject({
+      py: "háng",
+      pySource: "manual",
+    });
+    expect(useEditorStore.getState().riskAnnotationKeys).toEqual(["0:0"]);
   });
 
   it("风险字模式只显示读音风险位置", () => {
     useEditorStore.setState({
       annotationMode: "risk",
+      riskAnnotationKeys: ["0:1"],
       manualAnnotationKeys: [],
       paragraphs: [[
         { ch: "春", py: "chūn", isPunct: false, pySource: "auto" },
@@ -294,6 +353,7 @@ describe("Preview proofreading", () => {
   it("切换范围模式保留手动选择且只有清空注音会删除", () => {
     useEditorStore.setState({
       annotationMode: "manual",
+      riskAnnotationKeys: ["0:0"],
       manualAnnotationKeys: ["0:0"],
       paragraphs: [[
         { ch: "行", py: "xíng", isPunct: false, pySource: "auto" },
@@ -312,5 +372,6 @@ describe("Preview proofreading", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "清空注音" }));
     expect(useEditorStore.getState().manualAnnotationKeys).toEqual([]);
+    expect(useEditorStore.getState().riskAnnotationKeys).toEqual(["0:0"]);
   });
 });

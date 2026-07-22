@@ -53,8 +53,7 @@ export interface ProofreadParagraphOptions {
   onCancel: () => void;
   onChangeValue: (index: number, value: string) => void;
   annotationVisibility: boolean[];
-  annotationSelectionActive: boolean;
-  onToggleAnnotation: (pairIndex: number) => void;
+  highlightSelectedAnnotations: boolean;
 }
 
 function sourceClass(pair: Pair): string {
@@ -198,8 +197,7 @@ function renderProofreadNodes(
     onCancel,
     onChangeValue,
     annotationVisibility,
-    annotationSelectionActive,
-    onToggleAnnotation,
+    highlightSelectedAnnotations,
   } = options;
   const nodes: JSX.Element[] = [];
   const reviewRisks = analyzeReviewRisks(paragraph);
@@ -274,7 +272,7 @@ function renderProofreadNodes(
             "proof-unit",
             sourceClass(pair),
             isSuspect ? "suspect" : "",
-            annotationSelectionActive && isAnnotationVisible
+            highlightSelectedAnnotations && isAnnotationVisible
               ? "annotation-selected"
               : "",
           ]
@@ -283,10 +281,6 @@ function renderProofreadNodes(
           role="button"
           tabIndex={0}
           onClick={(event) => {
-            if (annotationSelectionActive) {
-              onToggleAnnotation(currentPairIndex);
-              return;
-            }
             onOpenCandidates(
               paragraphIndex,
               currentPairIndex,
@@ -296,10 +290,6 @@ function renderProofreadNodes(
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
-              if (annotationSelectionActive) {
-                onToggleAnnotation(currentPairIndex);
-                return;
-              }
               onOpenCandidates(
                 paragraphIndex,
                 currentPairIndex,

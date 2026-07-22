@@ -166,6 +166,7 @@ describe("render — ruby structure", () => {
       <div>
         {renderParagraphs([paragraph], {
           mode: "manual",
+          riskKeys: [],
           manualKeys: ["0:1"],
         })}
       </div>,
